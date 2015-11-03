@@ -1,0 +1,27 @@
+{
+    "name": "recca0120/elfinder",
+    "description": "Elfinder for Laravel 5",
+    "keywords": ["laravel", "elfinder", "tinymce"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "recca0120",
+            "email": "recca0120@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "~5.0|~5.1",
+        "illuminate/routing": "~5.0|~5.1"
+    },
+    "autoload": {
+        "classmap": ["resources/assets/php"],
+        "psr-4": {
+            "Recca0120\\Elfinder\\": "src/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "minimum-stability": "dev"
+}
