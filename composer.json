@@ -11,7 +11,8 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "laravel/routing": "~5.0|~5.1"
+        "illuminate/support": "~5.0|~5.1",
+        "illuminate/routing": "~5.0|~5.1"
     },
     "autoload": {
         "classmap": ["resources/assets/php"],
