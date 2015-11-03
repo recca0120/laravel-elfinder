@@ -1,13 +1,13 @@
 /*!
  * elFinder - file manager for web
- * Version 2.1.0 (2015-11-03)
+ * Version 2.1_n (Nightly: cd770ea) (2015-11-02)
  * http://elfinder.org
  * 
  * Copyright 2009-2015, Studio 42
  * Licensed under a 3 clauses BSD license
  */
 
-/* File: \css\commands.css */
+/* File: /css/commands.css */
 /******************************************************************/
 /*                          COMMANDS STYLES                       */
 /******************************************************************/
@@ -278,7 +278,7 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 
 
 
-/* File: \css\common.css */
+/* File: /css/common.css */
 /*********************************************/
 /*            COMMON ELFINDER STUFFS         */
 /*********************************************/
@@ -382,7 +382,7 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 
 
 
-/* File: \css\contextmenu.css */
+/* File: /css/contextmenu.css */
 /* menu and submenu */
 .elfinder-contextmenu,
 .elfinder-contextmenu-sub {
@@ -466,7 +466,7 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 	margin:0 1px;
 }
 
-/* File: \css\cwd.css */
+/* File: /css/cwd.css */
 /******************************************************************/
 /*                     CURRENT DIRECTORY STYLES                   */
 /******************************************************************/
@@ -749,7 +749,7 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 
 
 
-/* File: \css\dialog.css */
+/* File: /css/dialog.css */
 /*********************************************/
 /*                DIALOGS STYLES             */
 /*********************************************/
@@ -1000,7 +1000,7 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 
 
 
-/* File: \css\fonts.css */
+/* File: /css/fonts.css */
 .elfinder-contextmenu .elfinder-contextmenu-item span { font-size:.76em; }
 
 .elfinder-cwd-view-icons .elfinder-cwd-filename { font-size:.7em; }
@@ -1024,7 +1024,7 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 .elfinder-drag-num { font-size:12px; }
 
 
-/* File: \css\navbar.css */
+/* File: /css/navbar.css */
 /*********************************************/
 /*              NAVIGATION PANEL             */
 /*********************************************/
@@ -1199,9 +1199,9 @@ div.elfinder-cwd-wrapper-list tr.ui-state-default td span.ui-icon {
 
 
 
-/* File: \css\places.css */
+/* File: /css/places.css */
 
-/* File: \css\quicklook.css */
+/* File: /css/quicklook.css */
 /* quicklook window */
 .elfinder-quicklook {
 	position:absolute;
@@ -1467,7 +1467,7 @@ embed.elfinder-quicklook-preview-audio {
 
 
 
-/* File: \css\statusbar.css */
+/* File: /css/statusbar.css */
 /******************************************************************/
 /*                           STATUSBAR STYLES                     */
 /******************************************************************/
@@ -1512,7 +1512,7 @@ embed.elfinder-quicklook-preview-audio {
 
 .elfinder-stat-selected { white-space:nowrap; overflow:hidden; }
 
-/* File: \css\toolbar.css */
+/* File: /css/toolbar.css */
 /*********************************************/
 /*               TOOLBAR STYLES              */
 /*********************************************/
@@ -1633,6 +1633,8 @@ embed.elfinder-quicklook-preview-audio {
 .elfinder-button-icon-netunmount { background-position: 0 -96px; }
 .elfinder-button-icon-places    { background-position: 0 -704px; }
 .elfinder-button-icon-chmod     { background-position: 0  -48px; }
+
+.elfinder-button-icon-pixlr     { background-position: 0 -673px; }
 
 /* button with dropdown menu*/
 .elfinder .elfinder-menubutton { overflow:visible; }

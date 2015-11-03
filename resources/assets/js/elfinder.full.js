@@ -1,6 +1,6 @@
 /*!
  * elFinder - file manager for web
- * Version 2.1.0 (2015-11-03)
+ * Version 2.1_n (Nightly: cd770ea) (2015-11-02)
  * http://elfinder.org
  * 
  * Copyright 2009-2015, Studio 42
@@ -10,7 +10,7 @@
 
 
 /*
- * File: \js\elFinder.js
+ * File: /js/elFinder.js
  */
 
 /**
@@ -4088,7 +4088,7 @@ if (!Object.keys) {
 
 
 /*
- * File: \js\elFinder.version.js
+ * File: /js/elFinder.version.js
  */
 
 /**
@@ -4096,12 +4096,12 @@ if (!Object.keys) {
  *
  * @type String
  **/
-elFinder.prototype.version = '2.1.0';
+elFinder.prototype.version = '2.1_n (Nightly: cd770ea)';
 
 
 
 /*
- * File: \js\jquery.elfinder.js
+ * File: /js/jquery.elfinder.js
  */
 
 /*** jQuery UI droppable performance tune for elFinder ***/
@@ -4170,7 +4170,7 @@ $.fn.getElFinder = function() {
 
 
 /*
- * File: \js\elFinder.options.js
+ * File: /js/elFinder.options.js
  */
 
 /**
@@ -4308,6 +4308,7 @@ elFinder.prototype._options = {
 	 * @type Array
 	 */
 	commands : [
+		'pixlr',
 		'open', 'reload', 'home', 'up', 'back', 'forward', 'getfile', 'quicklook', 
 		'download', 'rm', 'duplicate', 'rename', 'mkdir', 'mkfile', 'upload', 'copy', 
 		'cut', 'paste', 'edit', 'extract', 'archive', 'search', 'info', 'view', 'help',
@@ -4556,7 +4557,7 @@ elFinder.prototype._options = {
 			['quicklook'],
 			['copy', 'cut', 'paste'],
 			['rm'],
-			['duplicate', 'rename', 'edit', 'resize'],
+			['duplicate', 'rename', 'edit', 'resize', 'pixlr'],
 			['extract', 'archive'],
 			['search'],
 			['view', 'sort'],
@@ -4846,7 +4847,7 @@ elFinder.prototype._options = {
 		// current directory menu
 		cwd    : ['reload', 'back', '|', 'upload', 'mkdir', 'mkfile', 'paste', '|', 'sort', '|', 'info'],
 		// current directory file menu
-		files  : ['getfile', '|','open', 'quicklook', '|', 'download', 'upload', '|', 'copy', 'cut', 'paste', 'duplicate', '|', 'rm', '|', 'edit', 'rename', 'resize', '|', 'archive', 'extract', '|', 'places', 'info', 'chmod']
+		files  : ['getfile', '|','open', 'quicklook', '|', 'download', 'upload', '|', 'copy', 'cut', 'paste', 'duplicate', '|', 'rm', '|', 'edit', 'rename', 'resize', 'pixlr', '|', 'archive', 'extract', '|', 'places', 'info', 'chmod']
 	},
 
 	/**
@@ -4860,7 +4861,7 @@ elFinder.prototype._options = {
 
 
 /*
- * File: \js\elFinder.history.js
+ * File: /js/elFinder.history.js
  */
 
 /**
@@ -4977,7 +4978,7 @@ elFinder.prototype.history = function(fm) {
 }
 
 /*
- * File: \js\elFinder.command.js
+ * File: /js/elFinder.command.js
  */
 
 /**
@@ -5256,7 +5257,7 @@ elFinder.prototype.command = function(fm) {
 
 
 /*
- * File: \js\elFinder.resources.js
+ * File: /js/elFinder.resources.js
  */
 
 /**
@@ -5416,7 +5417,7 @@ elFinder.prototype.resources = {
 
 
 /*
- * File: \js\jquery.dialogelfinder.js
+ * File: /js/jquery.dialogelfinder.js
  */
 
 /**
@@ -5513,7 +5514,7 @@ $.fn.dialogelfinder = function(opts) {
 
 
 /*
- * File: \js\i18n\elfinder.en.js
+ * File: /js/i18n/elfinder.en.js
  */
 
 /**
@@ -5648,7 +5649,9 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'cmdplaces'    : 'To Places', // added 28.12.2014
 			'cmdchmod'     : 'Change mode', // from v2.1 added 20.6.2015
 			
-			/*********************************** buttons ***********************************/
+			'cmdpixlr'     : 'Edit on Pixlr',
+			
+			/*********************************** buttons ***********************************/ 
 			'btnClose'  : 'Close',
 			'btnSave'   : 'Save',
 			'btnRm'     : 'Remove',
@@ -5923,7 +5926,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 
 
 /*
- * File: \js\ui\button.js
+ * File: /js/ui/button.js
  */
 
 /**
@@ -6005,7 +6008,7 @@ $.fn.elfinderbutton = function(cmd) {
 
 
 /*
- * File: \js\ui\contextmenu.js
+ * File: /js/ui/contextmenu.js
  */
 
 /**
@@ -6219,7 +6222,7 @@ $.fn.elfindercontextmenu = function(fm) {
 
 
 /*
- * File: \js\ui\cwd.js
+ * File: /js/ui/cwd.js
  */
 
 /**
@@ -7516,7 +7519,7 @@ $.fn.elfindercwd = function(fm, options) {
 
 
 /*
- * File: \js\ui\dialog.js
+ * File: /js/ui/dialog.js
  */
 
 /**
@@ -7768,7 +7771,7 @@ $.fn.elfinderdialog.defaults = {
 }
 
 /*
- * File: \js\ui\navbar.js
+ * File: /js/ui/navbar.js
  */
 
 /**
@@ -7858,7 +7861,7 @@ $.fn.elfindernavbar = function(fm, opts) {
 
 
 /*
- * File: \js\ui\overlay.js
+ * File: /js/ui/overlay.js
  */
 
 
@@ -7910,7 +7913,7 @@ $.fn.elfinderoverlay = function(opts) {
 }
 
 /*
- * File: \js\ui\panel.js
+ * File: /js/ui/panel.js
  */
 
 $.fn.elfinderpanel = function(fm) {
@@ -7931,7 +7934,7 @@ $.fn.elfinderpanel = function(fm) {
 }
 
 /*
- * File: \js\ui\path.js
+ * File: /js/ui/path.js
  */
 
 /**
@@ -7968,7 +7971,7 @@ $.fn.elfinderpath = function(fm) {
 }
 
 /*
- * File: \js\ui\places.js
+ * File: /js/ui/places.js
  */
 
 /**
@@ -8328,7 +8331,7 @@ $.fn.elfinderplaces = function(fm, opts) {
 
 
 /*
- * File: \js\ui\searchbutton.js
+ * File: /js/ui/searchbutton.js
  */
 
 /**
@@ -8490,7 +8493,7 @@ $.fn.elfindersearchbutton = function(cmd) {
 };
 
 /*
- * File: \js\ui\sortbutton.js
+ * File: /js/ui/sortbutton.js
  */
 
 /**
@@ -8584,7 +8587,7 @@ $.fn.elfindersortbutton = function(cmd) {
 
 
 /*
- * File: \js\ui\stat.js
+ * File: /js/ui/stat.js
  */
 
 /**
@@ -8647,7 +8650,7 @@ $.fn.elfinderstat = function(fm) {
 }
 
 /*
- * File: \js\ui\toolbar.js
+ * File: /js/ui/toolbar.js
  */
 
 /**
@@ -8736,7 +8739,7 @@ $.fn.elfindertoolbar = function(fm, opts) {
 }
 
 /*
- * File: \js\ui\tree.js
+ * File: /js/ui/tree.js
  */
 
 /**
@@ -9467,7 +9470,7 @@ $.fn.elfindertree = function(fm, opts) {
 
 
 /*
- * File: \js\ui\uploadButton.js
+ * File: /js/ui/uploadButton.js
  */
 
 /**
@@ -9500,7 +9503,7 @@ $.fn.elfinderuploadbutton = function(cmd) {
 
 
 /*
- * File: \js\ui\viewbutton.js
+ * File: /js/ui/viewbutton.js
  */
 
 /**
@@ -9523,7 +9526,7 @@ $.fn.elfinderviewbutton = function(cmd) {
 }
 
 /*
- * File: \js\ui\workzone.js
+ * File: /js/ui/workzone.js
  */
 
 /**
@@ -9559,7 +9562,7 @@ $.fn.elfinderworkzone = function(fm) {
 
 
 /*
- * File: \js\commands\archive.js
+ * File: /js/commands/archive.js
  */
 
 /**
@@ -9632,7 +9635,7 @@ elFinder.prototype.commands.archive = function() {
 }
 
 /*
- * File: \js\commands\back.js
+ * File: /js/commands/back.js
  */
 
 /**
@@ -9659,7 +9662,7 @@ elFinder.prototype.commands.back = function() {
 }
 
 /*
- * File: \js\commands\chmod.js
+ * File: /js/commands/chmod.js
  */
 
 /**
@@ -9956,7 +9959,7 @@ elFinder.prototype.commands.chmod = function() {
 
 
 /*
- * File: \js\commands\copy.js
+ * File: /js/commands/copy.js
  */
 
 /**
@@ -9998,7 +10001,7 @@ elFinder.prototype.commands.copy = function() {
 }
 
 /*
- * File: \js\commands\cut.js
+ * File: /js/commands/cut.js
  */
 
 /**
@@ -10043,7 +10046,7 @@ elFinder.prototype.commands.cut = function() {
 }
 
 /*
- * File: \js\commands\download.js
+ * File: /js/commands/download.js
  */
 
 /**
@@ -10125,7 +10128,7 @@ elFinder.prototype.commands.download = function() {
 };
 
 /*
- * File: \js\commands\duplicate.js
+ * File: /js/commands/duplicate.js
  */
 
 /**
@@ -10179,7 +10182,7 @@ elFinder.prototype.commands.duplicate = function() {
 }
 
 /*
- * File: \js\commands\edit.js
+ * File: /js/commands/edit.js
  */
 
 /**
@@ -10522,7 +10525,7 @@ elFinder.prototype.commands.edit = function() {
 };
 
 /*
- * File: \js\commands\extract.js
+ * File: /js/commands/extract.js
  */
 
 /**
@@ -10722,7 +10725,7 @@ elFinder.prototype.commands.extract = function() {
 }
 
 /*
- * File: \js\commands\forward.js
+ * File: /js/commands/forward.js
  */
 
 /**
@@ -10749,7 +10752,7 @@ elFinder.prototype.commands.forward = function() {
 }
 
 /*
- * File: \js\commands\getfile.js
+ * File: /js/commands/getfile.js
  */
 
 /**
@@ -10874,7 +10877,7 @@ elFinder.prototype.commands.getfile = function() {
 }
 
 /*
- * File: \js\commands\help.js
+ * File: /js/commands/help.js
  */
 
 /**
@@ -11030,7 +11033,7 @@ elFinder.prototype.commands.help = function() {
 
 
 /*
- * File: \js\commands\home.js
+ * File: /js/commands/home.js
  */
 
 
@@ -11058,7 +11061,7 @@ elFinder.prototype.commands.home = function() {
 }
 
 /*
- * File: \js\commands\info.js
+ * File: /js/commands/info.js
  */
 
 /**
@@ -11326,7 +11329,7 @@ elFinder.prototype.commands.info = function() {
 
 
 /*
- * File: \js\commands\mkdir.js
+ * File: /js/commands/mkdir.js
  */
 
 /**
@@ -11354,7 +11357,7 @@ elFinder.prototype.commands.mkdir = function() {
 
 
 /*
- * File: \js\commands\mkfile.js
+ * File: /js/commands/mkfile.js
  */
 
 /**
@@ -11378,7 +11381,7 @@ elFinder.prototype.commands.mkfile = function() {
 
 
 /*
- * File: \js\commands\netmount.js
+ * File: /js/commands/netmount.js
  */
 
 /**
@@ -11593,7 +11596,7 @@ elFinder.prototype.commands.netunmount = function() {
 
 
 /*
- * File: \js\commands\open.js
+ * File: /js/commands/open.js
  */
 
 /**
@@ -11731,7 +11734,7 @@ elFinder.prototype.commands.open = function() {
 }
 
 /*
- * File: \js\commands\paste.js
+ * File: /js/commands/paste.js
  */
 
 /**
@@ -11971,7 +11974,99 @@ elFinder.prototype.commands.paste = function() {
 }
 
 /*
- * File: \js\commands\places.js
+ * File: /js/commands/pixlr.js
+ */
+
+elFinder.prototype.commands.pixlr = function() {
+	this.updateOnSelect = false;
+
+	this.getstate = function(sel) {
+		var fm = this.fm;
+		var sel = fm.selectedFiles();
+		return !this._disabled && sel.length == 1 && sel[0].read && sel[0].mime.indexOf('image/') !== -1 && fm.file(sel[0].phash) && fm.file(sel[0].phash).write ? 0 : -1;
+	};
+
+	this.exec = function(hashes) {
+		var fm    = this.fm,
+		dfrd  = $.Deferred().fail(function(error) { error && fm.error(error); }),
+		files = this.files(hashes),
+		cnt   = files.length,
+		fire = function(mode) {
+			var file, url, uploadURL, img, target, exit, loc,
+			cdata = $.param(fm.options.customData);
+			
+			// set custom data
+			if (cdata) {
+				cdata = '&' + cdata;
+			}
+			
+			file = files[0];
+			
+			loc = location.href.replace(/^(https?:\/\/[^\/]+).+/i, '$1');
+			img = fm.url(file.hash);
+			if (! img.match(/^http/)) {
+				img = loc + img;
+			}
+			
+			loc = location.href.replace(/\/[^\/]*$/, '/');
+			uploadURL = fm.uploadURL;
+			if (! uploadURL.match(/^http/)) {
+				uploadURL = loc + uploadURL;
+			}
+			
+			target = uploadURL + (uploadURL.indexOf('?') === -1 ? '?' : '&')
+				+ 'cmd=pixlr'
+				+ '&target=' + file.phash
+				+ '&node=' + encodeURIComponent(fm.id)
+				+ cdata;
+			
+			exit = uploadURL + (uploadURL.indexOf('?') === -1 ? '?' : '&')
+				+ 'cmd=pixlr'
+				+ cdata;
+			
+			url = 'http://pixlr.com/'+mode+'/?image=' + encodeURIComponent(img)
+				+ '&target=' + encodeURIComponent(target)
+				+ '&title=' + encodeURIComponent('pixlr_'+file.name)
+				+ '&exit=' + encodeURIComponent(exit);
+			
+			if (!window.open(url)) {
+				return dfrd.reject('errPopup');
+			}
+		},
+		selector = $('<div/>'),
+		opts    = {
+			title : 'Pixlr Editor or Pixlr Express ?',
+			width : 'auto',
+			close : function() { $(this).elfinderdialog('destroy'); }
+		}
+		;
+		
+		if (!cnt) {
+			return dfrd.reject();
+		}
+		
+		selector.css('text-align', 'center')
+		        .append($('<button/>').css('margin', '30px').append('Pixlr Editor').button().click(
+					function(){
+						fire('editor');
+						$(this).elfinderdialog('destroy');
+						return false;
+					}))
+		        .append($('<button/>').css('margin', '30px').append('Pixlr Express').button().click(
+		        	function(){
+		        		fire('express');
+		        		$(this).elfinderdialog('destroy');
+		        		return false;
+		        	}));
+		
+		dialog = fm.dialog(selector, opts);
+
+		return dfrd.resolve();
+	};
+};
+
+/*
+ * File: /js/commands/places.js
  */
 
 /**
@@ -12007,7 +12102,7 @@ elFinder.prototype.commands.places = function() {
 };
 
 /*
- * File: \js\commands\quicklook.js
+ * File: /js/commands/quicklook.js
  */
 
 /**
@@ -12449,7 +12544,7 @@ elFinder.prototype.commands.quicklook = function() {
 
 
 /*
- * File: \js\commands\quicklook.plugins.js
+ * File: /js/commands/quicklook.plugins.js
  */
 
 
@@ -12789,7 +12884,7 @@ elFinder.prototype.commands.quicklook.plugins = [
 ]
 
 /*
- * File: \js\commands\reload.js
+ * File: /js/commands/reload.js
  */
 
 /**
@@ -12840,7 +12935,7 @@ elFinder.prototype.commands.reload = function() {
 };
 
 /*
- * File: \js\commands\rename.js
+ * File: /js/commands/rename.js
  */
 
 /**
@@ -12986,7 +13081,7 @@ elFinder.prototype.commands.rename = function() {
 
 
 /*
- * File: \js\commands\resize.js
+ * File: /js/commands/resize.js
  */
 
 /**
@@ -13811,7 +13906,7 @@ elFinder.prototype.commands.resize = function() {
 
 
 /*
- * File: \js\commands\rm.js
+ * File: /js/commands/rm.js
  */
 
 /**
@@ -13908,7 +14003,7 @@ elFinder.prototype.commands.rm = function() {
 }
 
 /*
- * File: \js\commands\search.js
+ * File: /js/commands/search.js
  */
 
 /**
@@ -13960,7 +14055,7 @@ elFinder.prototype.commands.search = function() {
 }
 
 /*
- * File: \js\commands\sort.js
+ * File: /js/commands/sort.js
  */
 
 /**
@@ -14046,7 +14141,7 @@ elFinder.prototype.commands.sort = function() {
 };
 
 /*
- * File: \js\commands\up.js
+ * File: /js/commands/up.js
  */
 
 /**
@@ -14074,7 +14169,7 @@ elFinder.prototype.commands.up = function() {
 }
 
 /*
- * File: \js\commands\upload.js
+ * File: /js/commands/upload.js
  */
 
 /**
@@ -14313,7 +14408,7 @@ elFinder.prototype.commands.upload = function() {
 };
 
 /*
- * File: \js\commands\view.js
+ * File: /js/commands/view.js
  */
 
 /**

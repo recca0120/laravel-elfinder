@@ -130,8 +130,10 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'cmdnetunmount': 'アンマウント', // from v2.1 added 30.04.2012
 			'cmdplaces'    : 'お気に入りへ', // added 28.12.2014
 			'cmdchmod'     : '属性変更', // from v2.1 added 20.6.2015
-
-			/*********************************** buttons ***********************************/
+			
+			'cmdpixlr'     : 'Pixlr で編集',
+			
+			/*********************************** buttons ***********************************/ 
 			'btnClose'  : '閉じる',
 			'btnSave'   : '保存',
 			'btnRm'     : '削除',
