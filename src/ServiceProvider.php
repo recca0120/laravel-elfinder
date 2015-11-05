@@ -3,9 +3,9 @@
 namespace Recca0120\Elfinder;
 
 use Illuminate\Routing\Router;
-use Illuminate\Support\ServiceProvider as baseServiceProvider;
+use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
-class ServiceProvider extends baseServiceProvider
+class ServiceProvider extends BaseServiceProvider
 {
     protected $namespace = 'Recca0120\Elfinder\Http\Controllers';
 
