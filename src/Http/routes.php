@@ -1,6 +1,6 @@
 <?php
 
-get('/', [
+Route::get('/', [
     'as' => 'elfinder',
     'uses' => 'ElfinderController@elfinder',
 ]);
@@ -10,7 +10,7 @@ Route::any('connector', [
     'uses' => 'ElfinderController@connector',
 ]);
 
-get('/sounds/{file}', [
+Route::get('/sounds/{file}', [
     'as' => 'sound',
-    'uses' => 'ElfinderController@sound'
+    'uses' => 'ElfinderController@sound',
 ]);
