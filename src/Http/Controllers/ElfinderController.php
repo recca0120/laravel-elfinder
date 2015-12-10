@@ -4,8 +4,8 @@ namespace Recca0120\Elfinder\Http\Controllers;
 
 use elFinder;
 use File;
-use Recca0120\Elfinder\Connector;
 use Illuminate\Routing\Controller;
+use Recca0120\Elfinder\Connector;
 
 class ElfinderController extends Controller
 {
@@ -31,7 +31,7 @@ class ElfinderController extends Controller
             ]);
         }
 
-        $dirs = $dirs->map(function($item) {
+        $dirs = $dirs->map(function ($item) {
             $driver = array_get($item, 'driver', 'LocalFileSystem');
             $path = trim(array_get($item, 'path', 'upload/filemanager/shared'), '/');
             $options = array_merge($item, [
@@ -73,7 +73,8 @@ class ElfinderController extends Controller
         return $connector->run();
     }
 
-    public function sound($file) {
+    public function sound($file)
+    {
         return response()->download(__DIR__.'/../../../resources/assets/sounds/rm.wav');
     }
 }

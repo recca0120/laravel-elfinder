@@ -38,10 +38,15 @@ class ServiceProvider extends BaseServiceProvider
     protected function bootRoutes($router)
     {
         if ($this->app->routesAreCached() === false) {
+            $middleware = [];
+            if (method_exists(app(), 'bindShared') === false) {
+                $middleware = array_merge(['web'], $middleware);
+            }
             $group = $router->group([
                 'namespace' => $this->namespace,
                 'as' => 'elfinder::',
                 'prefix' => $this->prefix,
+                'middleware' => $middleware,
             ], function () {
                 require __DIR__.'/Http/routes.php';
             });
