@@ -33,15 +33,21 @@ class ServiceProvider extends BaseServiceProvider
         if (! defined('ELFINDER_IMG_PARENT_URL')) {
             define('ELFINDER_IMG_PARENT_URL', asset('vendor/elfinder'));
         }
+        $this->mergeConfigFrom(__DIR__.'/../config/elfinder.php', 'elfinder');
     }
 
     protected function bootRoutes($router)
     {
         if ($this->app->routesAreCached() === false) {
+            $middleware = [];
+            if (method_exists(app(), 'bindShared') === false) {
+                $middleware = array_merge(['web'], $middleware);
+            }
             $group = $router->group([
                 'namespace' => $this->namespace,
                 'as' => 'elfinder::',
                 'prefix' => $this->prefix,
+                'middleware' => $middleware,
             ], function () {
                 require __DIR__.'/Http/routes.php';
             });
@@ -55,7 +61,11 @@ class ServiceProvider extends BaseServiceProvider
         ], 'views');
 
         $this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/elfinder'),
+            __DIR__.'/../resources/elfinder' => public_path('vendor/elfinder'),
         ], 'public');
+
+        $this->publishes([
+            __DIR__.'/../config/elfinder.php' => config_path('elfinder.php'),
+        ], 'config');
     }
 }
