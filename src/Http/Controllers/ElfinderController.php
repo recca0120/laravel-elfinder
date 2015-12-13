@@ -18,22 +18,30 @@ class ElfinderController extends Controller
     {
         $dirs = collect();
 
+        $root = config('filesystems.elfinder.root');
+        if (empty($root) === true) {
+            $root = config('elfinder.root', public_path('media/elfinder'));
+        }
+
+        $path = substr($root, strlen(public_path()) + 1);
+
         if (auth()->check() === true) {
             $dirs->push([
                 'alias' => 'Home',
                 'icon' => null,
-                'path' => 'upload/filemanager/user/'.auth()->id(),
+                'path' => $path.'/user/'.auth()->id(),
             ]);
 
             $dirs->push([
                 'alias' => 'Shared',
-                'path' => 'upload/filemanager/shared',
+                'path' => $path.'/shared',
             ]);
         }
 
-        $dirs = $dirs->map(function ($item) {
+        $dirs = $dirs->map(function ($item) use ($root, $path) {
             $driver = array_get($item, 'driver', 'LocalFileSystem');
-            $path = trim(array_get($item, 'path', 'upload/filemanager/shared'), '/');
+            $path = array_get($item, 'path', $path.'/shared', '/');
+
             $options = array_merge($item, [
                 'driver' => $driver,
                 'accessControl' => function ($attr, $path, $data, $volume, $isDir) {
@@ -75,6 +83,11 @@ class ElfinderController extends Controller
 
     public function sound($file)
     {
-        return response()->download(__DIR__.'/../../../resources/assets/sounds/rm.wav');
+        $file = __DIR__.'/../../../resources/assets/sounds/'.$file;
+        $mimeType = File::mimeType($file);
+
+        return response(file_get_contents($file), 200, [
+            'content-type' => $mimeType,
+        ]);
     }
 }

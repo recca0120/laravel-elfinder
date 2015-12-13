@@ -33,6 +33,7 @@ class ServiceProvider extends BaseServiceProvider
         if (! defined('ELFINDER_IMG_PARENT_URL')) {
             define('ELFINDER_IMG_PARENT_URL', asset('vendor/elfinder'));
         }
+        $this->mergeConfigFrom(__DIR__.'/../config/elfinder.php', 'elfinder');
     }
 
     protected function bootRoutes($router)
@@ -62,5 +63,9 @@ class ServiceProvider extends BaseServiceProvider
         $this->publishes([
             __DIR__.'/../resources/assets' => public_path('vendor/elfinder'),
         ], 'public');
+
+        $this->publishes([
+            __DIR__.'/../config/elfinder.php' => config_path('elfinder.php'),
+        ], 'config');
     }
 }

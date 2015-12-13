@@ -54,4 +54,16 @@ class Connector extends elFinderConnector
 
         return $this->response;
     }
+
+    protected function input_filter($args)
+    {
+        // if (empty($args['FILES']) === false &&
+        //     empty($args['FILES']['upload']) === false &&
+        //     empty($args['FILES']['upload']['name']) === false
+        // ) {
+        //     $args['FILES']['upload']['name'][0] = utf8_encode($args['FILES']['upload']['name'][0]);
+        // }
+
+        return parent::input_filter($args);
+    }
 }
