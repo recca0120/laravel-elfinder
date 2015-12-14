@@ -61,7 +61,7 @@ class ServiceProvider extends BaseServiceProvider
         ], 'views');
 
         $this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/elfinder'),
+            __DIR__.'/../resources/elfinder' => public_path('vendor/elfinder'),
         ], 'public');
 
         $this->publishes([

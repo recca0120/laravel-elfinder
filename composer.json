@@ -11,11 +11,11 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "~5.0|~5.1",
-        "illuminate/routing": "~5.0|~5.1"
+        "illuminate/support": "~5.0",
+        "illuminate/routing": "~5.0"
     },
     "autoload": {
-        "classmap": ["resources/assets/php"],
+        "classmap": ["resources/elfinder/php"],
         "psr-4": {
             "Recca0120\\Elfinder\\": "src/"
         }
