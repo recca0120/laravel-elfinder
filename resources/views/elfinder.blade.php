@@ -5,9 +5,9 @@
 		<title>elFinder 2.0</title>
 
 		<!-- jQuery and jQuery UI (REQUIRED) -->
-		<link rel="stylesheet" type="text/css" href="{{ asset('vendor/elfinder/jquery/ui-themes/smoothness/jquery-ui.min.css') }}">
-		<script src="{{ asset('vendor/elfinder/jquery/jquery-1.11.3.min.js') }}"></script>
-		<script src="{{ asset('vendor/elfinder/jquery/jquery-ui.min.js') }}"></script>
+		<link rel="stylesheet" type="text/css" href="{{ asset('vendor/elfinder/jquery/ui-themes/smoothness/jquery-ui-1.10.1.custom.min.css') }}">
+		<script src="{{ asset('vendor/elfinder/jquery/jquery-1.9.1.min.js') }}"></script>
+		<script src="{{ asset('vendor/elfinder/jquery/jquery-ui-1.10.1.custom.min.js') }}"></script>
 
 		<!-- elFinder CSS (REQUIRED) -->
 		<link rel="stylesheet" type="text/css" href="{{ asset('vendor/elfinder/css/elfinder.min.css') }}">
