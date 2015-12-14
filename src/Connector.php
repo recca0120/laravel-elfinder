@@ -70,6 +70,7 @@ class Connector extends elFinderConnector
 
             // unlock session data for multiple access
             session_id() && session_write_close();
+            app('session')->close();
             // client disconnect should abort
             ignore_user_abort(false);
 

@@ -2,11 +2,11 @@
 
 return [
     'locale' => 'en_US.UTF-8',
-    'debug' => true,
+    'debug' => false,
     'roots' => [[
         'driver' => 'LocalFileSystem',
         'alias' => 'Home',
-        // 'icon' => null,
+        'rootCssClass' => 'elfinder-button-icon-home',
         'path' => function () {
             return public_path('media/elfinder/user/'.auth()->id());
         },
@@ -16,7 +16,6 @@ return [
     ],[
         'driver' => 'LocalFileSystem',
         'alias' => 'Shared',
-        // 'icon' => 'local',
         'path' => public_path('media/elfinder/shared'),
         'URL' => url('media/elfinder/shared'),
     ]],

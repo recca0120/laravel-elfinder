@@ -22,17 +22,6 @@ class ServiceProvider extends BaseServiceProvider
 
     public function register()
     {
-        // require __DIR__.'/../php/elFinderConnector.class.php';
-        // require __DIR__.'/../php/elFinder.class.php';
-        // require __DIR__.'/../php/elFinderVolumeDriver.class.php';
-        // require __DIR__.'/../php/elFinderVolumeLocalFileSystem.class.php';
-        // require __DIR__.'/../php/elFinderVolumeMySQL.class.php';
-        // require __DIR__.'/../php/elFinderVolumeFTP.class.php';
-        // require __DIR__.'/../php/elFinderVolumeDropbox.class.php';
-
-        if (! defined('ELFINDER_IMG_PARENT_URL')) {
-            define('ELFINDER_IMG_PARENT_URL', asset('vendor/elfinder'));
-        }
         $this->mergeConfigFrom(__DIR__.'/../config/elfinder.php', 'elfinder');
     }
 
