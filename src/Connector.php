@@ -29,6 +29,7 @@ class Connector extends elFinderConnector
 
         if (isset($data['pointer'])) {
             $toEnd = true;
+            $status = 200;
             $fp = $data['pointer'];
             if (elFinder::isSeekableStream($fp)) {
                 $headers['Accept-Ranges'] = 'bytes';
@@ -53,7 +54,8 @@ class Connector extends elFinderConnector
                             }
                             $psize = $end - $start + 1;
 
-                            $headers['HTTP/1.1 206 Partial Content'];
+                            // $headers['HTTP/1.1 206 Partial Content'];
+                            $status = 206;
                             $headers['Content-Length'] = $psize;
                             $headers['Content-Range'] = 'bytes '.$start.'-'.$end.'/'.$size;
 
@@ -70,10 +72,11 @@ class Connector extends elFinderConnector
 
             // unlock session data for multiple access
             session_id() && session_write_close();
+            app('session')->close();
             // client disconnect should abort
             ignore_user_abort(false);
 
-            return $this->response = new StreamedResponse(function () use ($toEnd, $fp, $data) {
+            return $this->response = new StreamedResponse(function () use ($toEnd, $fp, $psize, $data) {
                 if ($toEnd) {
                     fpassthru($fp);
                 } else {
@@ -86,7 +89,7 @@ class Connector extends elFinderConnector
                     $data['volume']->close($data['pointer'], $data['info']['hash']);
                 }
 
-            }, 200, $headers);
+            }, $status, $headers);
         }
 
         if (! empty($data['raw']) && ! empty($data['error'])) {
