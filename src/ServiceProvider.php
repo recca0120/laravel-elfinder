@@ -15,35 +15,30 @@ class ServiceProvider extends BaseServiceProvider
 
     public function boot(Router $router)
     {
+        $this->mergeConfigFrom(__DIR__.'/../config/elfinder.php', 'elfinder');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'elfinder');
-        $this->publishAssets();
-        $this->bootRoutes($router);
+        $this->handlePublishes();
+        $this->handleRoutes($router);
     }
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/elfinder.php', 'elfinder');
     }
 
-    protected function bootRoutes($router)
+    protected function handleRoutes(Router $router)
     {
         if ($this->app->routesAreCached() === false) {
-            $middleware = [];
-            if (method_exists(app(), 'bindShared') === false) {
-                $middleware = array_merge(['web'], $middleware);
-            }
             $group = $router->group([
                 'namespace' => $this->namespace,
                 'as' => 'elfinder::',
                 'prefix' => $this->prefix,
-                'middleware' => $middleware,
             ], function () {
                 require __DIR__.'/Http/routes.php';
             });
         }
     }
 
-    protected function publishAssets()
+    protected function handlePublishes()
     {
         $this->publishes([
             __DIR__.'/../resources/views' => base_path('resources/views/vendor/elfinder'),
