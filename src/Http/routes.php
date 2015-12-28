@@ -11,12 +11,7 @@
 |
 */
 
-$middleware = [];
-if (method_exists(app(), 'bindShared') === false) {
-    $middleware = array_merge(['web'], $middleware);
-}
-
-Route::group(['middleware' => $middleware], function () {
+Route::group(['middleware' => config('elfinder.middleware')], function () {
     Route::get('/', [
         'as' => 'elfinder',
         'uses' => 'ElfinderController@elfinder',

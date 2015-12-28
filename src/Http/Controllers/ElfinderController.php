@@ -17,9 +17,9 @@ class ElfinderController extends Controller
 
     public function connector()
     {
-        $config = config('elfinder');
+        $options = config('elfinder.options');
 
-        $roots = array_get($config, 'roots', []);
+        $roots = array_get($options, 'roots', []);
         foreach ($roots as $key => $root) {
             $root['driver'] = (empty($root['driver']) === true) ? 'LocalFileSystem' : $root['driver'];
             $root['autoload'] = true;
@@ -56,9 +56,9 @@ class ElfinderController extends Controller
             }
             $roots[$key] = $root;
         }
-        $config['roots'] = $roots;
+        $options['roots'] = $roots;
 
-        return with(new Connector(new elFinder($config)))->run();
+        return with(new Connector(new elFinder($options)))->run();
     }
 
     public function sound($file)
