@@ -66,7 +66,7 @@
                     url: "{{ route('elfinder::connector') }}",
                     lang: getLang(),
                     customData: {
-                        _token: '<?= csrf_token() ?>'
+                        _token: '<?php echo csrf_token() ?>'
                     },
                     getFileCallback: function(file) { // editor callback
                         // file.url - commandsOptions.getfile.onlyURL = false (default)
