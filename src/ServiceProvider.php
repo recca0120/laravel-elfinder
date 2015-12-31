@@ -15,7 +15,6 @@ class ServiceProvider extends BaseServiceProvider
 
     public function boot(Router $router)
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/elfinder.php', 'elfinder');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'elfinder');
         $this->handlePublishes();
         $this->handleRoutes($router);
@@ -30,8 +29,8 @@ class ServiceProvider extends BaseServiceProvider
         if ($this->app->routesAreCached() === false) {
             $group = $router->group([
                 'namespace' => $this->namespace,
-                'as' => 'elfinder::',
-                'prefix' => $this->prefix,
+                'as'        => 'elfinder::',
+                'prefix'    => $this->prefix,
             ], function () {
                 require __DIR__.'/Http/routes.php';
             });
@@ -51,5 +50,7 @@ class ServiceProvider extends BaseServiceProvider
         $this->publishes([
             __DIR__.'/../config/elfinder.php' => config_path('elfinder.php'),
         ], 'config');
+
+        $this->mergeConfigFrom(__DIR__.'/../config/elfinder.php', 'elfinder');
     }
 }

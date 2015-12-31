@@ -30,25 +30,27 @@ class ElfinderController extends Controller
 
             switch ($root['driver']) {
                 case 'LocalFileSystem':
+                    if (strpos($root['path'], '{user_id}') != -1 && auth()->check() === false) {
+                        continue;
+                    } else {
+                        $userId = auth()->user()->id;
+                        $root['path'] = str_replace('{user_id}', $userId, $root['path']);
+                        $root['URL'] = url(str_replace('{user_id}', $userId, $root['URL']));
+                    }
+
                     if (File::exists($root['path']) === false) {
                         File::makeDirectory($root['path'], 0755, true);
                     }
 
-                    if (empty($root['URL']) === true) {
-                        $root['URL'] = url(substr($root['path'], strlen(public_path()) + 1));
-                    } elseif (($root['URL'] instanceof Closure) === true) {
-                        $root['URL'] = call_user_func($root['URL']);
-                    }
-
                     $root = array_merge([
-                        'mimeDetect' => 'internal',
-                        'tmpPath' => '.tmb',
-                        'utf8fix' => true,
-                        'tmbCrop' => false,
-                        'tmbBgColor' => 'transparent',
+                        'mimeDetect'    => 'internal',
+                        'tmpPath'       => '.tmb',
+                        'utf8fix'       => true,
+                        'tmbCrop'       => false,
+                        'tmbBgColor'    => 'transparent',
                         'accessControl' => function ($attr, $path, $data, $volume, $isDir) {
                             return strpos(basename($path), '.') === 0       // if file/folder begins with '.' (dot)
-                                ? ! ($attr == 'read' || $attr == 'write')    // set read+write to false, other (locked+hidden) set to true
+                                ? !($attr == 'read' || $attr == 'write')    // set read+write to false, other (locked+hidden) set to true
                                 :  null;                                    // else elFinder decide it itself
                         },
                     ], $root);
