@@ -30,14 +30,16 @@ class ElfinderController extends Controller
 
             switch ($root['driver']) {
                 case 'LocalFileSystem':
-                    if (File::exists($root['path']) === false) {
-                        File::makeDirectory($root['path'], 0755, true);
+                    if (strpos($root['path'], '{user_id}') != -1 && auth()->check() === false) {
+                        continue;
+                    } else {
+                        $userId = auth()->user()->id;
+                        $root['path'] = str_replace('{user_id}', $userId, $root['path']);
+                        $root['URL'] = url(str_replace('{user_id}', $userId, $root['URL']));
                     }
 
-                    if (empty($root['URL']) === true) {
-                        $root['URL'] = url(substr($root['path'], strlen(public_path()) + 1));
-                    } elseif (($root['URL'] instanceof Closure) === true) {
-                        $root['URL'] = call_user_func($root['URL']);
+                    if (File::exists($root['path']) === false) {
+                        File::makeDirectory($root['path'], 0755, true);
                     }
 
                     $root = array_merge([

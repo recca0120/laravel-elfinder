@@ -14,17 +14,14 @@ return [
             'driver' => 'LocalFileSystem',
             'alias' => 'Home',
             'rootCssClass' => 'elfinder-button-icon-home',
-            'path' => function () {
-                return public_path('media/elfinder/user/'.auth()->id());
-            },
-            'URL' => function () {
-                return url('media/elfinder/user/'.auth()->id());
-            },
+            'path' => public_path('media/elfinder/user/{user_id}'),
+            'URL' => 'media/elfinder/user/{user_id}',
+
         ],[
             'driver' => 'LocalFileSystem',
             'alias' => 'Shared',
             'path' => public_path('media/elfinder/shared'),
-            'URL' => url('media/elfinder/shared'),
+            'URL' => 'media/elfinder/shared',
         ]],
     ],
 ];
