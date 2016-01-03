@@ -29,8 +29,8 @@ class ServiceProvider extends BaseServiceProvider
         if ($this->app->routesAreCached() === false) {
             $group = $router->group([
                 'namespace' => $this->namespace,
-                'as' => 'elfinder::',
-                'prefix' => $this->prefix,
+                'as'        => 'elfinder::',
+                'prefix'    => $this->prefix,
             ], function () {
                 require __DIR__.'/Http/routes.php';
             });
