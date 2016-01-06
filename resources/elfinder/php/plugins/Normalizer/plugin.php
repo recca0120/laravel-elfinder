@@ -68,7 +68,7 @@ class elFinderPluginNormalizer
     public function cmdPreprocess($cmd, &$args, $elfinder, $volume)
     {
         $opts = $this->getOpts($volume);
-        if (! $opts['enable']) {
+        if (!$opts['enable']) {
             return false;
         }
 
@@ -88,7 +88,7 @@ class elFinderPluginNormalizer
     public function onUpLoadPreSave(&$path, &$name, $src, $elfinder, $volume)
     {
         $opts = $this->getOpts($volume);
-        if (! $opts['enable']) {
+        if (!$opts['enable']) {
             return false;
         }
 
@@ -117,14 +117,14 @@ class elFinderPluginNormalizer
     {
         if ($opts['nfc'] || $opts['nfkc']) {
             if (class_exists('Normalizer', false)) {
-                if ($opts['nfc'] && ! Normalizer::isNormalized($str, Normalizer::FORM_C)) {
+                if ($opts['nfc'] && !Normalizer::isNormalized($str, Normalizer::FORM_C)) {
                     $str = Normalizer::normalize($str, Normalizer::FORM_C);
                 }
-                if ($opts['nfkc'] && ! Normalizer::isNormalized($str, Normalizer::FORM_KC)) {
+                if ($opts['nfkc'] && !Normalizer::isNormalized($str, Normalizer::FORM_KC)) {
                     $str = Normalizer::normalize($str, Normalizer::FORM_KC);
                 }
             } else {
-                if (! class_exists('I18N_UnicodeNormalizer', false)) {
+                if (!class_exists('I18N_UnicodeNormalizer', false)) {
                     @include_once 'I18N/UnicodeNormalizer.php';
                 }
                 if (class_exists('I18N_UnicodeNormalizer', false)) {

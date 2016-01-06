@@ -12,10 +12,10 @@ class elFinderVolumeFTPIIS extends elFinderVolumeFTP
      **/
     protected function connect()
     {
-        if (! ($this->connect = ftp_connect($this->options['host'], $this->options['port'], $this->options['timeout']))) {
+        if (!($this->connect = ftp_connect($this->options['host'], $this->options['port'], $this->options['timeout']))) {
             return $this->setError('Unable to connect to FTP server '.$this->options['host']);
         }
-        if (! ftp_login($this->connect, $this->options['user'], $this->options['pass'])) {
+        if (!ftp_login($this->connect, $this->options['user'], $this->options['pass'])) {
             $this->umount();
 
             return $this->setError('Unable to login into '.$this->options['host']);
@@ -28,7 +28,7 @@ class elFinderVolumeFTPIIS extends elFinderVolumeFTP
         ftp_pasv($this->connect, $this->options['mode'] == 'passive');
 
         // enter root folder
-        if (! ftp_chdir($this->connect, $this->root)) {
+        if (!ftp_chdir($this->connect, $this->root)) {
             $this->umount();
 
             return $this->setError('Unable to open root folder.');
@@ -134,4 +134,3 @@ class elFinderVolumeFTPIIS extends elFinderVolumeFTP
         return $items;
     }
 } // END class
-

@@ -118,9 +118,9 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
      **/
     public function netmountPrepare($options)
     {
-        if (! empty($_REQUEST['encoding']) && @iconv('UTF-8', $_REQUEST['encoding'], '') !== false) {
+        if (!empty($_REQUEST['encoding']) && @iconv('UTF-8', $_REQUEST['encoding'], '') !== false) {
             $options['encoding'] = $_REQUEST['encoding'];
-            if (! empty($_REQUEST['locale']) && @setlocale(LC_ALL, $_REQUEST['locale'])) {
+            if (!empty($_REQUEST['locale']) && @setlocale(LC_ALL, $_REQUEST['locale'])) {
                 setlocale(LC_ALL, elFinder::$locale);
                 $options['locale'] = $_REQUEST['locale'];
             }
@@ -146,23 +146,23 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
      **/
     protected function init()
     {
-        if (! $this->options['host']
-        ||  ! $this->options['port']) {
+        if (!$this->options['host']
+        ||  !$this->options['port']) {
             return $this->setError('Required options undefined.');
         }
 
-        if (! $this->options['user']) {
+        if (!$this->options['user']) {
             $this->options['user'] = 'anonymous';
             $this->options['pass'] = '';
         }
-        if (! $this->options['path']) {
+        if (!$this->options['path']) {
             $this->options['path'] = '/';
         }
 
         // make ney mount key
         $this->netMountKey = md5(implode('-', ['ftp', $this->options['host'], $this->options['port'], $this->options['path'], $this->options['user']]));
 
-        if (! function_exists('ftp_connect')) {
+        if (!function_exists('ftp_connect')) {
             return $this->setError('FTP extension not loaded.');
         }
 
@@ -199,17 +199,17 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
     {
         parent::configure();
 
-        if (! empty($this->options['tmpPath'])) {
+        if (!empty($this->options['tmpPath'])) {
             if ((is_dir($this->options['tmpPath']) || @mkdir($this->options['tmpPath'], 0755, true)) && is_writable($this->options['tmpPath'])) {
                 $this->tmp = $this->options['tmpPath'];
             }
         }
 
-        if (! $this->tmp && $this->tmbPath) {
+        if (!$this->tmp && $this->tmbPath) {
             $this->tmp = $this->tmbPath;
         }
 
-        if (! $this->tmp) {
+        if (!$this->tmp) {
             $this->disabled[] = 'mkfile';
             $this->disabled[] = 'paste';
             $this->disabled[] = 'duplicate';
@@ -231,10 +231,10 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
      **/
     protected function connect()
     {
-        if (! ($this->connect = ftp_connect($this->options['host'], $this->options['port'], $this->options['timeout']))) {
+        if (!($this->connect = ftp_connect($this->options['host'], $this->options['port'], $this->options['timeout']))) {
             return $this->setError('Unable to connect to FTP server '.$this->options['host']);
         }
-        if (! ftp_login($this->connect, $this->options['user'], $this->options['pass'])) {
+        if (!ftp_login($this->connect, $this->options['user'], $this->options['pass'])) {
             $this->umount();
 
             return $this->setError('Unable to login into '.$this->options['host']);
@@ -253,7 +253,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
         ftp_pasv($this->connect, $this->options['mode'] == 'passive');
 
         // enter root folder
-        if (! ftp_chdir($this->connect, $this->root)
+        if (!ftp_chdir($this->connect, $this->root)
         || $this->root != ftp_pwd($this->connect)) {
             $this->umount();
 
@@ -262,7 +262,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
 
         // check for MLST support
         $features = ftp_raw($this->connect, 'FEAT');
-        if (! is_array($features)) {
+        if (!is_array($features)) {
             $this->umount();
 
             return $this->setError('Server does not support command FEAT.');
@@ -308,10 +308,10 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
         $info = preg_split("/\s+/", $raw, 9);
         $stat = [];
 
-        if (! isset($this->ftpOsUnix)) {
-            $this->ftpOsUnix = ! preg_match('/\d/', substr($info[0], 0, 1));
+        if (!isset($this->ftpOsUnix)) {
+            $this->ftpOsUnix = !preg_match('/\d/', substr($info[0], 0, 1));
         }
-        if (! $this->ftpOsUnix) {
+        if (!$this->ftpOsUnix) {
             $info = $this->normalizeRawWindows($raw);
         }
 
@@ -327,7 +327,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
             if ($this->cacheDirTarget && $this->_joinPath($base, $name) !== $this->cacheDirTarget) {
                 return [];
             }
-            if (! $nameOnly) {
+            if (!$nameOnly) {
                 $target = trim($m[2]);
                 if (substr($target, 0, 1) !== $this->separator) {
                     $target = $this->getFullPath($target, $base);
@@ -344,7 +344,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
             return ['name' => $name];
         }
 
-        if (is_numeric($info[5]) && ! $info[6] && ! $info[7]) {
+        if (is_numeric($info[5]) && !$info[6] && !$info[7]) {
             // by normalizeRawWindows()
             $stat['ts'] = $info[5];
         } else {
@@ -605,7 +605,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
             }
 
             if (($comp != '..')
-            || (! $initial_slashes && ! $new_comps)
+            || (!$initial_slashes && !$new_comps)
             || ($new_comps && (end($new_comps) == '..'))) {
                 array_push($new_comps, $comp);
             } elseif ($new_comps) {
@@ -727,7 +727,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
         } else {
             $this->convEncIn();
         }
-        if (! $this->MLSTsupprt) {
+        if (!$this->MLSTsupprt) {
             if ($path === $this->root) {
                 return [
                     'name' => $this->root,
@@ -749,11 +749,11 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
                 list($key, $val) = explode('=', $part);
 
                 switch ($key) {
-                    case 'type' :
+                    case 'type':
                         $stat['mime'] = strpos($val, 'dir') !== false ? 'directory' : $this->mimetype($path);
                         break;
 
-                    case 'size' :
+                    case 'size':
                         $stat['size'] = $val;
                         break;
 
@@ -770,7 +770,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
                         $val = strtolower($val);
                         $stat['read'] = (int) preg_match('/e|l|r/', $val);
                         $stat['write'] = (int) preg_match('/w|m|c/', $val);
-                        if (! preg_match('/f|d/', $val)) {
+                        if (!preg_match('/f|d/', $val)) {
                             $stat['locked'] = 1;
                         }
                         break;
@@ -848,10 +848,10 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
     {
         foreach (ftp_rawlist($this->connect, $path) as $str) {
             $info = preg_split('/\s+/', $str, 9);
-            if (! isset($this->ftpOsUnix)) {
-                $this->ftpOsUnix = ! preg_match('/\d/', substr($info[0], 0, 1));
+            if (!isset($this->ftpOsUnix)) {
+                $this->ftpOsUnix = !preg_match('/\d/', substr($info[0], 0, 1));
             }
-            if (! $this->ftpOsUnix) {
+            if (!$this->ftpOsUnix) {
                 $info = $this->normalizeRawWindows($str);
             }
             $name = isset($info[8]) ? trim($info[8]) : '';
@@ -1128,7 +1128,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
     {
         $contents = '';
         if (($fp = $this->_fopen($path))) {
-            while (! feof($fp)) {
+            while (!feof($fp)) {
                 $contents .= fread($fp, 8192);
             }
             $this->_fclose($fp, $path);
@@ -1241,14 +1241,14 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
     protected function _extract($path, $arc)
     {
         $dir = $this->tempDir();
-        if (! $dir) {
+        if (!$dir) {
             return false;
         }
 
         $basename = $this->_basename($path);
         $localPath = $dir.DIRECTORY_SEPARATOR.$basename;
 
-        if (! ftp_get($this->connect, $localPath, $path, FTP_BINARY)) {
+        if (!ftp_get($this->connect, $localPath, $path, FTP_BINARY)) {
             //cleanup
             $this->rmdirRecursive($dir);
 
@@ -1287,7 +1287,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
         // archive contains one item - extract in archive dir
         $name = '';
         $src = $dir.DIRECTORY_SEPARATOR.$filesToProcess[0];
-        if (($extractTo === 'auto' || ! $extractTo) && count($filesToProcess) === 1 && is_file($src)) {
+        if (($extractTo === 'auto' || !$extractTo) && count($filesToProcess) === 1 && is_file($src)) {
             $name = $filesToProcess[0];
         } elseif ($extractTo === 'auto' || $extractTo) {
             // for several files - create new directory
@@ -1306,7 +1306,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
         if ($name !== '' && is_file($src)) {
             $result = $this->_joinPath(dirname($path), $name);
 
-            if (! ftp_put($this->connect, $result, $src, FTP_BINARY)) {
+            if (!ftp_put($this->connect, $result, $src, FTP_BINARY)) {
                 $this->rmdirRecursive($dir);
 
                 return false;
@@ -1315,7 +1315,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
             $dstDir = $this->_dirname($path);
             $result = [];
             if (is_dir($src)) {
-                if (! $dstDir = $this->_mkdir($dstDir, $name)) {
+                if (!$dstDir = $this->_mkdir($dstDir, $name)) {
                     $this->rmdirRecursive($dir);
 
                     return false;
@@ -1328,14 +1328,14 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
                 if (is_dir($src)) {
                     $p = dirname($name);
                     $name = basename($name);
-                    if (! $target = $this->_mkdir($this->_joinPath($dstDir, $p), $name)) {
+                    if (!$target = $this->_mkdir($this->_joinPath($dstDir, $p), $name)) {
                         $this->rmdirRecursive($dir);
 
                         return false;
                     }
                 } else {
                     $target = $this->_joinPath($dstDir, $name);
-                    if (! ftp_put($this->connect, $target, $src, FTP_BINARY)) {
+                    if (!ftp_put($this->connect, $target, $src, FTP_BINARY)) {
                         $this->rmdirRecursive($dir);
 
                         return false;
@@ -1343,7 +1343,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
                 }
                 $result[] = $target;
             }
-            if (! $result) {
+            if (!$result) {
                 $this->rmdirRecursive($dir);
 
                 return false;
@@ -1376,12 +1376,12 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
         $cwd = getcwd();
 
         $tmpDir = $this->tempDir();
-        if (! $tmpDir) {
+        if (!$tmpDir) {
             return false;
         }
 
         //download data
-        if (! $this->ftp_download_files($dir, $files, $tmpDir)) {
+        if (!$this->ftp_download_files($dir, $files, $tmpDir)) {
             //cleanup
             $this->rmdirRecursive($tmpDir);
 
@@ -1391,13 +1391,13 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
         $remoteArchiveFile = false;
         if ($path = $this->makeArchive($tmpDir, $files, $name, $arc)) {
             $remoteArchiveFile = $this->_joinPath($dir, $name);
-            if (! ftp_put($this->connect, $remoteArchiveFile, $path, FTP_BINARY)) {
+            if (!ftp_put($this->connect, $remoteArchiveFile, $path, FTP_BINARY)) {
                 $remoteArchiveFile = false;
             }
         }
 
         //cleanup
-        if (! $this->rmdirRecursive($tmpDir)) {
+        if (!$this->rmdirRecursive($tmpDir)) {
             return false;
         }
 
@@ -1412,19 +1412,19 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
     private function tempDir()
     {
         $tempPath = tempnam($this->tmp, 'elFinder');
-        if (! $tempPath) {
+        if (!$tempPath) {
             $this->setError(elFinder::ERROR_CREATING_TEMP_DIR, $this->tmp);
 
             return false;
         }
         $success = unlink($tempPath);
-        if (! $success) {
+        if (!$success) {
             $this->setError(elFinder::ERROR_CREATING_TEMP_DIR, $this->tmp);
 
             return false;
         }
         $success = mkdir($tempPath, 0700, true);
-        if (! $success) {
+        if (!$success) {
             $this->setError(elFinder::ERROR_CREATING_TEMP_DIR, $this->tmp);
 
             return false;
@@ -1457,18 +1457,18 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
         }
         foreach ($buff as $str) {
             $info = preg_split("/\s+/", $str, 9);
-            if (! isset($this->ftpOsUnix)) {
-                $this->ftpOsUnix = ! preg_match('/\d/', substr($info[0], 0, 1));
+            if (!isset($this->ftpOsUnix)) {
+                $this->ftpOsUnix = !preg_match('/\d/', substr($info[0], 0, 1));
             }
-            if (! $this->ftpOsUnix) {
+            if (!$this->ftpOsUnix) {
                 $info = $this->normalizeRawWindows($str);
             }
             $type = substr($info[0], 0, 1);
             $name = trim($info[8]);
-            if ($name !== '.' && $name !== '..' && (! $targets || isset($targets[$name]))) {
+            if ($name !== '.' && $name !== '..' && (!$targets || isset($targets[$name]))) {
                 switch ($type) {
-                    case 'l' : //omit symbolic links
-                    case 'd' :
+                    case 'l': //omit symbolic links
+                    case 'd':
                         $remote_file_path = $this->_joinPath($remote_directory, $name);
                         $item = [];
                         $item['path'] = $remote_file_path;
@@ -1502,7 +1502,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
     private function ftp_download_files($remote_directory, array $files, $dest_local_directory)
     {
         $contents = $this->ftp_scan_dir($remote_directory, $files);
-        if (! isset($contents)) {
+        if (!isset($contents)) {
             $this->setError(elFinder::ERROR_FTP_DOWNLOAD_FILE, $remote_directory);
 
             return false;
@@ -1521,7 +1521,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
                 default:
                     $success = true;
             }
-            if (! $success) {
+            if (!$success) {
                 $this->setError(elFinder::ERROR_FTP_DOWNLOAD_FILE, $remote_directory);
 
                 return false;
@@ -1540,7 +1540,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
      */
     private function deleteDir($dirPath)
     {
-        if (! is_dir($dirPath)) {
+        if (!is_dir($dirPath)) {
             $success = unlink($dirPath);
         } else {
             $success = true;
@@ -1553,7 +1553,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
                 } else {
                     $success = unlink($path);
                 }
-                if (! $success) {
+                if (!$success) {
                     break;
                 }
             }
@@ -1561,7 +1561,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
                 $success = rmdir($dirPath);
             }
         }
-        if (! $success) {
+        if (!$success) {
             $this->setError(elFinder::ERROR_RM, $dirPath);
 
             return false;
@@ -1585,17 +1585,17 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
      */
     private static function listFilesInDirectory($dir, $omitSymlinks, $prefix = '')
     {
-        if (! is_dir($dir)) {
+        if (!is_dir($dir)) {
             return false;
         }
         $excludes = ['.', '..'];
         $result = [];
         $files = scandir($dir);
-        if (! $files) {
+        if (!$files) {
             return [];
         }
         foreach ($files as $file) {
-            if (! in_array($file, $excludes)) {
+            if (!in_array($file, $excludes)) {
                 $path = $dir.DIRECTORY_SEPARATOR.$file;
                 if (is_link($path)) {
                     if ($omitSymlinks) {
@@ -1618,4 +1618,3 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
         return $result;
     }
 } // END class
-
