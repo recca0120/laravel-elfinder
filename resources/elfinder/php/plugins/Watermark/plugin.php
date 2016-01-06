@@ -78,7 +78,7 @@ class elFinderPluginWatermark
             $opts = array_merge($this->opts, $volOpts);
         }
 
-        if (! $opts['enable']) {
+        if (!$opts['enable']) {
             return false;
         }
 
@@ -93,12 +93,12 @@ class elFinderPluginWatermark
         }
 
         // check water mark image
-        if (! file_exists($opts['source'])) {
+        if (!file_exists($opts['source'])) {
             $opts['source'] = dirname(__FILE__).'/'.$opts['source'];
         }
         if (is_readable($opts['source'])) {
             $watermarkImgInfo = @getimagesize($opts['source']);
-            if (! $watermarkImgInfo) {
+            if (!$watermarkImgInfo) {
                 return false;
             }
         } else {
@@ -118,7 +118,7 @@ class elFinderPluginWatermark
             IMAGETYPE_PNG  => IMG_PNG,
             IMAGETYPE_WBMP => IMG_WBMP,
         ];
-        if (! ($opts['targetType'] & $imgTypes[$srcImgInfo[2]])) {
+        if (!($opts['targetType'] & $imgTypes[$srcImgInfo[2]])) {
             return false;
         }
 
@@ -216,7 +216,7 @@ class elFinderPluginWatermark
                 break;
         }
 
-        if (! $ermsg) {
+        if (!$ermsg) {
             switch ($srcImgInfo['mime']) {
                 case 'image/gif':
                     if (@imagetypes() & IMG_GIF) {

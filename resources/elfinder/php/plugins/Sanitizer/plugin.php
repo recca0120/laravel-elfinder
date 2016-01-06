@@ -60,7 +60,7 @@ class elFinderPluginSanitizer
     public function cmdPreprocess($cmd, &$args, $elfinder, $volume)
     {
         $opts = $this->getOpts($volume);
-        if (! $opts['enable']) {
+        if (!$opts['enable']) {
             return false;
         }
 
@@ -80,7 +80,7 @@ class elFinderPluginSanitizer
     public function onUpLoadPreSave(&$path, &$name, $src, $elfinder, $volume)
     {
         $opts = $this->getOpts($volume);
-        if (! $opts['enable']) {
+        if (!$opts['enable']) {
             return false;
         }
 
