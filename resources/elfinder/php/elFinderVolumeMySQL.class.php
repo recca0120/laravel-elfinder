@@ -1008,3 +1008,4 @@ class elFinderVolumeMySQL extends elFinderVolumeDriver
         return false;
     }
 } // END class
+

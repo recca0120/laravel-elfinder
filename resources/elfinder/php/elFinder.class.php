@@ -2647,3 +2647,4 @@ class elFinder
         return $data;
     }
 } // END class
+

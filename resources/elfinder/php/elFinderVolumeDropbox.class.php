@@ -1611,3 +1611,4 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
         return false;
     }
 } // END class
+

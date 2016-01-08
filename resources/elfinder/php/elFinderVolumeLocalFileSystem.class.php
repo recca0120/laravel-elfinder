@@ -1184,3 +1184,4 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
         return $result;
     }
 } // END class
+

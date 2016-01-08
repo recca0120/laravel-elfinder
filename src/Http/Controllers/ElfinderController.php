@@ -4,7 +4,7 @@ namespace Recca0120\Elfinder\Http\Controllers;
 
 use Closure;
 use elFinder;
-use File;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Routing\Controller;
 use Recca0120\Elfinder\Connector;
 
@@ -15,7 +15,7 @@ class ElfinderController extends Controller
         return view('elfinder::elfinder');
     }
 
-    public function connector()
+    public function connector(Filesystem $filesystem)
     {
         $options = config('elfinder.options');
 
@@ -38,8 +38,8 @@ class ElfinderController extends Controller
                         $root['URL'] = url(str_replace('{user_id}', $userId, $root['URL']));
                     }
 
-                    if (File::exists($root['path']) === false) {
-                        File::makeDirectory($root['path'], 0755, true);
+                    if ($filesystem->exists($root['path']) === false) {
+                        $filesystem->makeDirectory($root['path'], 0755, true);
                     }
 
                     $root = array_merge([
@@ -63,10 +63,10 @@ class ElfinderController extends Controller
         return with(new Connector(new elFinder($options)))->run();
     }
 
-    public function sound($file)
+    public function sound(Filesystem $filesystem, $file)
     {
         $file = __DIR__.'/../../../resources/elfinder/sounds/'.$file;
-        $mimeType = File::mimeType($file);
+        $mimeType = $filesystem->mimeType($file);
 
         return response(file_get_contents($file), 200, [
             'content-type' => $mimeType,

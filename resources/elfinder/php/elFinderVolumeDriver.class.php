@@ -5159,3 +5159,4 @@ abstract class elFinderVolumeDriver
      **/
     abstract protected function _chmod($path, $mode);
 } // END class
+
