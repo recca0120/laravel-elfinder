@@ -22,7 +22,7 @@ Route::group(['middleware' => config('elfinder.middleware')], function () {
         'uses' => 'ElfinderController@connector',
     ]);
 
-    Route::get('/sounds/{file}', [
+    Route::get('sounds/{file}', [
         'as'   => 'sound',
         'uses' => 'ElfinderController@sound',
     ]);
