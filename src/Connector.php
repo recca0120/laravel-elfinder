@@ -10,8 +10,19 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Connector extends elFinderConnector
 {
+    /**
+     * response.
+     *
+     * @var mixed
+     */
     protected $response;
 
+    /**
+     * output.
+     *
+     * @param  array $data
+     * @return mixed
+     */
     protected function output(array $data)
     {
         // clear output buffer
@@ -99,6 +110,11 @@ class Connector extends elFinderConnector
         return $this->response = new JsonResponse($data, 200, $headers);
     }
 
+    /**
+     * run.
+     *
+     * @return mixed
+     */
     public function run()
     {
         parent::run();

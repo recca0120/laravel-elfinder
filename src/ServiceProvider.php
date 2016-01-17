@@ -7,12 +7,26 @@ use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class ServiceProvider extends BaseServiceProvider
 {
+    /**
+     * namespace.
+     *
+     * @var string
+     */
     protected $namespace = 'Recca0120\Elfinder\Http\Controllers';
 
+    /**
+     * prefix.
+     *
+     * @var string
+     */
     protected $prefix = 'elfinder';
 
-    protected $router;
-
+    /**
+     * handle routes.
+     *
+     * @param  \Illuminate\Routing\Router $router
+     * @return void
+     */
     public function boot(Router $router)
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'elfinder');
@@ -20,10 +34,21 @@ class ServiceProvider extends BaseServiceProvider
         $this->handleRoutes($router);
     }
 
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
     public function register()
     {
     }
 
+    /**
+     * handle routes.
+     *
+     * @param  \Illuminate\Routing\Router $router
+     * @return void
+     */
     protected function handleRoutes(Router $router)
     {
         if ($this->app->routesAreCached() === false) {
@@ -37,6 +62,11 @@ class ServiceProvider extends BaseServiceProvider
         }
     }
 
+    /**
+     * handle publishes.
+     *
+     * @return void
+     */
     protected function handlePublishes()
     {
         $this->publishes([
