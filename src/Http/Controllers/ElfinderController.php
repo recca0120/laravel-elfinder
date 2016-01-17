@@ -10,11 +10,22 @@ use Recca0120\Elfinder\Connector;
 
 class ElfinderController extends Controller
 {
+    /**
+     * elfinder.
+     *
+     * @return mixed
+     */
     public function elfinder()
     {
         return view('elfinder::elfinder');
     }
 
+    /**
+     * connector.
+     *
+     * @param  \Illuminate\Filesystem\Filesystem $filesystem
+     * @return mixed
+     */
     public function connector(Filesystem $filesystem)
     {
         $options = config('elfinder.options');
@@ -63,6 +74,13 @@ class ElfinderController extends Controller
         return with(new Connector(new elFinder($options)))->run();
     }
 
+    /**
+     * sound.
+     *
+     * @param  Filesystem $filesystem
+     * @param  string $file
+     * @return \Illuminate\Http\Response
+     */
     public function sound(Filesystem $filesystem, $file)
     {
         $file = __DIR__.'/../../../resources/elfinder/sounds/'.$file;
