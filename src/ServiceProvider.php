@@ -27,11 +27,10 @@ class ServiceProvider extends BaseServiceProvider
      * @param  \Illuminate\Routing\Router $router
      * @return void
      */
-    public function boot(Router $router)
+    public function boot()
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'elfinder');
         $this->handlePublishes();
-        $this->handleRoutes($router);
     }
 
     /**
@@ -41,18 +40,20 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(__DIR__.'/../config/elfinder.php', 'elfinder');
+        $this->app->call([$this, 'registerRoutes']);
     }
 
     /**
-     * handle routes.
+     * register routes.
      *
-     * @param  \Illuminate\Routing\Router $router
+     * @param  Illuminate\Routing\Router $router
      * @return void
      */
-    protected function handleRoutes(Router $router)
+    public function registerRoutes(Router $router)
     {
         if ($this->app->routesAreCached() === false) {
-            $group = $router->group([
+            $router->group([
                 'namespace' => $this->namespace,
                 'as'        => 'elfinder::',
                 'prefix'    => $this->prefix,
@@ -80,7 +81,5 @@ class ServiceProvider extends BaseServiceProvider
         $this->publishes([
             __DIR__.'/../config/elfinder.php' => config_path('elfinder.php'),
         ], 'config');
-
-        $this->mergeConfigFrom(__DIR__.'/../config/elfinder.php', 'elfinder');
     }
 }
