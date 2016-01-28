@@ -1,12 +1,7 @@
 <?php
 
-$middleware = ['auth'];
-if (method_exists(app(), 'bindShared') === false) {
-    $middleware = array_merge(['web'], $middleware);
-}
-
 return [
-    'middleware' => $middleware,
+    'middleware' => ['auth'],
     'options'    => [
         'locale' => 'en_US.UTF-8',
         'debug'  => false,
