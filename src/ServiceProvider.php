@@ -53,10 +53,14 @@ class ServiceProvider extends BaseServiceProvider
     public function registerRoutes(Router $router)
     {
         if ($this->app->routesAreCached() === false) {
+            $middleware = config('elfinder.middleware');
+            $middleware = (version_compare($this->app->version(), 5.2, '>=') === true) ?
+                array_merge(['web'], $middleware) : $middleware;
             $router->group([
-                'namespace' => $this->namespace,
-                'as'        => 'elfinder::',
-                'prefix'    => $this->prefix,
+                'as'         => 'elfinder::',
+                'middleware' => $middleware,
+                'namespace'  => $this->namespace,
+                'prefix'     => $this->prefix,
             ], function () {
                 require __DIR__.'/Http/routes.php';
             });

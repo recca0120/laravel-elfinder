@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['middleware' => config('elfinder.middleware')], function () {
+Route::group([], function () {
     Route::get('/', [
         'as'   => 'elfinder',
         'uses' => 'ElfinderController@elfinder',
