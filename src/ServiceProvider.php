@@ -24,7 +24,8 @@ class ServiceProvider extends BaseServiceProvider
     /**
      * handle routes.
      *
-     * @param  \Illuminate\Routing\Router $router
+     * @param \Illuminate\Routing\Router $router
+     *
      * @return void
      */
     public function boot()
@@ -47,7 +48,8 @@ class ServiceProvider extends BaseServiceProvider
     /**
      * register routes.
      *
-     * @param  Illuminate\Routing\Router $router
+     * @param Illuminate\Routing\Router $router
+     *
      * @return void
      */
     public function registerRoutes(Router $router)

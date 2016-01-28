@@ -20,7 +20,8 @@ class Connector extends elFinderConnector
     /**
      * output.
      *
-     * @param  array $data
+     * @param array $data
+     *
      * @return mixed
      */
     protected function output(array $data)

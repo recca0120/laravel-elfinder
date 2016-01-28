@@ -289,8 +289,8 @@ class elFinderPluginWatermark
                 break;
         }
 
-        imageDestroy($oSrcImg);
-        imageDestroy($oWatermarkImg);
+        imagedestroy($oSrcImg);
+        imagedestroy($oWatermarkImg);
 
         return true;
     }
