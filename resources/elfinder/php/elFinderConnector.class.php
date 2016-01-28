@@ -235,4 +235,3 @@ class elFinderConnector
         return $res;
     }
 }// END class
-

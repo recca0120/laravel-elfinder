@@ -2518,7 +2518,7 @@ class elFinder
     {
         $time = explode(' ', microtime());
 
-        return (double) $time[1] + (double) $time[0];
+        return (float) $time[1] + (float) $time[0];
     }
 
     /***************************************************************************/
@@ -2647,4 +2647,3 @@ class elFinder
         return $data;
     }
 } // END class
-

@@ -134,4 +134,3 @@ class elFinderVolumeFTPIIS extends elFinderVolumeFTP
         return $items;
     }
 } // END class
-

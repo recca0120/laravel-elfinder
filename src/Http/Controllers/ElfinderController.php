@@ -23,7 +23,8 @@ class ElfinderController extends Controller
     /**
      * connector.
      *
-     * @param  \Illuminate\Filesystem\Filesystem $filesystem
+     * @param \Illuminate\Filesystem\Filesystem $filesystem
+     *
      * @return mixed
      */
     public function connector(Filesystem $filesystem)
@@ -77,8 +78,9 @@ class ElfinderController extends Controller
     /**
      * sound.
      *
-     * @param  Filesystem $filesystem
-     * @param  string $file
+     * @param Filesystem $filesystem
+     * @param string     $file
+     *
      * @return \Illuminate\Http\Response
      */
     public function sound(Filesystem $filesystem, $file)

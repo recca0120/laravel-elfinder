@@ -4250,12 +4250,12 @@ abstract class elFinderVolumeDriver
                 $degree = 360 - $degree;
                 list($r, $g, $b) = sscanf($bgcolor, '#%02x%02x%02x');
                 $bgcolor = imagecolorallocate($img, $r, $g, $b);
-                $tmp = imageRotate($img, $degree, (int) $bgcolor);
+                $tmp = imagerotate($img, $degree, (int) $bgcolor);
 
                 $result = self::gdImage($tmp, $path, $destformat, $s['mime']);
 
-                imageDestroy($img);
-                imageDestroy($tmp);
+                imagedestroy($img);
+                imagedestroy($tmp);
 
                 return $result ? $path : false;
 
@@ -5159,4 +5159,3 @@ abstract class elFinderVolumeDriver
      **/
     abstract protected function _chmod($path, $mode);
 } // END class
-
