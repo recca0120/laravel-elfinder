@@ -68,7 +68,7 @@ class elFinderPluginAutoResize
             $opts = array_merge($this->opts, $volOpts);
         }
 
-        if (! $opts['enable']) {
+        if (!$opts['enable']) {
             return false;
         }
 
@@ -84,7 +84,7 @@ class elFinderPluginAutoResize
                 IMAGETYPE_PNG  => IMG_PNG,
                 IMAGETYPE_WBMP => IMG_WBMP,
         ];
-        if (! ($opts['targetType'] & $imgTypes[$srcImgInfo[2]])) {
+        if (!($opts['targetType'] & $imgTypes[$srcImgInfo[2]])) {
             return false;
         }
 
@@ -146,7 +146,7 @@ class elFinderPluginAutoResize
         }
 
         if ($oSrcImg &&  false != ($tmp = imagecreatetruecolor($width, $height))) {
-            if (! imagecopyresampled($tmp, $oSrcImg, 0, 0, 0, 0, $width, $height, $srcImgInfo[0], $srcImgInfo[1])) {
+            if (!imagecopyresampled($tmp, $oSrcImg, 0, 0, 0, 0, $width, $height, $srcImgInfo[0], $srcImgInfo[1])) {
                 return false;
             }
 

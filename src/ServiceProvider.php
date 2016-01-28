@@ -24,7 +24,8 @@ class ServiceProvider extends BaseServiceProvider
     /**
      * handle routes.
      *
-     * @param  \Illuminate\Routing\Router $router
+     * @param \Illuminate\Routing\Router $router
+     *
      * @return void
      */
     public function boot()
@@ -47,16 +48,21 @@ class ServiceProvider extends BaseServiceProvider
     /**
      * register routes.
      *
-     * @param  Illuminate\Routing\Router $router
+     * @param Illuminate\Routing\Router $router
+     *
      * @return void
      */
     public function registerRoutes(Router $router)
     {
         if ($this->app->routesAreCached() === false) {
+            $middleware = config('elfinder.middleware');
+            $middleware = (version_compare($this->app->version(), 5.2, '>=') === true) ?
+                array_merge(['web'], $middleware) : $middleware;
             $router->group([
-                'namespace' => $this->namespace,
-                'as'        => 'elfinder::',
-                'prefix'    => $this->prefix,
+                'as'         => 'elfinder::',
+                'middleware' => $middleware,
+                'namespace'  => $this->namespace,
+                'prefix'     => $this->prefix,
             ], function () {
                 require __DIR__.'/Http/routes.php';
             });
