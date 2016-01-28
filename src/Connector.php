@@ -20,7 +20,8 @@ class Connector extends elFinderConnector
     /**
      * output.
      *
-     * @param  array $data
+     * @param array $data
+     *
      * @return mixed
      */
     protected function output(array $data)
@@ -45,7 +46,7 @@ class Connector extends elFinderConnector
             if (elFinder::isSeekableStream($fp)) {
                 $headers['Accept-Ranges'] = 'bytes';
                 $psize = null;
-                if (! empty($_SERVER['HTTP_RANGE'])) {
+                if (!empty($_SERVER['HTTP_RANGE'])) {
                     $size = $data['info']['size'];
                     $start = 0;
                     $end = $size - 1;
@@ -55,7 +56,7 @@ class Connector extends elFinderConnector
                                 $start = $size - $matches[2];
                             } else {
                                 $start = intval($matches[1]);
-                                if (! empty($matches[2])) {
+                                if (!empty($matches[2])) {
                                     $end = intval($matches[2]);
                                     if ($end >= $size) {
                                         $end = $size - 1;
@@ -96,14 +97,14 @@ class Connector extends elFinderConnector
                     fclose($out);
                 }
 
-                if (! empty($data['volume'])) {
+                if (!empty($data['volume'])) {
                     $data['volume']->close($data['pointer'], $data['info']['hash']);
                 }
 
             }, $status, $headers);
         }
 
-        if (! empty($data['raw']) && ! empty($data['error'])) {
+        if (!empty($data['raw']) && !empty($data['error'])) {
             return $this->response = new JsonResponse($data['error'], 500, $headers);
         }
 

@@ -144,7 +144,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
         }
 
         if ($options['user'] === 'init') {
-            if (! $this->dropbox_phpFound || empty($options['consumerKey']) || empty($options['consumerSecret']) || ! class_exists('PDO', false)) {
+            if (!$this->dropbox_phpFound || empty($options['consumerKey']) || empty($options['consumerSecret']) || !class_exists('PDO', false)) {
                 return ['exit' => true, 'body' => '{msg:errNetMountNoDriver}'];
             }
 
@@ -154,7 +154,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
                 if (class_exists('OAuth', false)) {
                     $this->oauth = new Dropbox_OAuth_PHP($options['consumerKey'], $options['consumerSecret']);
                 } else {
-                    if (! class_exists('HTTP_OAuth_Consumer', false)) {
+                    if (!class_exists('HTTP_OAuth_Consumer', false)) {
                         // We're going to try to load in manually
                         include 'HTTP/OAuth/Consumer.php';
                     }
@@ -164,7 +164,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
                 }
             }
 
-            if (! $this->oauth) {
+            if (!$this->oauth) {
                 return ['exit' => true, 'body' => '{msg:errNetMountNoDriver}'];
             }
 
@@ -185,13 +185,13 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
                         unset($_SESSION['elFinderDropboxTokens']);
                     }
                 }
-                if (! $html) {
+                if (!$html) {
                     // get customdata
                     $cdata = '';
                     $innerKeys = ['cmd', 'host', 'options', 'pass', 'protocol', 'user'];
                     $this->ARGS = $_SERVER['REQUEST_METHOD'] === 'POST' ? $_POST : $_GET;
                     foreach ($this->ARGS as $k => $v) {
-                        if (! in_array($k, $innerKeys)) {
+                        if (!in_array($k, $innerKeys)) {
                             $cdata .= '&'.$k.'='.rawurlencode($v);
                         }
                     }
@@ -302,14 +302,14 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
      **/
     protected function init()
     {
-        if (! class_exists('PDO', false)) {
+        if (!class_exists('PDO', false)) {
             return $this->setError('PHP PDO class is require.');
         }
 
-        if (! $this->options['consumerKey']
-        ||  ! $this->options['consumerSecret']
-        ||  ! $this->options['accessToken']
-        ||  ! $this->options['accessTokenSecret']) {
+        if (!$this->options['consumerKey']
+        ||  !$this->options['consumerSecret']
+        ||  !$this->options['accessToken']
+        ||  !$this->options['accessTokenSecret']) {
             return $this->setError('Required options undefined.');
         }
 
@@ -320,14 +320,14 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
         // make net mount key
         $this->netMountKey = md5(implode('-', ['dropbox', $this->options['path']]));
 
-        if (! $this->oauth) {
+        if (!$this->oauth) {
             if (defined('ELFINDER_DROPBOX_USE_CURL_PUT')) {
                 $this->oauth = new Dropbox_OAuth_Curl($this->options['consumerKey'], $this->options['consumerSecret']);
             } else {
                 if (class_exists('OAuth', false)) {
                     $this->oauth = new Dropbox_OAuth_PHP($this->options['consumerKey'], $this->options['consumerSecret']);
                 } else {
-                    if (! class_exists('HTTP_OAuth_Consumer', false)) {
+                    if (!class_exists('HTTP_OAuth_Consumer', false)) {
                         // We're going to try to load in manually
                         include 'HTTP/OAuth/Consumer.php';
                     }
@@ -338,7 +338,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
             }
         }
 
-        if (! $this->oauth) {
+        if (!$this->oauth) {
             return $this->setError('OAuth extension not loaded.');
         }
 
@@ -376,35 +376,35 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
         $this->dropboxUid = $this->options['dropboxUid'];
         $this->tmbPrefix = 'dropbox'.base_convert($this->dropboxUid, 10, 32);
 
-        if (! empty($this->options['tmpPath'])) {
+        if (!empty($this->options['tmpPath'])) {
             if ((is_dir($this->options['tmpPath']) || @mkdir($this->options['tmpPath'])) && is_writable($this->options['tmpPath'])) {
                 $this->tmp = $this->options['tmpPath'];
             }
         }
-        if (! $this->tmp && is_writable($this->options['tmbPath'])) {
+        if (!$this->tmp && is_writable($this->options['tmbPath'])) {
             $this->tmp = $this->options['tmbPath'];
         }
 
-        if (! empty($this->options['metaCachePath'])) {
+        if (!empty($this->options['metaCachePath'])) {
             if ((is_dir($this->options['metaCachePath']) || @mkdir($this->options['metaCachePath'])) && is_writable($this->options['metaCachePath'])) {
                 $this->metaCache = $this->options['metaCachePath'];
             }
         }
-        if (! $this->metaCache && $this->tmp) {
+        if (!$this->metaCache && $this->tmp) {
             $this->metaCache = $this->tmp;
         }
 
-        if (! $this->tmp) {
+        if (!$this->tmp) {
             $this->disabled[] = 'archive';
             $this->disabled[] = 'extract';
         }
 
-        if (! $this->metaCache) {
+        if (!$this->metaCache) {
             return $this->setError('Cache dirctory (metaCachePath or tmp) is require.');
         }
 
         // setup PDO
-        if (! $this->options['PDO_DSN']) {
+        if (!$this->options['PDO_DSN']) {
             $this->options['PDO_DSN'] = 'sqlite:'.$this->metaCache.DIRECTORY_SEPARATOR.'.elFinder_dropbox_db_'.md5($this->dropboxUid.$this->options['consumerSecret']);
         }
         // DataBase table name
@@ -412,14 +412,14 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
         // DataBase check or make table
         try {
             $this->DB = new PDO($this->options['PDO_DSN'], $this->options['PDO_User'], $this->options['PDO_Pass'], $this->options['PDO_Options']);
-            if (! $this->checkDB()) {
+            if (!$this->checkDB()) {
                 return $this->setError('Can not make DB table');
             }
         } catch (PDOException $e) {
             return $this->setError('PDO connection failed: '.$e->getMessage());
         }
 
-        $res = $this->deltaCheck(! empty($_REQUEST['reload']) && strpos($_REQUEST['target'], $this->id) === 0);
+        $res = $this->deltaCheck(!empty($_REQUEST['reload']) && strpos($_REQUEST['target'], $this->id) === 0);
         if ($res !== true) {
             if (is_string($res)) {
                 return $this->setError($res);
@@ -442,7 +442,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
     {
         parent::configure();
 
-        if (! $this->tmp) {
+        if (!$this->tmp) {
             $this->disabled[] = 'archive';
             $this->disabled[] = 'extract';
         }
@@ -459,13 +459,13 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
         if ($res && isset($_REQUEST['init'])) {
             // check is index(nameidx) UNIQUE?
             $chk = $this->query('SELECT sql FROM sqlite_master WHERE type=\'index\' and name=\'nameidx\'');
-            if (! $chk || strpos(strtoupper($chk[0]), 'UNIQUE') === false) {
+            if (!$chk || strpos(strtoupper($chk[0]), 'UNIQUE') === false) {
                 // remake
                 $this->DB->exec('DROP TABLE '.$this->DB_TableName);
                 $res = false;
             }
         }
-        if (! $res) {
+        if (!$res) {
             try {
                 $this->DB->exec('CREATE TABLE '.$this->DB_TableName.'(path text, fname text, dat blob, isdir integer);');
                 $this->DB->exec('CREATE UNIQUE INDEX nameidx ON '.$this->DB_TableName.'(path, fname)');
@@ -552,7 +552,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
     protected function deltaCheck($refresh = true)
     {
         $chk = false;
-        if (! $refresh && $chk = $this->query('select dat from '.$this->DB_TableName.' where path=\'\' and fname=\'\' limit 1')) {
+        if (!$refresh && $chk = $this->query('select dat from '.$this->DB_TableName.' where path=\'\' and fname=\'\' limit 1')) {
             $chk = unserialize($chk[0]);
         }
         if ($chk && ($chk['mtime'] + $this->options['metaCacheTime']) > $_SERVER['REQUEST_TIME']) {
@@ -574,7 +574,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
             do {
                 @ini_set('max_execution_time', 120);
                 $_info = $this->dropbox->delta($cursor);
-                if (! empty($_info['reset'])) {
+                if (!empty($_info['reset'])) {
                     $this->DB->exec('TRUNCATE table '.$this->DB_TableName);
                     $this->DB->exec('insert into '.$this->DB_TableName.' values(\'\', \'\', \''.serialize(['cursor' => '', 'mtime' => 0]).'\', 0);');
                     $this->DB->exec('insert into '.$this->DB_TableName.' values(\'/\', \'\', \''.serialize([
@@ -597,20 +597,20 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
 
                     if (empty($entry[1])) {
                         $this->DB->exec('delete from '.$this->DB_TableName.' '.$where);
-                        ! $delete && $delete = true;
+                        !$delete && $delete = true;
                         continue;
                     }
 
                     $sql = 'select path from '.$this->DB_TableName.' '.$where.' limit 1';
-                    if (! $reset && $this->query($sql)) {
+                    if (!$reset && $this->query($sql)) {
                         $this->DB->exec('update '.$this->DB_TableName.' set dat='.$this->DB->quote(serialize($entry[1])).', isdir='.($entry[1]['is_dir'] ? 1 : 0).' '.$where);
                     } else {
                         $this->DB->exec('insert into '.$this->DB_TableName.' values ('.$path.', '.$fname.', '.$this->DB->quote(serialize($entry[1])).', '.(int) $entry[1]['is_dir'].')');
                     }
                 }
-            } while (! empty($_info['has_more']));
+            } while (!empty($_info['has_more']));
             $this->DB->exec('update '.$this->DB_TableName.' set dat='.$this->DB->quote(serialize(['cursor' => $cursor, 'mtime' => $_SERVER['REQUEST_TIME']])).' where path=\'\' and fname=\'\'');
-            if (! $this->DB->commit()) {
+            if (!$this->DB->commit()) {
                 $e = $this->DB->errorInfo();
 
                 return $e[2];
@@ -649,7 +649,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
             $stat['dirs'] = (int) (bool) $this->query('select path from '.$this->DB_TableName.' where isdir=1 and path='.$this->DB->quote(strtolower($raw['path'])));
         }
 
-        if (! empty($raw['url'])) {
+        if (!empty($raw['url'])) {
             $stat['url'] = $raw['url'];
         } else {
             $stat['url'] = '1';
@@ -714,10 +714,10 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
             foreach ($res as $raw) {
                 $raw = unserialize($raw);
                 if ($stat = $this->parseRaw($raw)) {
-                    if (! isset($this->cache[$raw['path']])) {
+                    if (!isset($this->cache[$raw['path']])) {
                         $stat = $this->updateCache($raw['path'], $stat);
                     }
-                    if (! empty($stat['hidden']) || ($mimes && $stat['mime'] === 'directory') || ! $this->mimeAccepted($stat['mime'], $mimes)) {
+                    if (!empty($stat['hidden']) || ($mimes && $stat['mime'] === 'directory') || !$this->mimeAccepted($stat['mime'], $mimes)) {
                         continue;
                     }
                     $result[] = $this->stat($raw['path']);
@@ -772,16 +772,16 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
             return $this->setError(elFinder::ERROR_RM, $this->_path($path), elFinder::ERROR_FILE_NOT_FOUND);
         }
 
-        if (! $force && ! empty($stat['locked'])) {
+        if (!$force && !empty($stat['locked'])) {
             return $this->setError(elFinder::ERROR_LOCKED, $this->_path($path));
         }
 
         if ($stat['mime'] == 'directory') {
-            if (! $recursive && ! $this->_rmdir($path)) {
+            if (!$recursive && !$this->_rmdir($path)) {
                 return $this->setError(elFinder::ERROR_RM, $this->_path($path));
             }
         } else {
-            if (! $recursive && ! $this->_unlink($path)) {
+            if (!$recursive && !$this->_unlink($path)) {
                 return $this->setError(elFinder::ERROR_RM, $this->_path($path));
             }
         }
@@ -804,7 +804,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
      **/
     protected function createTmb($path, $stat)
     {
-        if (! $stat || ! $this->canCreateTmb($path, $stat)) {
+        if (!$stat || !$this->canCreateTmb($path, $stat)) {
             return false;
         }
 
@@ -812,10 +812,10 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
         $tmb = $this->tmbPath.DIRECTORY_SEPARATOR.$name;
 
         // copy image into tmbPath so some drivers does not store files on local fs
-        if (! $data = $this->getThumbnail($path, $this->options['getTmbSize'])) {
+        if (!$data = $this->getThumbnail($path, $this->options['getTmbSize'])) {
             return false;
         }
-        if (! file_put_contents($tmb, $data)) {
+        if (!file_put_contents($tmb, $data)) {
             return false;
         }
 
@@ -834,7 +834,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
             if ($this->options['tmbCrop']) {
 
                 /* Resize and crop if image bigger than thumbnail */
-                if (! (($s[0] > $tmbSize && $s[1] <= $tmbSize) || ($s[0] <= $tmbSize && $s[1] > $tmbSize)) || ($s[0] > $tmbSize && $s[1] > $tmbSize)) {
+                if (!(($s[0] > $tmbSize && $s[1] <= $tmbSize) || ($s[0] <= $tmbSize && $s[1] > $tmbSize)) || ($s[0] > $tmbSize && $s[1] > $tmbSize)) {
                     $result = $this->imgResize($tmb, $tmbSize, $tmbSize, true, false, 'png');
                 }
 
@@ -850,7 +850,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
             $result = $this->imgSquareFit($tmb, $tmbSize, $tmbSize, 'center', 'middle', $this->options['tmbBgColor'], 'png');
         }
 
-        if (! $result) {
+        if (!$result) {
             unlink($tmb);
 
             return false;
@@ -902,7 +902,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
      **/
     public function getContentUrl($hash, $options = [])
     {
-        if (($file = $this->file($hash)) == false || ! $file['url'] || $file['url'] == 1) {
+        if (($file = $this->file($hash)) == false || !$file['url'] || $file['url'] == 1) {
             $path = $this->decode($hash);
             $cache = $this->getDBdat($path);
             $url = '';
@@ -914,7 +914,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
                     }
                 }
             }
-            if (! $url) {
+            if (!$url) {
                 try {
                     $res = $this->dropbox->share($path, null, false);
                     $url = $res['url'];
@@ -926,7 +926,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
                     }
                     list($url) = explode('?', $url);
                     $url = str_replace('www.dropbox.com', $this->dropbox_dlhost, $url);
-                    if (! isset($cache['share']) || $cache['share'] !== $url) {
+                    if (!isset($cache['share']) || $cache['share'] !== $url) {
                         $cache['share'] = $url;
                         $this->updateDBdat($path, $cache);
                     }
@@ -1611,4 +1611,3 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
         return false;
     }
 } // END class
-

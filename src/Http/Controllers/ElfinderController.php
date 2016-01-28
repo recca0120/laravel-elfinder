@@ -23,7 +23,8 @@ class ElfinderController extends Controller
     /**
      * connector.
      *
-     * @param  \Illuminate\Filesystem\Filesystem $filesystem
+     * @param \Illuminate\Filesystem\Filesystem $filesystem
+     *
      * @return mixed
      */
     public function connector(Filesystem $filesystem)
@@ -61,7 +62,7 @@ class ElfinderController extends Controller
                         'tmbBgColor'    => 'transparent',
                         'accessControl' => function ($attr, $path, $data, $volume, $isDir) {
                             return strpos(basename($path), '.') === 0       // if file/folder begins with '.' (dot)
-                                ? ! ($attr == 'read' || $attr == 'write')    // set read+write to false, other (locked+hidden) set to true
+                                ? !($attr == 'read' || $attr == 'write')    // set read+write to false, other (locked+hidden) set to true
                                 :  null;                                    // else elFinder decide it itself
                         },
                     ], $root);
@@ -77,8 +78,9 @@ class ElfinderController extends Controller
     /**
      * sound.
      *
-     * @param  Filesystem $filesystem
-     * @param  string $file
+     * @param Filesystem $filesystem
+     * @param string     $file
+     *
      * @return \Illuminate\Http\Response
      */
     public function sound(Filesystem $filesystem, $file)

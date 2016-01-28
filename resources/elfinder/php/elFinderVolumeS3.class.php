@@ -28,9 +28,9 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
 
     protected function init()
     {
-        if (! $this->options['accesskey']
-        ||  ! $this->options['secretkey']
-        ||  ! $this->options['bucket']) {
+        if (!$this->options['accesskey']
+        ||  !$this->options['secretkey']
+        ||  !$this->options['bucket']) {
             return $this->setError('Required options undefined.');
         }
 
@@ -46,7 +46,7 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
     protected function configure()
     {
         parent::configure();
-        if (! empty($this->options['tmpPath'])) {
+        if (!empty($this->options['tmpPath'])) {
             if ((is_dir($this->options['tmpPath']) || @mkdir($this->options['tmpPath'])) && is_writable($this->options['tmpPath'])) {
                 $this->tmpPath = $this->options['tmpPath'];
             }
@@ -260,7 +260,7 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
         } catch (Exception $e) {
         }
 
-        if (! isset($obj) || ($obj->GetObjectResponse->Status->Code != 200)) {
+        if (!isset($obj) || ($obj->GetObjectResponse->Status->Code != 200)) {
             $np .= '/';
             try {
                 $obj = $this->s3->GetObject(['Bucket' => $this->options['bucket'], 'Key' => $np, 'GetMetadata' => true, 'InlineData' => false, 'GetData' => false]);
@@ -268,7 +268,7 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
             }
         }
 
-        if (! (isset($obj) && $obj->GetObjectResponse->Status->Code == 200)) {
+        if (!(isset($obj) && $obj->GetObjectResponse->Status->Code == 200)) {
             return [];
         }
 
@@ -278,7 +278,7 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
 
         $mime = $metadata['Content-Type'];
 
-        if (! empty($mime)) {
+        if (!empty($mime)) {
             $stat['mime'] = ($mime == 'binary/octet-stream') ? 'directory' : $mime;
         }
 
@@ -291,7 +291,7 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
         } catch (Exception $e) {
         }
 
-        if (! is_array($files)) {
+        if (!is_array($files)) {
             $files = [$files];
         }
 
