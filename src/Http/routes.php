@@ -11,19 +11,17 @@
 |
 */
 
-Route::group([], function () {
-    Route::get('/', [
-        'as'   => 'elfinder',
-        'uses' => 'ElfinderController@elfinder',
-    ]);
+Route::get('/', [
+    'as'   => 'elfinder',
+    'uses' => 'ElfinderController@elfinder',
+]);
 
-    Route::any('connector', [
-        'as'   => 'connector',
-        'uses' => 'ElfinderController@connector',
-    ]);
+Route::any('connector', [
+    'as'   => 'connector',
+    'uses' => 'ElfinderController@connector',
+]);
 
-    Route::get('sounds/{file}', [
-        'as'   => 'sound',
-        'uses' => 'ElfinderController@sound',
-    ]);
-});
+Route::get('sounds/{file}', [
+    'as'   => 'sound',
+    'uses' => 'ElfinderController@sound',
+]);
