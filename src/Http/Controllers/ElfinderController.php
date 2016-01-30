@@ -29,7 +29,8 @@ class ElfinderController extends Controller
      */
     public function connector(Filesystem $filesystem)
     {
-        $options = config('elfinder.options');
+        $config = config('elfinder');
+        $options = array_get($config, 'options', []);
 
         $roots = array_get($options, 'roots', []);
         foreach ($roots as $key => $root) {
@@ -60,11 +61,7 @@ class ElfinderController extends Controller
                         'utf8fix'       => true,
                         'tmbCrop'       => false,
                         'tmbBgColor'    => 'transparent',
-                        'accessControl' => function ($attr, $path, $data, $volume, $isDir) {
-                            return strpos(basename($path), '.') === 0       // if file/folder begins with '.' (dot)
-                                ? !($attr == 'read' || $attr == 'write')    // set read+write to false, other (locked+hidden) set to true
-                                :  null;                                    // else elFinder decide it itself
-                        },
+                        'accessControl' => array_get($config, 'accessControl'),
                     ], $root);
                     break;
             }
