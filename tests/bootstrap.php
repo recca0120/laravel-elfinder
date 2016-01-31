@@ -85,7 +85,7 @@ class Application extends Container
     }
 }
 
-if (! function_exists('bcrypt')) {
+if (!function_exists('bcrypt')) {
     /**
      * Hash the given value.
      *
@@ -100,7 +100,7 @@ if (! function_exists('bcrypt')) {
     }
 }
 
-if (! function_exists('app')) {
+if (!function_exists('app')) {
     function app()
     {
         return App::getInstance();
