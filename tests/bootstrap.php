@@ -56,7 +56,9 @@ class Application extends Container
             'driver'   => 'sqlite',
             'database' => ':memory:',
         ]);
-        $connection->setEventDispatcher($this['events']);
+        if (isset($this['events']) === true) {
+            $connection->setEventDispatcher($this['events']);
+        }
         $connection->bootEloquent();
         $connection->setAsGlobal();
 
