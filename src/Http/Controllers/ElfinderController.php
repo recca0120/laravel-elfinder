@@ -4,9 +4,11 @@ namespace Recca0120\Elfinder\Http\Controllers;
 
 use Closure;
 use elFinder;
+use Illuminate\Contracts\Auth\Guard as GuardContract;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Routing\Controller;
 use Recca0120\Elfinder\Connector;
+use Illuminate\Http\Request;
 
 class ElfinderController extends Controller
 {
@@ -27,7 +29,7 @@ class ElfinderController extends Controller
      *
      * @return mixed
      */
-    public function connector(Filesystem $filesystem)
+    public function connector(Filesystem $filesystem, GuardContract $guard)
     {
         $config = config('elfinder');
         $options = array_get($config, 'options', []);
@@ -43,13 +45,13 @@ class ElfinderController extends Controller
 
             switch ($root['driver']) {
                 case 'LocalFileSystem':
-                    if (strpos($root['path'], '{user_id}') != -1 && auth()->check() === false) {
+                    if (strpos($root['path'], '{user_id}') !== -1 && $guard->check() === false) {
                         continue;
-                    } else {
-                        $userId = auth()->user()->id;
-                        $root['path'] = str_replace('{user_id}', $userId, $root['path']);
-                        $root['URL'] = url(str_replace('{user_id}', $userId, $root['URL']));
                     }
+                    $user = $guard->user();
+                    $userId = $user->id;
+                    $root['path'] = str_replace('{user_id}', $userId, $root['path']);
+                    $root['URL'] = url(str_replace('{user_id}', $userId, $root['URL']));
 
                     if ($filesystem->exists($root['path']) === false) {
                         $filesystem->makeDirectory($root['path'], 0755, true);
@@ -76,18 +78,37 @@ class ElfinderController extends Controller
     /**
      * sound.
      *
-     * @param Filesystem $filesystem
+     * @param \Illuminate\Filesystem\Filesystem $filesystem
+     * @param \Illuminate\Http\Request $request
      * @param string     $file
      *
      * @return \Illuminate\Http\Response
      */
-    public function sound(Filesystem $filesystem, $file)
+    public function sound(Filesystem $filesystem, Request $request, $file)
     {
-        $file = __DIR__.'/../../../resources/elfinder/sounds/'.$file;
-        $mimeType = $filesystem->mimeType($file);
+        $filename = __DIR__.'/../../../resources/elfinder/sounds/'.$file;
+        $mimeType = $filesystem->mimeType($filename);
+        $lastModified = $filesystem->lastModified($filename);
+        $eTag = sha1_file($filename);
+        $headers = [
+            'content-type'  => $mimeType,
+            'last-modified' => date('D, d M Y H:i:s ', $lastModified).'GMT',
+        ];
 
-        return response(file_get_contents($file), 200, [
-            'content-type' => $mimeType,
-        ]);
+        if (@strtotime($request->server('HTTP_IF_MODIFIED_SINCE')) === $lastModified ||
+            trim($request->server('HTTP_IF_NONE_MATCH'), '"') === $eTag
+        ) {
+            $response = response(null, 304, $headers);
+        } else {
+            $response = response()->stream(function () use ($filename) {
+                $out = fopen('php://output', 'wb');
+                $file = fopen($filename, 'rb');
+                stream_copy_to_stream($file, $out, filesize($filename));
+                fclose($out);
+                fclose($file);
+            }, 200, $headers);
+        }
+
+        return $response->setEtag($eTag);
     }
 }
