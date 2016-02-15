@@ -7,6 +7,7 @@ use elFinder;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Routing\Controller;
 use Recca0120\Elfinder\Connector;
+use Illuminate\Contracts\Auth\Guard as GuardContract;
 
 class ElfinderController extends Controller
 {
@@ -27,7 +28,7 @@ class ElfinderController extends Controller
      *
      * @return mixed
      */
-    public function connector(Filesystem $filesystem)
+    public function connector(Filesystem $filesystem, GuardContract $guard)
     {
         $config = config('elfinder');
         $options = array_get($config, 'options', []);
@@ -43,13 +44,13 @@ class ElfinderController extends Controller
 
             switch ($root['driver']) {
                 case 'LocalFileSystem':
-                    if (strpos($root['path'], '{user_id}') != -1 && auth()->check() === false) {
+                    if (strpos($root['path'], '{user_id}') !== -1 && $guard->check() === false) {
                         continue;
-                    } else {
-                        $userId = auth()->user()->id;
-                        $root['path'] = str_replace('{user_id}', $userId, $root['path']);
-                        $root['URL'] = url(str_replace('{user_id}', $userId, $root['URL']));
                     }
+                    $user = $guard->user();
+                    $userId = $user->id;
+                    $root['path'] = str_replace('{user_id}', $userId, $root['path']);
+                    $root['URL'] = url(str_replace('{user_id}', $userId, $root['URL']));
 
                     if ($filesystem->exists($root['path']) === false) {
                         $filesystem->makeDirectory($root['path'], 0755, true);
