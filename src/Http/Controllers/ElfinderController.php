@@ -4,10 +4,10 @@ namespace Recca0120\Elfinder\Http\Controllers;
 
 use Closure;
 use elFinder;
+use Illuminate\Contracts\Auth\Guard as GuardContract;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Routing\Controller;
 use Recca0120\Elfinder\Connector;
-use Illuminate\Contracts\Auth\Guard as GuardContract;
 
 class ElfinderController extends Controller
 {
