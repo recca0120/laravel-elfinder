@@ -68,8 +68,9 @@ class ElfinderController extends Controller
             $roots[$key] = $root;
         }
         $options['roots'] = $roots;
+        $connector = new Connector(new elFinder($options));
 
-        return with(new Connector(new elFinder($options)))->run();
+        return $connector->run();
     }
 
     /**

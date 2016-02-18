@@ -1,6 +1,6 @@
 {
     "name": "recca0120/elfinder",
-    "description": "Elfinder for Laravel 5",
+    "description": "A Laravel Package to integrate elFinder 2",
     "keywords": ["laravel", "elfinder", "tinymce"],
     "license": "MIT",
     "authors": [
