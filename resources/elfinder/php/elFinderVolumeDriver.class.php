@@ -16,7 +16,7 @@ abstract class elFinderVolumeDriver
     /**
      * Request args
      * $_POST or $_GET values.
-     * 
+     *
      * @var array
      */
     protected $ARGS = [];
@@ -534,14 +534,14 @@ abstract class elFinderVolumeDriver
 
     /**
      * Cache for subdirsCE().
-     * 
+     *
      * @var array
      */
     protected $subdirsCache = [];
 
     /**
      * Reference of $_SESSION[elFinder::$sessionCacheKey][$this->id].
-     * 
+     *
      * @var array
      */
     protected $sessionCache;
@@ -710,7 +710,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * "Mount" volume.
-     * Return true if volume available for read or write, 
+     * Return true if volume available for read or write,
      * false - otherwise.
      *
      * @return bool
@@ -1009,7 +1009,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Return Extention/MIME Table (elFinderVolumeDriver::$mimetypes).
-     * 
+     *
      * @return array
      *
      * @author Naoki Sawada
@@ -1049,7 +1049,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Return target path hash.
-     * 
+     *
      * @param string $path
      * @param string $name
      *
@@ -1114,7 +1114,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Get option value of this volume.
-     * 
+     *
      * @param string $name target option name
      *
      * @return null|mixed target option value
@@ -1128,7 +1128,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Get plugin values of this options.
-     * 
+     *
      * @param string $name Plugin name
      *
      * @return null|array Plugin values
@@ -1351,7 +1351,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Return dir files names list.
-     * 
+     *
      * @param string $hash file hash
      *
      * @return array
@@ -1679,7 +1679,7 @@ abstract class elFinderVolumeDriver
     }
 
     /**
-     * Save uploaded file. 
+     * Save uploaded file.
      * On success return array with new file stat and with removed file hash (if existed file was replaced).
      *
      * @param resource $fp      file pointer
@@ -1955,7 +1955,7 @@ abstract class elFinderVolumeDriver
      *
      * @return array|bool
      *
-     * @author Dmitry (dio) Levashov, 
+     * @author Dmitry (dio) Levashov,
      * @author Alexey Sukhotin
      **/
     public function extract($hash, $makedir = null)
@@ -2228,7 +2228,7 @@ abstract class elFinderVolumeDriver
     /**
      * Return content URL (for netmout volume driver)
      * If file.url == 1 requests from JavaScript client with XHR.
-     * 
+     *
      * @param string $hash    file hash
      * @param array  $options options array
      *
@@ -2247,7 +2247,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Return temp path.
-     * 
+     *
      * @return string
      *
      * @author Naoki Sawada
@@ -2269,7 +2269,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * (Make &) Get upload taget dirctory hash.
-     * 
+     *
      * @param string $baseTargetHash
      * @param string $path
      * @param array  $result
@@ -2310,7 +2310,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Return this uploadMaxSize value.
-     * 
+     *
      * @return int
      *
      * @author Naoki Sawada
@@ -2323,7 +2323,7 @@ abstract class elFinderVolumeDriver
     /**
      * Save error message.
      *
-     * @param  array  error 
+     * @param  array  error
      *
      * @return false
      *
@@ -2469,7 +2469,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Close opened file (with convert encording).
-     * 
+     *
      * @param resource $fp   file pointer
      * @param string   $path file path
      *
@@ -2608,7 +2608,7 @@ abstract class elFinderVolumeDriver
     }
 
     /**
-     * Return crypted path 
+     * Return crypted path
      * Not implemented.
      *
      * @param  string  path
@@ -2623,7 +2623,7 @@ abstract class elFinderVolumeDriver
     }
 
     /**
-     * Return uncrypted path 
+     * Return uncrypted path
      * Not implemented.
      *
      * @param  mixed  hash
@@ -2706,7 +2706,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Converts character encoding from UTF-8 to server's one.
-     * 
+     *
      * @param mixed  $var           target string or array var
      * @param bool   $restoreLocale do retore global locale, default is false
      * @param string $unknown       replaces character for unknown
@@ -2722,7 +2722,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Converts character encoding from server's one to UTF-8.
-     * 
+     *
      * @param mixed  $var           target string or array var
      * @param bool   $restoreLocale do retore global locale, default is true
      * @param string $unknown       replaces character for unknown
@@ -2738,7 +2738,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Converts character encoding (base function).
-     * 
+     *
      * @param mixed  $var     target string or array var
      * @param string $from    from character encoding
      * @param string $to      to character encoding
@@ -2784,7 +2784,7 @@ abstract class elFinderVolumeDriver
     /**
      * Get temporary filename. Tempfile will be removed when after script execution finishes or exit() is called.
      * When needing the unique file to a path, give $path to parameter.
-     * 
+     *
      * @param string $path for get unique file to a path
      *
      * @return string|false
@@ -2822,7 +2822,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * File path of local server side work file path.
-     * 
+     *
      * @param string $path path need convert encoding to server encoding
      *
      * @return string
@@ -2978,7 +2978,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Return true if file MIME type can save with check uploadOrder config.
-     * 
+     *
      * @param string $mime
      *
      * @return bool
@@ -3575,7 +3575,7 @@ abstract class elFinderVolumeDriver
      *
      * @param string $src  source path
      * @param string $dst  destination dir path
-     * @param string $name new file name 
+     * @param string $name new file name
      *
      * @return string|false
      *
@@ -3763,7 +3763,7 @@ abstract class elFinderVolumeDriver
     /**
      * Return true if thumnbnail for required file can be created.
      *
-     * @param string $path         thumnbnail path 
+     * @param string $path         thumnbnail path
      * @param array  $stat         file stat
      * @param bool   $checkTmbPath
      *
@@ -3784,7 +3784,7 @@ abstract class elFinderVolumeDriver
      * Return true if required file can be resized.
      * By default - the same as canCreateTmb.
      *
-     * @param string $path thumnbnail path 
+     * @param string $path thumnbnail path
      * @param array  $stat file stat
      *
      * @return string|bool
@@ -4444,7 +4444,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Get server side available archivers.
-     * 
+     *
      * @param bool $use_cache
      *
      * @return array
@@ -4567,7 +4567,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Resolve relative / (Unix-like)absolute path.
-     * 
+     *
      * @param string $path target path
      * @param string $base base path
      *
@@ -4669,7 +4669,7 @@ abstract class elFinderVolumeDriver
      *
      * @return string|bool
      *
-     * @author Dmitry (dio) Levashov, 
+     * @author Dmitry (dio) Levashov,
      * @author Alexey Sukhotin
      * @author Naoki Sawada
      **/
@@ -4726,7 +4726,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Create Zip archive using PHP class ZipArchive.
-     * 
+     *
      * @param string        $dir     target dir
      * @param array         $files   files names list
      * @param string|object $zipPath Zip archive name
@@ -4778,7 +4778,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Unpack Zip archive using PHP class ZipArchive.
-     * 
+     *
      * @param string $zipPath Zip archive name
      * @param string $toDir   Extract to path
      *
@@ -4912,7 +4912,7 @@ abstract class elFinderVolumeDriver
      *
      * If file does not exists - returns empty array or false.
      *
-     * @param string $path file path 
+     * @param string $path file path
      *
      * @return array|false
      *
@@ -4973,7 +4973,7 @@ abstract class elFinderVolumeDriver
 
     /**
      * Close opened file.
-     * 
+     *
      * @param resource $fp   file pointer
      * @param string   $path file path
      *
@@ -5117,7 +5117,7 @@ abstract class elFinderVolumeDriver
      *
      * @return bool
      *
-     * @author Dmitry (dio) Levashov, 
+     * @author Dmitry (dio) Levashov,
      * @author Alexey Sukhotin
      **/
     abstract protected function _extract($path, $arc);
@@ -5132,7 +5132,7 @@ abstract class elFinderVolumeDriver
      *
      * @return string|bool
      *
-     * @author Dmitry (dio) Levashov, 
+     * @author Dmitry (dio) Levashov,
      * @author Alexey Sukhotin
      **/
     abstract protected function _archive($dir, $files, $name, $arc);
@@ -5142,7 +5142,7 @@ abstract class elFinderVolumeDriver
      *
      * @return void
      *
-     * @author Dmitry (dio) Levashov, 
+     * @author Dmitry (dio) Levashov,
      * @author Alexey Sukhotin
      **/
     abstract protected function _checkArchivers();

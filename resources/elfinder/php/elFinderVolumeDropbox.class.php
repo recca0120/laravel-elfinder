@@ -72,7 +72,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
 
     /**
      * Dropbox download host, replaces 'www.dropbox.com' of shares URL.
-     * 
+     *
      * @var string
      */
     private $dropbox_dlhost = 'dl.dropboxusercontent.com';
@@ -242,7 +242,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
     /**
      * process of on netunmount
      * Drop table `dropbox` & rm thumbs.
-     * 
+     *
      * @param array $options
      *
      * @return bool
@@ -271,7 +271,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
 
     /**
      * Get script url.
-     * 
+     *
      * @return string full URL
      *
      * @author Naoki Sawada
@@ -450,7 +450,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
 
     /**
      * Check DB for delta cache.
-     * 
+     *
      * @return void
      */
     private function checkDB()
@@ -480,7 +480,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
 
     /**
      * DB query and fetchAll.
-     * 
+     *
      * @param string $sql
      *
      * @return bool|array
@@ -498,7 +498,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
 
     /**
      * Get dat(dropbox metadata) from DB.
-     * 
+     *
      * @param string $path
      *
      * @return array dropbox metadata
@@ -514,7 +514,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
 
     /**
      * Update DB dat(dropbox metadata).
-     * 
+     *
      * @param string $path
      * @param array  $dat
      *
@@ -544,7 +544,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
 
     /**
      * Get delta data and DB update.
-     * 
+     *
      * @param bool $refresh force refresh
      *
      * @return true|string error message
@@ -943,7 +943,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
 
     /**
      * Get HTTP request response header string.
-     * 
+     *
      * @param string $url target URL
      *
      * @return string
@@ -1226,7 +1226,7 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
                 fwrite($fp, "Host: {$url['host']}\r\n");
                 fwrite($fp, "\r\n");
                 while (trim(fgets($fp)) !== '') {
-                };
+                }
 
                 return $fp;
             } catch (Dropbox_Exception $e) {

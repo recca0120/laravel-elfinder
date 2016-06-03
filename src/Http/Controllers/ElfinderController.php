@@ -6,9 +6,9 @@ use Closure;
 use elFinder;
 use Illuminate\Contracts\Auth\Guard as GuardContract;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Recca0120\Elfinder\Connector;
-use Illuminate\Http\Request;
 
 class ElfinderController extends Controller
 {
@@ -79,8 +79,8 @@ class ElfinderController extends Controller
      * sound.
      *
      * @param \Illuminate\Filesystem\Filesystem $filesystem
-     * @param \Illuminate\Http\Request $request
-     * @param string     $file
+     * @param \Illuminate\Http\Request          $request
+     * @param string                            $file
      *
      * @return \Illuminate\Http\Response
      */

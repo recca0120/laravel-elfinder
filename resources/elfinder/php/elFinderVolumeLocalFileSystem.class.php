@@ -354,7 +354,7 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
      *
      * If file does not exists - returns empty array or false.
      *
-     * @param string $path file path 
+     * @param string $path file path
      *
      * @return array|false
      *
@@ -428,7 +428,7 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
     /**
      * Get stat `owner`, `group` and `isowner` by `uid` and `gid`
      * Sub-fuction of _stat() and _scandir().
-     * 
+     *
      * @param int $uid
      * @param int $gid
      *
@@ -892,8 +892,6 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
     protected function _checkArchivers()
     {
         $this->archivers = $this->getArchivers();
-
-        return;
     }
 
     /**
@@ -958,7 +956,7 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
      *
      * @return true
      *
-     * @author Dmitry (dio) Levashov, 
+     * @author Dmitry (dio) Levashov,
      * @author Alexey Sukhotin
      **/
     protected function _extract($path, $arc)
@@ -1080,7 +1078,7 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
      *
      * @return string|bool
      *
-     * @author Dmitry (dio) Levashov, 
+     * @author Dmitry (dio) Levashov,
      * @author Alexey Sukhotin
      **/
     protected function _archive($dir, $files, $name, $arc)

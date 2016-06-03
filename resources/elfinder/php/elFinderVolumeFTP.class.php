@@ -64,14 +64,14 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
 
     /**
      * FTP command `MLST` support.
-     * 
+     *
      * @var bool
      */
     private $MLSTsupprt = false;
 
     /**
      * Calling cacheDir() target path with non-MLST.
-     * 
+     *
      * @var string
      */
     private $cacheDirTarget = '';
@@ -713,7 +713,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
      *
      * If file does not exists - returns empty array or false.
      *
-     * @param string $path file path 
+     * @param string $path file path
      *
      * @return array|false
      *
@@ -1176,8 +1176,6 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
     protected function _checkArchivers()
     {
         $this->archivers = $this->getArchivers();
-
-        return;
     }
 
     /**
@@ -1436,7 +1434,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
     /**
      * Gets an array of absolute remote FTP paths of files and
      * folders in $remote_directory omitting symbolic links.
-     * 
+     *
      * @param $remote_directory string remote FTP path to scan for file and folders recursively
      * @param $targets          array  Array of target item. `null` is to get all of items
      *
@@ -1492,7 +1490,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
     /**
      * Downloads specified files from remote directory
      * if there is a directory among files it is downloaded recursively (omitting symbolic links).
-     * 
+     *
      * @param $remote_directory string remote FTP path to a source directory to download from.
      * @param array $files list of files to download from remote directory.
      * @param $dest_local_directory string destination folder to store downloaded files.

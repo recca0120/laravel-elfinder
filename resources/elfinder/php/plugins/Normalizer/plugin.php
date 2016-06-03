@@ -1,14 +1,14 @@
 <?php
 /**
  * elFinder Plugin Normalizer.
- * 
+ *
  * UTF-8 Normalizer of file-name and file-path etc.
  * nfc(NFC): Canonical Decomposition followed by Canonical Composition
  * nfkc(NFKC): Compatibility Decomposition followed by Canonical
- * 
+ *
  * This plugin require Class "Normalizer" (PHP 5 >= 5.3.0, PECL intl >= 1.0.0)
  * or PEAR package "I18N_UnicodeNormalizer"
- * 
+ *
  * ex. binding, configure on connector options
  *	$opts = array(
  *		'bind' => array(
