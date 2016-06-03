@@ -100,7 +100,6 @@ class Connector extends elFinderConnector
                 if (!empty($data['volume'])) {
                     $data['volume']->close($data['pointer'], $data['info']['hash']);
                 }
-
             }, $status, $headers);
         }
 

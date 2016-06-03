@@ -560,7 +560,7 @@ class elFinderVolumeMySQL extends elFinderVolumeDriver
      *
      * If file does not exists - returns empty array or false.
      *
-     * @param string $path file path 
+     * @param string $path file path
      *
      * @return array|false
      *
@@ -931,7 +931,6 @@ class elFinderVolumeMySQL extends elFinderVolumeDriver
      **/
     protected function _checkArchivers()
     {
-        return;
     }
 
     /**
@@ -957,7 +956,6 @@ class elFinderVolumeMySQL extends elFinderVolumeDriver
      **/
     protected function _unpack($path, $arc)
     {
-        return;
     }
 
     /**
@@ -982,7 +980,7 @@ class elFinderVolumeMySQL extends elFinderVolumeDriver
      *
      * @return true
      *
-     * @author Dmitry (dio) Levashov, 
+     * @author Dmitry (dio) Levashov,
      * @author Alexey Sukhotin
      **/
     protected function _extract($path, $arc)
@@ -1000,7 +998,7 @@ class elFinderVolumeMySQL extends elFinderVolumeDriver
      *
      * @return string|bool
      *
-     * @author Dmitry (dio) Levashov, 
+     * @author Dmitry (dio) Levashov,
      * @author Alexey Sukhotin
      **/
     protected function _archive($dir, $files, $name, $arc)

@@ -26,21 +26,21 @@ class elFinder
 
     /**
      * Network mount drivers.
-     * 
+     *
      * @var array
      */
     public static $netDrivers = [];
 
     /**
      * elFinder global locale.
-     * 
+     *
      * @var string
      */
     public static $locale = '';
 
     /**
      * elFinder global sessionCacheKey.
-     * 
+     *
      * @var string
      */
     public static $sessionCacheKey = '';
@@ -50,7 +50,7 @@ class elFinder
      * elFinder save session data as `UTF-8`
      * If the session storage mechanism of the system does not allow `UTF-8`
      * And it must be `true` option 'base64encodeSessionData' of elFinder.
-     * 
+     *
      * @var bool
      */
     protected static $base64encodeSessionData = false;
@@ -146,14 +146,14 @@ class elFinder
 
     /**
      * Call `session_write_close()` before exec command?
-     * 
+     *
      * @var bool
      */
     protected $sessionCloseEarlier = true;
 
     /**
      * SESSION use commands default is `netmount`, `netunmount` @see __construct().
-     * 
+     *
      * @var array
      */
     protected $sessionUseCmds = [];
@@ -167,7 +167,7 @@ class elFinder
 
     /**
      * Temp dir path for Upload.
-     * 
+     *
      * @var string
      */
     protected $uploadTempPath = '';
@@ -189,7 +189,7 @@ class elFinder
     /**
      * URL for callback output window for CORS
      * redirect to this URL when callback output.
-     * 
+     *
      * @var string URL
      */
     protected $callbackWindowURL = '';
@@ -694,7 +694,7 @@ class elFinder
 
     /**
      * Remove netmount volume.
-     * 
+     *
      * @param string $key netvolume key
      */
     protected function removeNetVolume($key)
@@ -708,7 +708,7 @@ class elFinder
 
     /**
      * Get plugin instance & set to $this->plugins.
-     * 
+     *
      * @param string $name Plugin name (dirctory name)
      * @param array  $opts Plugin options (optional)
      *
@@ -1009,7 +1009,7 @@ class elFinder
     }
 
     /**
-     * Required to output file in browser when volume URL is not set 
+     * Required to output file in browser when volume URL is not set
      * Return array contains opened file pointer, root itself and required headers.
      *
      * @param  array  command arguments
@@ -1406,7 +1406,7 @@ class elFinder
         while ($_response !== "\r\n") {
             $_response = fgets($fp, $readsize);
             $header .= $_response;
-        };
+        }
 
         $rccd = array_pad(explode(' ', $header, 3), 3, ''); // array('HTTP/1.1','200','OK\r\n...')
         $rc = (int) $rccd[1];
@@ -1465,7 +1465,7 @@ class elFinder
 
     /**
      * Parse Data URI scheme.
-     * 
+     *
      * @param string $str
      * @param array  $extTable
      *
@@ -1490,7 +1490,7 @@ class elFinder
 
     /**
      * Detect file type extension by local path.
-     * 
+     *
      * @param string $path Local path
      *
      * @return string file type extension with dot
@@ -1553,7 +1553,7 @@ class elFinder
 
     /**
      * Check chunked upload files.
-     * 
+     *
      * @param string $tmpname uploaded temporary file path
      * @param string $chunk   uploaded chunk file name
      * @param string $cid     uploaded chunked file id
@@ -1693,7 +1693,7 @@ class elFinder
 
     /**
      * Get temporary dirctroy path.
-     * 
+     *
      * @param string $volumeTempPath
      *
      * @return string
@@ -2192,7 +2192,7 @@ class elFinder
      *
      * @return array
      *
-     * @author Dmitry (dio) Levashov, 
+     * @author Dmitry (dio) Levashov,
      * @author Alexey Sukhotin
      **/
     protected function extract($args)
@@ -2219,7 +2219,7 @@ class elFinder
      *
      * @return array
      *
-     * @author Dmitry (dio) Levashov, 
+     * @author Dmitry (dio) Levashov,
      * @author Alexey Sukhotin
      **/
     protected function archive($args)
@@ -2366,7 +2366,7 @@ class elFinder
     /**
      * Output callback result with JavaScript that control elFinder
      * or HTTP redirect to callbackWindowURL.
-     * 
+     *
      * @param  array  command arguments
      *
      * @author Naoki Sawada
@@ -2527,7 +2527,7 @@ class elFinder
 
     /**
      * Return Is Animation Gif.
-     * 
+     *
      * @param string $path server local path of target image
      *
      * @return bool
@@ -2578,7 +2578,7 @@ class elFinder
 
     /**
      * Return Is seekable stream resource.
-     * 
+     *
      * @param resource $resource
      *
      * @return bool
@@ -2592,7 +2592,7 @@ class elFinder
 
     /**
      * serialize and base64_encode of session data (If needed).
-     * 
+     *
      * @param mixed $var target variable
      *
      * @author Naoki Sawada
@@ -2608,7 +2608,7 @@ class elFinder
 
     /**
      * base64_decode and unserialize of session data  (If needed).
-     * 
+     *
      * @param mixed $var     target variable
      * @param bool  $checkIs data type for check (array|string|object|int)
      *

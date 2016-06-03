@@ -211,7 +211,7 @@ class elFinderConnector
 
     /**
      * Remove null & stripslashes applies on "magic_quotes_gpc".
-     * 
+     *
      * @param mixed $args
      *
      * @return mixed

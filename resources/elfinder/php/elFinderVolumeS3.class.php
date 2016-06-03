@@ -2,7 +2,7 @@
 
 /**
  * @file
- * 
+ *
  * elFinder driver for Amazon S3 (SOAP) filesystem.
  *
  * @author Dmitry (dio) Levashov,
@@ -230,7 +230,7 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
      *
      * If file does not exists - returns empty array or false.
      *
-     * @param string $path file path 
+     * @param string $path file path
      *
      * @return array|false
      *
@@ -431,7 +431,7 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
 
     /**
      * Close opened file.
-     * 
+     *
      * @param resource $fp   file pointer
      * @param string   $path file path
      *
@@ -576,7 +576,7 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
         }
 
         /*$fp = fopen('/tmp/eltest.txt','a+');
-        
+
         fwrite($fp, 'key='.$newkey);*/
 
         if (is_object($obj)) {
@@ -664,7 +664,7 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
       *
       * @return bool
       *
-      * @author Dmitry (dio) Levashov, 
+      * @author Dmitry (dio) Levashov,
       * @author Alexey Sukhotin
       **/
      protected function _extract($path, $arc)
@@ -682,7 +682,7 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
      *
      * @return string|bool
      *
-     * @author Dmitry (dio) Levashov, 
+     * @author Dmitry (dio) Levashov,
      * @author Alexey Sukhotin
      **/
     protected function _archive($dir, $files, $name, $arc)
@@ -695,7 +695,7 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
      *
      * @return void
      *
-     * @author Dmitry (dio) Levashov, 
+     * @author Dmitry (dio) Levashov,
      * @author Alexey Sukhotin
      **/
     protected function _checkArchivers()
