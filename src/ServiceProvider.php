@@ -57,7 +57,7 @@ class ServiceProvider extends BaseServiceProvider
         if ($this->app->routesAreCached() === false) {
             $middleware = config('elfinder.middleware');
             $router->group([
-                'as'         => 'elfinder::',
+                'as'         => 'elfinder.',
                 'middleware' => $middleware,
                 'namespace'  => $this->namespace,
                 'prefix'     => $this->prefix,
