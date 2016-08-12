@@ -747,7 +747,7 @@ abstract class elFinderVolumeDriver
 
         // default file attribute
         $this->defaults = [
-            'read'    => isset($this->options['defaults']['read'])  ? (bool) $this->options['defaults']['read']  : true,
+            'read'    => isset($this->options['defaults']['read']) ? (bool) $this->options['defaults']['read'] : true,
             'write'   => isset($this->options['defaults']['write']) ? (bool) $this->options['defaults']['write'] : true,
             'locked'  => isset($this->options['defaults']['locked']) ? (bool) $this->options['defaults']['locked'] : false,
             'hidden'  => isset($this->options['defaults']['hidden']) ? (bool) $this->options['defaults']['hidden'] : false,
@@ -2362,7 +2362,7 @@ abstract class elFinderVolumeDriver
      **/
     protected function dirnameCE($path)
     {
-        return (!$this->encoding) ? $this->_dirname($path) :    $this->convEncOut($this->_dirname($this->convEncIn($path)));
+        return (!$this->encoding) ? $this->_dirname($path) : $this->convEncOut($this->_dirname($this->convEncIn($path)));
     }
 
     /**

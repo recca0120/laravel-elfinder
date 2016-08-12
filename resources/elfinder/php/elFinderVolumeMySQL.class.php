@@ -843,7 +843,7 @@ class elFinderVolumeMySQL extends elFinderVolumeDriver
         $this->clearcache();
 
         $mime = $stat['mime'];
-        $w = !empty($stat['width'])  ? $stat['width']  : 0;
+        $w = !empty($stat['width']) ? $stat['width'] : 0;
         $h = !empty($stat['height']) ? $stat['height'] : 0;
 
         $id = $this->_joinPath($dir, $name);

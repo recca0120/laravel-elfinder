@@ -2,6 +2,7 @@
 
 namespace Recca0120\Elfinder;
 
+use Illuminate\Contracts\Config\Repository as ConfigContract;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
@@ -15,24 +16,18 @@ class ServiceProvider extends BaseServiceProvider
     protected $namespace = 'Recca0120\Elfinder\Http\Controllers';
 
     /**
-     * prefix.
-     *
-     * @var string
-     */
-    protected $prefix = 'elfinder';
-
-    /**
      * handle routes.
      *
-     * @param \Illuminate\Routing\Router $router
+     * @param \Illuminate\Routing\Router              $router
+     * @param \Illuminate\Contracts\Config\Repository $config
      *
      * @return void
      */
-    public function boot(Router $router)
+    public function boot(Router $router, ConfigContract $config)
     {
         $this->handlePublishes();
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'elfinder');
-        $this->handleRoutes($router);
+        $this->handleRoutes($router, $config);
     }
 
     /**
@@ -48,19 +43,20 @@ class ServiceProvider extends BaseServiceProvider
     /**
      * register routes.
      *
-     * @param Illuminate\Routing\Router $router
+     * @param Illuminate\Routing\Router               $router
+     * @param \Illuminate\Contracts\Config\Repository $config
      *
      * @return void
      */
-    public function handleRoutes(Router $router)
+    public function handleRoutes(Router $router, ConfigContract $config)
     {
         if ($this->app->routesAreCached() === false) {
-            $middleware = config('elfinder.middleware');
+            $elfinder = $config->get('elfinder');
             $router->group([
-                'as'         => 'elfinder.',
-                'middleware' => $middleware,
+                'as'         => array_get($elfinder, 'as', 'elfinder::'),
+                'middleware' => array_get($elfinder, 'middleware'),
                 'namespace'  => $this->namespace,
-                'prefix'     => $this->prefix,
+                'prefix'     => array_get($elfinder, 'prefix', 'elfinder'),
             ], function () {
                 require __DIR__.'/Http/routes.php';
             });
