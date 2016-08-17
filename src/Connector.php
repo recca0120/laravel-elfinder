@@ -4,6 +4,7 @@ namespace Recca0120\Elfinder;
 
 use elFinder;
 use elFinderConnector;
+use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -84,7 +85,7 @@ class Connector extends elFinderConnector
 
             // unlock session data for multiple access
             session_id() && session_write_close();
-            app('session')->close();
+            Session::close();
             // client disconnect should abort
             ignore_user_abort(false);
 
