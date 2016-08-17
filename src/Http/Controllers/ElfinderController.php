@@ -5,9 +5,14 @@ namespace Recca0120\Elfinder\Http\Controllers;
 use Closure;
 use elFinder;
 use Illuminate\Contracts\Auth\Guard as GuardContract;
+use Illuminate\Contracts\Config\Repository as ConfigRepositoryContract;
+use Illuminate\Contracts\Foundation\Application as ApplicationContract;
+use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
+use Illuminate\Contracts\Routing\UrlGenerator as UrlGeneratorContract;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Arr;
 use Recca0120\Elfinder\Connector;
 
 class ElfinderController extends Controller
@@ -15,26 +20,37 @@ class ElfinderController extends Controller
     /**
      * elfinder.
      *
+     * @param \Illuminate\Contracts\Routing\ResponseFactory $responseFactory
+     *
      * @return mixed
      */
-    public function elfinder()
+    public function elfinder(ResponseFactoryContract $responseFactory)
     {
-        return view('elfinder::elfinder');
+        return $responseFactory->view('elfinder::elfinder');
     }
 
     /**
      * connector.
      *
-     * @param \Illuminate\Filesystem\Filesystem $filesystem
+     * @param \Illuminate\Contracts\Foundation\Application $app
+     * @param \Illuminate\Filesystem\Filesystem            $filesystem
+     * @param \Illuminate\Contracts\Routing\UrlGenerator   $urlGenerator
+     * @param \Illuminate\Contracts\Config\Repository      $config
+     * @param \Illuminate\Contracts\Auth\Guard             $guard
      *
      * @return mixed
      */
-    public function connector(Filesystem $filesystem, GuardContract $guard)
-    {
-        $config = config('elfinder');
-        $options = array_get($config, 'options', []);
+    public function connector(
+        ApplicationContract $app,
+        Filesystem $filesystem,
+        UrlGeneratorContract $urlGenerator,
+        ConfigRepositoryContract $config,
+        GuardContract $guard
+    ) {
+        $config = $config->get('elfinder');
+        $options = Arr::get($config, 'options', []);
 
-        $roots = array_get($options, 'roots', []);
+        $roots = Arr::get($options, 'roots', []);
         foreach ($roots as $key => $root) {
             $root['driver'] = (empty($root['driver']) === true) ? 'LocalFileSystem' : $root['driver'];
             $root['autoload'] = true;
@@ -51,7 +67,7 @@ class ElfinderController extends Controller
                     $user = $guard->user();
                     $userId = $user->id;
                     $root['path'] = str_replace('{user_id}', $userId, $root['path']);
-                    $root['URL'] = url(str_replace('{user_id}', $userId, $root['URL']));
+                    $root['URL'] = $urlGenerator->to(str_replace('{user_id}', $userId, $root['URL']));
 
                     if ($filesystem->exists($root['path']) === false) {
                         $filesystem->makeDirectory($root['path'], 0755, true);
@@ -63,7 +79,7 @@ class ElfinderController extends Controller
                         'utf8fix'       => true,
                         'tmbCrop'       => false,
                         'tmbBgColor'    => 'transparent',
-                        'accessControl' => array_get($config, 'accessControl'),
+                        'accessControl' => Arr::get($config, 'accessControl'),
                     ], $root);
                     break;
             }
@@ -78,13 +94,14 @@ class ElfinderController extends Controller
     /**
      * sound.
      *
-     * @param \Illuminate\Filesystem\Filesystem $filesystem
-     * @param \Illuminate\Http\Request          $request
-     * @param string                            $file
+     * @param \Illuminate\Contracts\Routing\ResponseFactory $responseFactory
+     * @param \Illuminate\Filesystem\Filesystem             $filesystem
+     * @param \Illuminate\Http\Request                      $request
+     * @param string                                        $file
      *
      * @return \Illuminate\Http\Response
      */
-    public function sound(Filesystem $filesystem, Request $request, $file)
+    public function sound(ResponseFactoryContract $responseFactory, Filesystem $filesystem, Request $request, $file)
     {
         $filename = __DIR__.'/../../../resources/elfinder/sounds/'.$file;
         $mimeType = $filesystem->mimeType($filename);
@@ -98,9 +115,9 @@ class ElfinderController extends Controller
         if (@strtotime($request->server('HTTP_IF_MODIFIED_SINCE')) === $lastModified ||
             trim($request->server('HTTP_IF_NONE_MATCH'), '"') === $eTag
         ) {
-            $response = response(null, 304, $headers);
+            $response = $responseFactory->make(null, 304, $headers);
         } else {
-            $response = response()->stream(function () use ($filename) {
+            $response = $responseFactory->stream(function () use ($filename) {
                 $out = fopen('php://output', 'wb');
                 $file = fopen($filename, 'rb');
                 stream_copy_to_stream($file, $out, filesize($filename));
