@@ -38,6 +38,7 @@ class ServiceProvider extends BaseServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/elfinder.php', 'elfinder');
+        require __DIR__.'/../resources/elfinder/php/autoload.php';
     }
 
     /**
