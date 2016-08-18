@@ -76,7 +76,7 @@
                     },
                     lang: getLang(),
                     customData: {
-                        _token: '<?php echo csrf_token() ?>'
+                        _token: '{{ $token }}'
                     },
                     getFileCallback: function(file) { // editor callback
                         // file.url - commandsOptions.getfile.onlyURL = false (default)

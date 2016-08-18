@@ -15,6 +15,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
 use Recca0120\Elfinder\Connector;
 use Recca0120\Elfinder\Session;
+use Illuminate\Session\SessionManager;
 
 class ElfinderController extends Controller
 {
@@ -22,12 +23,15 @@ class ElfinderController extends Controller
      * elfinder.
      *
      * @param \Illuminate\Contracts\Routing\ResponseFactory $responseFactory
+     * @param \Illuminate\Session\SessionManager            $sessionManager
      *
      * @return mixed
      */
-    public function elfinder(ResponseFactoryContract $responseFactory)
+    public function elfinder(ResponseFactoryContract $responseFactory, SessionManager $sessionManager)
     {
-        return $responseFactory->view('elfinder::elfinder');
+        $token = $sessionManager->driver()->token();
+
+        return $responseFactory->view('elfinder::elfinder', compact('token'));
     }
 
     /**
