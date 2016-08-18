@@ -81,7 +81,6 @@ class ElfinderController extends Controller
 
                     $disk = array_merge([
                         'mimeDetect'    => 'internal',
-                        'tmpPath'       => '.tmb',
                         'utf8fix'       => true,
                         'tmbCrop'       => false,
                         'tmbBgColor'    => 'transparent',
