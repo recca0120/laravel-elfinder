@@ -5,7 +5,7 @@ return [
         'middleware'    => ['web', 'auth'],
         'prefix'        => 'elfinder',
     ],
-    'accessControl' => [Recca0120\Elfinder\AccessControl::class, 'access'],
+    'accessControl' => [Recca0120\Elfinder\Elfinder::class, 'access'],
     'options'       => [
         'locale' => 'en_US.UTF-8',
         'debug'  => false,
@@ -15,7 +15,6 @@ return [
             'rootCssClass' => 'elfinder-button-icon-home',
             'path'         => public_path('storage/media/user/{user_id}'),
             'URL'          => 'storage/media/user/{user_id}',
-
         ], [
             'driver' => 'LocalFileSystem',
             'alias'  => 'Shared',

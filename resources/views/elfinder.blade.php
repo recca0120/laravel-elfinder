@@ -2,18 +2,21 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>elFinder 2.0</title>
+        <title>elFinder 2.1.x source version with PHP connector</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
 
 		<!-- jQuery and jQuery UI (REQUIRED) -->
-		<link rel="stylesheet" type="text/css" href="{{ asset('vendor/elfinder/jquery/ui-themes/smoothness/jquery-ui-1.10.1.custom.min.css') }}">
-		<script src="{{ asset('vendor/elfinder/jquery/jquery-1.9.1.min.js') }}"></script>
-		<script src="{{ asset('vendor/elfinder/jquery/jquery-ui-1.10.1.custom.min.js') }}"></script>
+        <link rel="stylesheet" type="text/css" href="{{ asset('vendor/elfinder/jquery-ui/jquery-ui.structure.min.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ asset('vendor/elfinder/jquery-ui/jquery-ui.theme.min.css') }}">
+		<script src="{{ asset('vendor/elfinder/jquery-ui/external/jquery/jquery.js') }}"></script>
+		<script src="{{ asset('vendor/elfinder/jquery-ui/jquery-ui.min.js') }}"></script>
 
 		<!-- elFinder CSS (REQUIRED) -->
 		<link rel="stylesheet" type="text/css" href="{{ asset('vendor/elfinder/css/elfinder.min.css') }}">
 		<link rel="stylesheet" type="text/css" href="{{ asset('vendor/elfinder/css/theme.css') }}">
 		<!-- elFinder JS (REQUIRED) -->
 		<script src="{{ asset('vendor/elfinder/js/elfinder.min.js') }}"></script>
+        <script src="{{ asset('vendor/elfinder/js/extras/quicklook.googledocs.js') }}"></script>
 
 		<!-- elFinder initialization (REQUIRED) -->
 		<script>
@@ -64,6 +67,13 @@
                     height: $(window).height() - 20,
                     url: "{{ route('elfinder.connector') }}",
 					soundPath: "{{ route('elfinder.elfinder').'/sounds/' }}",
+                    sync: 5000,
+                    ui: ['toolbar', 'places', 'tree', 'path', 'stat'],
+                    commandsOptions : {
+                        quicklook : {
+                            googleDocsMimes : ['application/pdf', 'image/tiff', 'application/vnd.ms-office', 'application/msword', 'application/vnd.ms-word', 'application/vnd.ms-excel', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+                        }
+                    },
                     lang: getLang(),
                     customData: {
                         _token: '<?php echo csrf_token() ?>'

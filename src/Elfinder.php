@@ -2,7 +2,7 @@
 
 namespace Recca0120\Elfinder;
 
-class AccessControl
+class Elfinder
 {
     public static function access($attr, $path, $data, $volume, $isDir)
     {
