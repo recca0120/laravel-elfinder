@@ -62,8 +62,8 @@
                 var elfinderInstance = $("#elfinder").elfinder({
                     resizable: false,
                     height: $(window).height() - 20,
-                    url: "{{ route('elfinder::connector') }}",
-					soundPath: "{{ route('elfinder::elfinder').'/sounds/' }}",
+                    url: "{{ route('elfinder.connector') }}",
+					soundPath: "{{ route('elfinder.elfinder').'/sounds/' }}",
                     lang: getLang(),
                     customData: {
                         _token: '<?php echo csrf_token() ?>'

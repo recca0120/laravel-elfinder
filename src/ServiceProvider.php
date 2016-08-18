@@ -51,13 +51,10 @@ class ServiceProvider extends BaseServiceProvider
     public function handleRoutes(Router $router, ConfigContract $config)
     {
         if ($this->app->routesAreCached() === false) {
-            $elfinder = $config->get('elfinder');
-            $router->group([
-                'as'         => array_get($elfinder, 'as', 'elfinder::'),
-                'middleware' => array_get($elfinder, 'middleware'),
+            $router->group(array_merge($config->get('elfinder.router'), [
+                'as'         => 'elfinder.',
                 'namespace'  => $this->namespace,
-                'prefix'     => array_get($elfinder, 'prefix', 'elfinder'),
-            ], function () {
+            ]), function () {
                 require __DIR__.'/Http/routes.php';
             });
         }
