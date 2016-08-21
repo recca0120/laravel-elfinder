@@ -70,7 +70,7 @@ class elFinderPluginNormalizer
             'nfc'       => true,  // Canonical Decomposition followed by Canonical Composition
             'nfkc'      => true,  // Compatibility Decomposition followed by Canonical
             'lowercase' => false, // Make chars lowercase
-            'convmap'   => [],// Convert map ('FROM' => 'TO') array
+            'convmap'   => [], // Convert map ('FROM' => 'TO') array
         ];
 
         $this->opts = array_merge($defaults, $opts);

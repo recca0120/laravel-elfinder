@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'router' => [
+    'route' => [
         'middleware'    => ['web', 'auth'],
         'prefix'        => 'elfinder',
     ],

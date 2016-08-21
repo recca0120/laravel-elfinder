@@ -5,17 +5,16 @@ namespace Recca0120\Elfinder\Http\Controllers;
 use Closure;
 use elFinder;
 use Illuminate\Contracts\Auth\Guard as GuardContract;
-use Illuminate\Contracts\Config\Repository as ConfigRepositoryContract;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
 use Illuminate\Contracts\Routing\UrlGenerator as UrlGeneratorContract;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Session\SessionManager;
 use Illuminate\Support\Arr;
 use Recca0120\Elfinder\Connector;
 use Recca0120\Elfinder\Session;
-use Illuminate\Session\SessionManager;
 
 class ElfinderController extends Controller
 {
@@ -40,8 +39,8 @@ class ElfinderController extends Controller
      * @param \Illuminate\Contracts\Foundation\Application $app
      * @param \Illuminate\Filesystem\Filesystem            $filesystem
      * @param \Illuminate\Contracts\Routing\UrlGenerator   $urlGenerator
-     * @param \Illuminate\Contracts\Config\Repository      $config
      * @param \Illuminate\Contracts\Auth\Guard             $guard
+     * @param \Recca0120\Elfinder\Session                  $session
      *
      * @return mixed
      */
@@ -49,11 +48,10 @@ class ElfinderController extends Controller
         ApplicationContract $app,
         Filesystem $filesystem,
         UrlGeneratorContract $urlGenerator,
-        ConfigRepositoryContract $config,
         GuardContract $guard,
         Session $session
     ) {
-        $config = $config->get('elfinder');
+        $config = config('elfinder');
         $options = Arr::get($config, 'options', []);
 
         $roots = Arr::get($options, 'roots', []);
@@ -91,7 +89,7 @@ class ElfinderController extends Controller
             $roots[$key] = $disk;
         }
         $options = array_merge($options, [
-            'roots' => $roots,
+            'roots'   => $roots,
             'session' => $session,
         ]);
         $connector = new Connector(new elFinder($options));
