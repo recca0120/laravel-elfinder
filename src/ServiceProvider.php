@@ -2,8 +2,8 @@
 
 namespace Recca0120\Elfinder;
 
-use Illuminate\Contracts\Config\Repository as ConfigContract;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class ServiceProvider extends BaseServiceProvider
@@ -18,13 +18,13 @@ class ServiceProvider extends BaseServiceProvider
     /**
      * handle routes.
      *
-     * @param \Illuminate\Routing\Router              $router
-     * @param \Illuminate\Contracts\Config\Repository $config
+     * @param \Illuminate\Routing\Router $router
      *
      * @return void
      */
-    public function boot(Router $router, ConfigContract $config)
+    public function boot(Router $router)
     {
+        $config = $this->app['config']->get('elfinder', []);
         $this->handlePublishes();
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'elfinder');
         $this->handleRoutes($router, $config);
@@ -44,18 +44,20 @@ class ServiceProvider extends BaseServiceProvider
     /**
      * register routes.
      *
-     * @param Illuminate\Routing\Router               $router
-     * @param \Illuminate\Contracts\Config\Repository $config
+     * @param \Illuminate\Routing\Router $router
+     * @oaram array                      $config
      *
      * @return void
      */
-    public function handleRoutes(Router $router, ConfigContract $config)
+    public function handleRoutes(Router $router, $config)
     {
         if ($this->app->routesAreCached() === false) {
-            $router->group(array_merge($config->get('elfinder.router'), [
+            $router->group(array_merge([
+                'middleware' => ['web', 'auth'],
+                'prefix'     => 'elfinder',
                 'as'         => 'elfinder.',
                 'namespace'  => $this->namespace,
-            ]), function () {
+            ], Arr::get($config, 'elfinder.route', [])), function () {
                 require __DIR__.'/Http/routes.php';
             });
         }
