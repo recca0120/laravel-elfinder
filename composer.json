@@ -23,6 +23,7 @@
         "nesbot/carbon": "~1.20"
     },
     "autoload": {
+        "classmap": ["resources/elfinder/php/"],
         "psr-4": {
             "Recca0120\\Elfinder\\": "src/"
         }
