@@ -10,7 +10,7 @@ use \League\Flysystem\Filesystem;
 
 elFinder::$netDrivers['googledrive'] = 'FlysystemGoogleDriveNetmount';
 
-if (!class_exists('elFinderVolumeFlysystemGoogleDriveCache', false)) {
+if (! class_exists('elFinderVolumeFlysystemGoogleDriveCache', false)) {
     class elFinderVolumeFlysystemGoogleDriveCache extends ACache
     {
         use Hasdir;
@@ -25,11 +25,11 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
         parent::__construct();
 
         $opts = [
-            'rootCssClass'   => 'elfinder-navbar-root-googledrive',
-            'gdAlias'        => '%s@GDrive',
-            'gdCacheDir'     => __DIR__.'/.tmp',
-            'gdCachePrefix'  => 'gd-',
-            'gdCacheExpire'  => 600,
+            'rootCssClass' => 'elfinder-navbar-root-googledrive',
+            'gdAlias' => '%s@GDrive',
+            'gdCacheDir' => __DIR__.'/.tmp',
+            'gdCachePrefix' => 'gd-',
+            'gdCacheExpire' => 600,
         ];
 
         $this->options = array_merge($this->options, $opts);
@@ -74,7 +74,7 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
             $options['client_secret'] = ELFINDER_GOOGLEDRIVE_CLIENTSECRET;
         }
 
-        if (!isset($options['pass'])) {
+        if (! isset($options['pass'])) {
             $options['pass'] = '';
         }
 
@@ -92,7 +92,7 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
 
             $options = array_merge($this->session->get('GoogleDriveAuthParams', []), $options);
 
-            if (!isset($options['access_token'])) {
+            if (! isset($options['access_token'])) {
                 $options['access_token'] = $this->session->get('GoogleDriveTokens', []);
                 $this->session->remove('GoogleDriveTokens');
             }
@@ -131,9 +131,9 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
                            .'?cmd=netmount&protocol=googledrive&host=1';
                 $client->setRedirectUri($callback);
 
-                if (!$aToken && empty($_GET['code'])) {
+                if (! $aToken && empty($_GET['code'])) {
                     $client->setScopes([Google_Service_Drive::DRIVE]);
-                    if (!empty($options['offline'])) {
+                    if (! empty($options['offline'])) {
                         $client->setApprovalPrompt('force');
                         $client->setAccessType('offline');
                     }
@@ -158,7 +158,7 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
                         return ['exit' => 'callback', 'out' => $out];
                     }
                 } else {
-                    if (!empty($_GET['code'])) {
+                    if (! empty($_GET['code'])) {
                         $aToken = $client->fetchAccessTokenWithAuthCode($_GET['code']);
                         $options['access_token'] = $aToken;
                         $this->session->set('GoogleDriveTokens', $aToken)->set('GoogleDriveAuthParams', $options);
@@ -200,7 +200,7 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
             }
         }
 
-        if (!$aToken) {
+        if (! $aToken) {
             return ['exit' => true, 'error' => elFinder::ERROR_REAUTH_REQUIRE];
         }
 
@@ -277,7 +277,7 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
         $client->setClientId($opts['client_id']);
         $client->setClientSecret($opts['client_secret']);
 
-        if (!empty($opts['access_token'])) {
+        if (! empty($opts['access_token'])) {
             $client->setAccessToken($opts['access_token']);
         }
         if ($client->isAccessTokenExpired()) {
@@ -292,7 +292,7 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
         $service = new \Google_Service_Drive($client);
 
         // If path is not set, use the root
-        if (!isset($opts['path']) || $opts['path'] === '') {
+        if (! isset($opts['path']) || $opts['path'] === '') {
             $opts['path'] = 'root';
         }
 
@@ -314,7 +314,7 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
         $opts['filesystem'] = $filesystem;
         $opts['separator'] = '/';
         $opts['checkSubfolders'] = true;
-        if (!isset($opts['alias'])) {
+        if (! isset($opts['alias'])) {
             $opts['alias'] = 'GoogleDrive';
         }
 

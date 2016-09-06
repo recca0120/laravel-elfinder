@@ -55,7 +55,7 @@ class elFinderConnector
     {
         $isPost = $_SERVER['REQUEST_METHOD'] == 'POST';
         $src = $_SERVER['REQUEST_METHOD'] == 'POST' ? $_POST : $_GET;
-        if ($isPost && !$src && $rawPostData = @file_get_contents('php://input')) {
+        if ($isPost && ! $src && $rawPostData = @file_get_contents('php://input')) {
             // for support IE XDomainRequest()
             $parts = explode('&', $rawPostData);
             foreach ($parts as $part) {
@@ -63,7 +63,7 @@ class elFinderConnector
                 $key = rawurldecode($key);
                 if (substr($key, -2) === '[]') {
                     $key = substr($key, 0, strlen($key) - 2);
-                    if (!isset($src[$key])) {
+                    if (! isset($src[$key])) {
                         $src[$key] = [];
                     }
                     $src[$key][] = rawurldecode($value);
@@ -77,22 +77,22 @@ class elFinderConnector
         $cmd = isset($src['cmd']) ? $src['cmd'] : '';
         $args = [];
 
-        if (!function_exists('json_encode')) {
+        if (! function_exists('json_encode')) {
             $error = $this->elFinder->error(elFinder::ERROR_CONF, elFinder::ERROR_CONF_NO_JSON);
             $this->output(['error' => '{"error":["'.implode('","', $error).'"]}', 'raw' => true]);
         }
 
-        if (!$this->elFinder->loaded()) {
+        if (! $this->elFinder->loaded()) {
             $this->output(['error' => $this->elFinder->error(elFinder::ERROR_CONF, elFinder::ERROR_CONF_NO_VOL), 'debug' => $this->elFinder->mountErrors]);
         }
 
         // telepat_mode: on
-        if (!$cmd && $isPost) {
+        if (! $cmd && $isPost) {
             $this->output(['error' => $this->elFinder->error(elFinder::ERROR_UPLOAD, elFinder::ERROR_UPLOAD_TOTAL_SIZE), 'header' => 'Content-Type: text/html']);
         }
         // telepat_mode: off
 
-        if (!$this->elFinder->commandExists($cmd)) {
+        if (! $this->elFinder->commandExists($cmd)) {
             $this->output(['error' => $this->elFinder->error(elFinder::ERROR_UNKNOWN_CMD)]);
         }
 
@@ -108,7 +108,7 @@ class elFinderConnector
             } else {
                 $arg = isset($src[$name]) ? $src[$name] : '';
 
-                if (!is_array($arg) && $req !== '') {
+                if (! is_array($arg) && $req !== '') {
                     $arg = trim($arg);
                 }
                 if ($req && $arg === '') {
@@ -161,7 +161,7 @@ class elFinderConnector
             if (elFinder::isSeekableStream($fp) && (array_search('Accept-Ranges: none', headers_list()) === false)) {
                 header('Accept-Ranges: bytes');
                 $psize = null;
-                if (!empty($_SERVER['HTTP_RANGE'])) {
+                if (! empty($_SERVER['HTTP_RANGE'])) {
                     $size = $data['info']['size'];
                     $start = 0;
                     $end = $size - 1;
@@ -171,7 +171,7 @@ class elFinderConnector
                                 $start = $size - $matches[2];
                             } else {
                                 $start = intval($matches[1]);
-                                if (!empty($matches[2])) {
+                                if (! empty($matches[2])) {
                                     $end = intval($matches[2]);
                                     if ($end >= $size) {
                                         $end = $size - 1;
@@ -194,7 +194,7 @@ class elFinderConnector
                 }
             } else {
                 header('Accept-Ranges: none');
-                if (isset($data['info']) && !$data['info']['size']) {
+                if (isset($data['info']) && ! $data['info']['size']) {
                     if (function_exists('header_remove')) {
                         header_remove('Content-Length');
                     } else {
@@ -215,12 +215,12 @@ class elFinderConnector
                 stream_copy_to_stream($fp, $out, $psize);
                 fclose($out);
             }
-            if (!empty($data['volume'])) {
+            if (! empty($data['volume'])) {
                 $data['volume']->close($data['pointer'], $data['info']['hash']);
             }
             exit();
         } else {
-            if (!empty($data['raw']) && !empty($data['error'])) {
+            if (! empty($data['raw']) && ! empty($data['error'])) {
                 echo $data['error'];
             } else {
                 if (isset($data['debug']) && isset($data['debug']['phpErrors'])) {

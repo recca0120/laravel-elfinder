@@ -4,10 +4,10 @@ namespace Recca0120\Elfinder\Http\Controllers;
 
 use Closure;
 use elFinder;
-use Illuminate\Contracts\Auth\Guard as GuardContract;
-use Illuminate\Contracts\Foundation\Application as ApplicationContract;
-use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
-use Illuminate\Contracts\Routing\UrlGenerator as UrlGeneratorContract;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -26,7 +26,7 @@ class ElfinderController extends Controller
      *
      * @return mixed
      */
-    public function elfinder(ResponseFactoryContract $responseFactory, SessionManager $sessionManager)
+    public function elfinder(ResponseFactory $responseFactory, SessionManager $sessionManager)
     {
         $token = $sessionManager->driver()->token();
 
@@ -45,10 +45,10 @@ class ElfinderController extends Controller
      * @return mixed
      */
     public function connector(
-        ApplicationContract $app,
+        Application $app,
         Filesystem $filesystem,
-        UrlGeneratorContract $urlGenerator,
-        GuardContract $guard,
+        UrlGenerator $urlGenerator,
+        Guard $guard,
         Session $session
     ) {
         $config = config('elfinder');
@@ -78,10 +78,10 @@ class ElfinderController extends Controller
                     }
 
                     $disk = array_merge([
-                        'mimeDetect'    => 'internal',
-                        'utf8fix'       => true,
-                        'tmbCrop'       => false,
-                        'tmbBgColor'    => 'transparent',
+                        'mimeDetect' => 'internal',
+                        'utf8fix' => true,
+                        'tmbCrop' => false,
+                        'tmbBgColor' => 'transparent',
                         'accessControl' => Arr::get($config, 'accessControl'),
                     ], $disk);
                     break;
@@ -89,7 +89,7 @@ class ElfinderController extends Controller
             $roots[$key] = $disk;
         }
         $options = array_merge($options, [
-            'roots'   => $roots,
+            'roots' => $roots,
             'session' => $session,
         ]);
         $connector = new Connector(new elFinder($options));
@@ -107,14 +107,14 @@ class ElfinderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function sound(ResponseFactoryContract $responseFactory, Filesystem $filesystem, Request $request, $file)
+    public function sound(ResponseFactory $responseFactory, Filesystem $filesystem, Request $request, $file)
     {
         $filename = __DIR__.'/../../../resources/elfinder/sounds/'.$file;
         $mimeType = $filesystem->mimeType($filename);
         $lastModified = $filesystem->lastModified($filename);
         $eTag = sha1_file($filename);
         $headers = [
-            'content-type'  => $mimeType,
+            'content-type' => $mimeType,
             'last-modified' => date('D, d M Y H:i:s ', $lastModified).'GMT',
         ];
 

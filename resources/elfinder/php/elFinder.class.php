@@ -124,33 +124,33 @@ class elFinder
      * @var array
      **/
     protected $commands = [
-        'open'      => ['target' => false, 'tree' => false, 'init' => false, 'mimes' => false, 'compare' => false],
-        'ls'        => ['target' => true, 'mimes' => false, 'intersect' => false],
-        'tree'      => ['target' => true],
-        'parents'   => ['target' => true],
-        'tmb'       => ['targets' => true],
-        'file'      => ['target' => true, 'download' => false],
-        'zipdl'     => ['targets' => true, 'download' => false],
-        'size'      => ['targets' => true],
-        'mkdir'     => ['target' => true, 'name' => false, 'dirs' => false],
-        'mkfile'    => ['target' => true, 'name' => true, 'mimes' => false],
-        'rm'        => ['targets' => true],
-        'rename'    => ['target' => true, 'name' => true, 'mimes' => false],
+        'open' => ['target' => false, 'tree' => false, 'init' => false, 'mimes' => false, 'compare' => false],
+        'ls' => ['target' => true, 'mimes' => false, 'intersect' => false],
+        'tree' => ['target' => true],
+        'parents' => ['target' => true],
+        'tmb' => ['targets' => true],
+        'file' => ['target' => true, 'download' => false],
+        'zipdl' => ['targets' => true, 'download' => false],
+        'size' => ['targets' => true],
+        'mkdir' => ['target' => true, 'name' => false, 'dirs' => false],
+        'mkfile' => ['target' => true, 'name' => true, 'mimes' => false],
+        'rm' => ['targets' => true],
+        'rename' => ['target' => true, 'name' => true, 'mimes' => false],
         'duplicate' => ['targets' => true, 'suffix' => false],
-        'paste'     => ['dst' => true, 'targets' => true, 'cut' => false, 'mimes' => false, 'renames' => false, 'hashes' => false, 'suffix' => false],
-        'upload'    => ['target' => true, 'FILES' => true, 'mimes' => false, 'html' => false, 'upload' => false, 'name' => false, 'upload_path' => false, 'chunk' => false, 'cid' => false, 'node' => false, 'renames' => false, 'hashes' => false, 'suffix' => false, 'mtime' => false],
-        'get'       => ['target' => true, 'conv' => false],
-        'put'       => ['target' => true, 'content' => '', 'mimes' => false],
-        'archive'   => ['targets' => true, 'type' => true, 'mimes' => false, 'name' => false],
-        'extract'   => ['target' => true, 'mimes' => false, 'makedir' => false],
-        'search'    => ['q' => true, 'mimes' => false, 'target' => false],
-        'info'      => ['targets' => true, 'compare' => false],
-        'dim'       => ['target' => true],
-        'resize'    => ['target' => true, 'width' => true, 'height' => true, 'mode' => false, 'x' => false, 'y' => false, 'degree' => false, 'quality' => false],
-        'netmount'  => ['protocol' => true, 'host' => true, 'path' => false, 'port' => false, 'user' => false, 'pass' => false, 'alias' => false, 'options' => false],
-        'url'       => ['target' => true, 'options' => false],
-        'callback'  => ['node' => true, 'json' => false, 'bind' => false, 'done' => false],
-        'chmod'     => ['targets' => true, 'mode' => true],
+        'paste' => ['dst' => true, 'targets' => true, 'cut' => false, 'mimes' => false, 'renames' => false, 'hashes' => false, 'suffix' => false],
+        'upload' => ['target' => true, 'FILES' => true, 'mimes' => false, 'html' => false, 'upload' => false, 'name' => false, 'upload_path' => false, 'chunk' => false, 'cid' => false, 'node' => false, 'renames' => false, 'hashes' => false, 'suffix' => false, 'mtime' => false],
+        'get' => ['target' => true, 'conv' => false],
+        'put' => ['target' => true, 'content' => '', 'mimes' => false],
+        'archive' => ['targets' => true, 'type' => true, 'mimes' => false, 'name' => false],
+        'extract' => ['target' => true, 'mimes' => false, 'makedir' => false],
+        'search' => ['q' => true, 'mimes' => false, 'target' => false],
+        'info' => ['targets' => true, 'compare' => false],
+        'dim' => ['target' => true],
+        'resize' => ['target' => true, 'width' => true, 'height' => true, 'mode' => false, 'x' => false, 'y' => false, 'degree' => false, 'quality' => false],
+        'netmount' => ['protocol' => true, 'host' => true, 'path' => false, 'port' => false, 'user' => false, 'pass' => false, 'alias' => false, 'options' => false],
+        'url' => ['target' => true, 'options' => false],
+        'callback' => ['node' => true, 'json' => false, 'bind' => false, 'done' => false],
+        'chmod' => ['targets' => true, 'mode' => true],
     ];
 
     /**
@@ -328,22 +328,22 @@ class elFinder
         // set error handler of WARNING, NOTICE
         set_error_handler('elFinder::phpErrorHandler', E_WARNING | E_NOTICE | E_USER_WARNING | E_USER_NOTICE);
 
-        if (!interface_exists('elFinderSessionInterface')) {
+        if (! interface_exists('elFinderSessionInterface')) {
             include_once dirname(__FILE__).'/elFinderSessionInterface.php';
         }
 
         // session handler
-        if (!empty($opts['session']) && $opts['session'] instanceof elFinderSessionInterface) {
+        if (! empty($opts['session']) && $opts['session'] instanceof elFinderSessionInterface) {
             $this->session = $opts['session'];
         } else {
             $sessionOpts = [
-                'base64encode' => !empty($opts['base64encodeSessionData']),
-                'keys'         => [
-                    'default'   => !empty($opts['sessionCacheKey']) ? $opts['sessionCacheKey'] : 'elFinderCaches',
-                    'netvolume' => !empty($opts['netVolumesSessionKey']) ? $opts['netVolumesSessionKey'] : 'elFinderNetVolumes',
+                'base64encode' => ! empty($opts['base64encodeSessionData']),
+                'keys' => [
+                    'default' => ! empty($opts['sessionCacheKey']) ? $opts['sessionCacheKey'] : 'elFinderCaches',
+                    'netvolume' => ! empty($opts['netVolumesSessionKey']) ? $opts['netVolumesSessionKey'] : 'elFinderNetVolumes',
                 ],
             ];
-            if (!class_exists('elFinderSession')) {
+            if (! class_exists('elFinderSession')) {
                 include_once dirname(__FILE__).'/elFinderSession.php';
             }
             $this->session = new elFinderSession($sessionOpts);
@@ -369,15 +369,15 @@ class elFinder
         $this->uploadTempPath = (isset($opts['uploadTempPath']) ? $opts['uploadTempPath'] : '');
         $this->callbackWindowURL = (isset($opts['callbackWindowURL']) ? $opts['callbackWindowURL'] : '');
         self::$commonTempPath = (isset($opts['commonTempPath']) ? $opts['commonTempPath'] : './.tmp');
-        if (!is_writable(self::$commonTempPath)) {
+        if (! is_writable(self::$commonTempPath)) {
             self::$commonTempPath = '';
         }
         $this->maxArcFilesSize = isset($opts['maxArcFilesSize']) ? intval($opts['maxArcFilesSize']) : 0;
         $this->optionsNetVolumes = (isset($opts['optionsNetVolumes']) && is_array($opts['optionsNetVolumes'])) ? $opts['optionsNetVolumes'] : [];
 
         // deprecated settings
-        $this->netVolumesSessionKey = !empty($opts['netVolumesSessionKey']) ? $opts['netVolumesSessionKey'] : 'elFinderNetVolumes';
-        self::$sessionCacheKey = !empty($opts['sessionCacheKey']) ? $opts['sessionCacheKey'] : 'elFinderCaches';
+        $this->netVolumesSessionKey = ! empty($opts['netVolumesSessionKey']) ? $opts['netVolumesSessionKey'] : 'elFinderNetVolumes';
+        self::$sessionCacheKey = ! empty($opts['sessionCacheKey']) ? $opts['sessionCacheKey'] : 'elFinderCaches';
 
         // check session cache
         $_optsMD5 = md5(json_encode($opts['roots']));
@@ -386,7 +386,7 @@ class elFinder
         }
 
         // setlocale and global locale regists to elFinder::locale
-        self::$locale = !empty($opts['locale']) ? $opts['locale'] : 'en_US.UTF-8';
+        self::$locale = ! empty($opts['locale']) ? $opts['locale'] : 'en_US.UTF-8';
         if (false === setlocale(LC_ALL, self::$locale)) {
             self::$locale = setlocale(LC_ALL, '');
         }
@@ -395,18 +395,18 @@ class elFinder
         self::$defaultMimefile = (isset($opts['defaultMimefile']) ? $opts['defaultMimefile'] : '');
 
         // bind events listeners
-        if (!empty($opts['bind']) && is_array($opts['bind'])) {
+        if (! empty($opts['bind']) && is_array($opts['bind'])) {
             $_req = $_SERVER['REQUEST_METHOD'] == 'POST' ? $_POST : $_GET;
             $_reqCmd = isset($_req['cmd']) ? $_req['cmd'] : '';
             foreach ($opts['bind'] as $cmd => $handlers) {
                 $doRegist = (strpos($cmd, '*') !== false);
-                if (!$doRegist) {
+                if (! $doRegist) {
                     $_getcmd = create_function('$cmd', 'list($ret) = explode(\'.\', $cmd);return trim($ret);');
                     $doRegist = ($_reqCmd && in_array($_reqCmd, array_map($_getcmd, explode(' ', $cmd))));
                 }
                 if ($doRegist) {
                     // for backward compatibility
-                    if (!is_array($handlers)) {
+                    if (! is_array($handlers)) {
                         $handlers = [$handlers];
                     } else {
                         if (count($handlers) === 2 && is_object($handlers[0])) {
@@ -432,16 +432,16 @@ class elFinder
             }
         }
 
-        if (!isset($opts['roots']) || !is_array($opts['roots'])) {
+        if (! isset($opts['roots']) || ! is_array($opts['roots'])) {
             $opts['roots'] = [];
         }
 
         // check for net volumes stored in session
         $netVolumes = $this->getNetVolumes();
         foreach ($netVolumes as $key => $root) {
-            if (!isset($root['id'])) {
+            if (! isset($root['id'])) {
                 // given fixed unique id
-                if (!$root['id'] = $this->getNetVolumeUniqueId($netVolumes)) {
+                if (! $root['id'] = $this->getNetVolumeUniqueId($netVolumes)) {
                     $this->mountErrors[] = 'Netmount Driver "'.$root['driver'].'" : Could\'t given volume id.';
                     continue;
                 }
@@ -467,7 +467,7 @@ class elFinder
                         $id = $volume->id();
 
                         $this->volumes[$id] = $volume;
-                        if ((!$this->default || $volume->root() !== $volume->defaultPath()) && $volume->isReadable()) {
+                        if ((! $this->default || $volume->root() !== $volume->defaultPath()) && $volume->isReadable()) {
                             $this->default = $this->volumes[$id];
                         }
                     } else {
@@ -484,7 +484,7 @@ class elFinder
         }
 
         // if at least one readable volume - ii desu >_<
-        $this->loaded = !empty($this->default);
+        $this->loaded = ! empty($this->default);
 
         // restore error handler for now
         restore_error_handler();
@@ -557,7 +557,7 @@ class elFinder
         $cmds = array_unique($cmds);
 
         foreach ($cmds as $cmd) {
-            if (!isset($this->listeners[$cmd])) {
+            if (! isset($this->listeners[$cmd])) {
                 $this->listeners[$cmd] = [];
             }
 
@@ -581,7 +581,7 @@ class elFinder
      **/
     public function unbind($cmd, $handler)
     {
-        if (!empty($this->listeners[$cmd])) {
+        if (! empty($this->listeners[$cmd])) {
             foreach ($this->listeners[$cmd] as $i => $h) {
                 if ($h === $handler) {
                     unset($this->listeners[$cmd][$i]);
@@ -638,7 +638,7 @@ class elFinder
 
     private function session_expires()
     {
-        if (!$last = $this->session->get(':LAST_ACTIVITY')) {
+        if (! $last = $this->session->get(':LAST_ACTIVITY')) {
             $this->session->set(':LAST_ACTIVITY', time());
 
             return false;
@@ -668,7 +668,7 @@ class elFinder
         // set error handler of WARNING, NOTICE
         set_error_handler('elFinder::phpErrorHandler', E_WARNING | E_NOTICE | E_USER_WARNING | E_USER_NOTICE);
 
-        if (!$this->loaded) {
+        if (! $this->loaded) {
             return ['error' => $this->error(self::ERROR_CONF, self::ERROR_CONF_NO_VOL)];
         }
 
@@ -676,11 +676,11 @@ class elFinder
             return ['error' => $this->error(self::ERROR_SESSION_EXPIRES)];
         }
 
-        if (!$this->commandExists($cmd)) {
+        if (! $this->commandExists($cmd)) {
             return ['error' => $this->error(self::ERROR_UNKNOWN_CMD)];
         }
 
-        if (!empty($args['mimes']) && is_array($args['mimes'])) {
+        if (! empty($args['mimes']) && is_array($args['mimes'])) {
             foreach ($this->volumes as $id => $v) {
                 $this->volumes[$id]->setMimesFilter($args['mimes']);
             }
@@ -688,7 +688,7 @@ class elFinder
 
         // call pre handlers for this command
         $args['sessionCloseEarlier'] = isset($this->sessionUseCmds[$cmd]) ? false : $this->sessionCloseEarlier;
-        if (!empty($this->listeners[$cmd.'.pre'])) {
+        if (! empty($this->listeners[$cmd.'.pre'])) {
             $volume = isset($args['target']) ? $this->volume($args['target']) : false;
             foreach ($this->listeners[$cmd.'.pre'] as $handler) {
                 call_user_func_array($handler, [$cmd, &$args, $this, $volume]);
@@ -712,7 +712,7 @@ class elFinder
         } catch (Exception $e) {
             $result = [
                 'error' => htmlspecialchars($e->getMessage()),
-                'sync'  => true,
+                'sync' => true,
             ];
         }
 
@@ -727,7 +727,7 @@ class elFinder
         }
 
         // call handlers for this command
-        if (!empty($this->listeners[$cmd])) {
+        if (! empty($this->listeners[$cmd])) {
             $volume = isset($args['target']) ? $this->volume($args['target']) : false;
             foreach ($this->listeners[$cmd] as $handler) {
                 if (call_user_func_array($handler, [$cmd, &$result, $args, $this, $volume])) {
@@ -738,7 +738,7 @@ class elFinder
         }
 
         // replace removed files info with removed files hashes
-        if (!empty($result['removed'])) {
+        if (! empty($result['removed'])) {
             $removed = [];
             foreach ($result['removed'] as $file) {
                 $removed[] = $file['hash'];
@@ -746,24 +746,24 @@ class elFinder
             $result['removed'] = array_unique($removed);
         }
         // remove hidden files and filter files by mimetypes
-        if (!empty($result['added'])) {
+        if (! empty($result['added'])) {
             $result['added'] = $this->filter($result['added']);
         }
         // remove hidden files and filter files by mimetypes
-        if (!empty($result['changed'])) {
+        if (! empty($result['changed'])) {
             $result['changed'] = $this->filter($result['changed']);
         }
 
-        if ($this->debug || !empty($args['debug'])) {
+        if ($this->debug || ! empty($args['debug'])) {
             $result['debug'] = [
-                'connector'   => 'php',
-                'phpver'      => PHP_VERSION,
-                'time'        => $this->utime() - $this->time,
-                'memory'      => (function_exists('memory_get_peak_usage') ? ceil(memory_get_peak_usage() / 1024).'Kb / ' : '').ceil(memory_get_usage() / 1024).'Kb / '.ini_get('memory_limit'),
-                'upload'      => $this->uploadDebug,
-                'volumes'     => [],
+                'connector' => 'php',
+                'phpver' => PHP_VERSION,
+                'time' => $this->utime() - $this->time,
+                'memory' => (function_exists('memory_get_peak_usage') ? ceil(memory_get_peak_usage() / 1024).'Kb / ' : '').ceil(memory_get_usage() / 1024).'Kb / '.ini_get('memory_limit'),
+                'upload' => $this->uploadDebug,
+                'volumes' => [],
                 'mountErrors' => $this->mountErrors,
-                'phpErrors'   => self::$phpErrors,
+                'phpErrors' => self::$phpErrors,
             ];
             self::$phpErrors = [];
 
@@ -776,7 +776,7 @@ class elFinder
             $volume->umount();
         }
 
-        if (!empty($result['callback'])) {
+        if (! empty($result['callback'])) {
             $result['callback']['json'] = json_encode($result);
             $this->callback($result['callback']);
         } else {
@@ -873,10 +873,10 @@ class elFinder
     protected function getPluginInstance($name, $opts = [])
     {
         $key = strtolower($name);
-        if (!isset($this->plugins[$key])) {
+        if (! isset($this->plugins[$key])) {
             $class = 'elFinderPlugin'.$name;
             // to try auto load
-            if (!class_exists($class)) {
+            if (! class_exists($class)) {
                 $p_file = dirname(__FILE__).DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.'plugin.php';
                 if (is_file($p_file)) {
                     include_once $p_file;
@@ -924,7 +924,7 @@ class elFinder
         $protocol = $args['protocol'];
 
         if ($protocol === 'netunmount') {
-            if (!empty($args['user']) && $volume = $this->volume($args['user'])) {
+            if (! empty($args['user']) && $volume = $this->volume($args['user'])) {
                 if ($this->removeNetVolume($args['host'], $volume)) {
                     return ['removed' => [['hash' => $volume->root()]]];
                 }
@@ -936,11 +936,11 @@ class elFinder
         $driver = isset(self::$netDrivers[$protocol]) ? self::$netDrivers[$protocol] : '';
         $class = 'elFinderVolume'.$driver;
 
-        if (!class_exists($class)) {
+        if (! class_exists($class)) {
             return ['error' => $this->error(self::ERROR_NETMOUNT, $args['host'], self::ERROR_NETMOUNT_NO_DRIVER)];
         }
 
-        if (!$args['path']) {
+        if (! $args['path']) {
             $args['path'] = '/';
         }
 
@@ -974,22 +974,22 @@ class elFinder
 
         $netVolumes = $this->getNetVolumes();
 
-        if (!isset($options['id'])) {
+        if (! isset($options['id'])) {
             // given fixed unique id
-            if (!$options['id'] = $this->getNetVolumeUniqueId($netVolumes)) {
+            if (! $options['id'] = $this->getNetVolumeUniqueId($netVolumes)) {
                 return ['error' => $this->error(self::ERROR_NETMOUNT, $args['host'], 'Could\'t given volume id.')];
             }
         }
 
         // load additional volume root options
-        if (!empty($this->optionsNetVolumes['*'])) {
+        if (! empty($this->optionsNetVolumes['*'])) {
             $options = array_merge($options, $this->optionsNetVolumes['*']);
         }
-        if (!empty($this->optionsNetVolumes[$protocol])) {
+        if (! empty($this->optionsNetVolumes[$protocol])) {
             $options = array_merge($options, $this->optionsNetVolumes[$protocol]);
         }
 
-        if (!$key = $volume->netMountKey) {
+        if (! $key = $volume->netMountKey) {
             $key = md5($protocol.'-'.implode('-', $options));
         }
         $options['netkey'] = $key;
@@ -1026,8 +1026,8 @@ class elFinder
     protected function open($args)
     {
         $target = $args['target'];
-        $init = !empty($args['init']);
-        $tree = !empty($args['tree']);
+        $init = ! empty($args['init']);
+        $tree = ! empty($args['tree']);
         $volume = $this->volume($target);
         $cwd = $volume ? $volume->dir($target) : false;
         $hash = $init ? 'default folder' : '#'.$target;
@@ -1037,15 +1037,15 @@ class elFinder
         // on init request we can get invalid dir hash -
         // dir which can not be opened now, but remembered by client,
         // so open default dir
-        if ((!$cwd || !$cwd['read']) && $init) {
+        if ((! $cwd || ! $cwd['read']) && $init) {
             $volume = $this->default;
             $cwd = $volume->dir($volume->defaultPath());
         }
 
-        if (!$cwd) {
+        if (! $cwd) {
             return ['error' => $this->error(self::ERROR_OPEN, $hash, self::ERROR_DIR_NOT_FOUND)];
         }
-        if (!$cwd['read']) {
+        if (! $cwd['read']) {
             return ['error' => $this->error(self::ERROR_OPEN, $hash, self::ERROR_PERM_DENIED)];
         }
 
@@ -1102,16 +1102,16 @@ class elFinder
         }
 
         $result = [
-            'cwd'     => $cwd,
+            'cwd' => $cwd,
             'options' => $volume->options($cwd['hash']),
-            'files'   => $files,
+            'files' => $files,
         ];
 
         if ($compare) {
             $result['cwd']['compare'] = $compare;
         }
 
-        if (!empty($args['init'])) {
+        if (! empty($args['init'])) {
             $result['api'] = $this->version;
             $result['uplMaxSize'] = ini_get('upload_max_filesize');
             $result['uplMaxFile'] = ini_get('max_file_uploads');
@@ -1227,10 +1227,10 @@ class elFinder
     protected function zipdl($args)
     {
         $targets = $args['targets'];
-        $download = !empty($args['download']);
+        $download = ! empty($args['download']);
         $h404 = 'HTTP/1.x 404 Not Found';
 
-        if (!$download) {
+        if (! $download) {
             //1st: Return srrsy contains download archive file info
             $error = [self::ERROR_ARCHIVE];
             if (($volume = $this->volume($targets[0])) !== false) {
@@ -1265,7 +1265,7 @@ class elFinder
             $file = $targets[1];
             $path = $volume->getTempPath().DIRECTORY_SEPARATOR.$file;
             register_shutdown_function(create_function('$f', 'is_file($f) && unlink($f);'), $path);
-            if (!is_readable($path)) {
+            if (! is_readable($path)) {
                 return ['error' => 'File not found', 'header' => $h404, 'raw' => true];
             }
             $name = $targets[2];
@@ -1289,7 +1289,7 @@ class elFinder
             $file = fstat($fp);
             $result = [
                 'pointer' => $fp,
-                'header'  => [
+                'header' => [
                     'Content-Type: '.$mime,
                     'Content-Disposition: attachment; '.$filename,
                     'Content-Transfer-Encoding: binary',
@@ -1316,7 +1316,7 @@ class elFinder
     protected function file($args)
     {
         $target = $args['target'];
-        $download = !empty($args['download']);
+        $download = ! empty($args['download']);
         $h403 = 'HTTP/1.x 403 Access Denied';
         $h404 = 'HTTP/1.x 404 Not Found';
 
@@ -1328,7 +1328,7 @@ class elFinder
             return ['error' => 'File not found', 'header' => $h404, 'raw' => true];
         }
 
-        if (!$file['read']) {
+        if (! $file['read']) {
             return ['error' => 'Access denied', 'header' => $h403, 'raw' => true];
         }
 
@@ -1351,7 +1351,7 @@ class elFinder
                     $inlineRegex = false;
                 }
             }
-            if (!$inlineRegex) {
+            if (! $inlineRegex) {
                 $inlineRegex = '#^(?:(?:image|text)|application/x-shockwave-flash$)#';
             }
             $disp = preg_match($inlineRegex, $mime) ? 'inline' : 'attachment';
@@ -1372,10 +1372,10 @@ class elFinder
         }
 
         $result = [
-            'volume'  => $volume,
+            'volume' => $volume,
             'pointer' => $fp,
-            'info'    => $file,
-            'header'  => [
+            'info' => $file,
+            'header' => [
                 'Content-Type: '.$mime,
                 'Content-Disposition: '.$disp.'; '.$filename,
                 'Content-Transfer-Encoding: binary',
@@ -1406,7 +1406,7 @@ class elFinder
         foreach ($args['targets'] as $target) {
             if (($volume = $this->volume($target)) == false
             || ($file = $volume->file($target)) == false
-            || !$file['read']) {
+            || ! $file['read']) {
                 return ['error' => $this->error(self::ERROR_OPEN, '#'.$target)];
             }
 
@@ -1430,7 +1430,7 @@ class elFinder
         $target = $args['target'];
         $name = $args['name'];
         $dirs = $args['dirs'];
-        if ($name === '' && !$dirs) {
+        if ($name === '' && ! $dirs) {
             return ['error' => $this->error(self::ERROR_INV_PARAMS, 'mkdir')];
         }
 
@@ -1445,7 +1445,7 @@ class elFinder
                 $tgt = &$mkdirs;
                 $_names = explode('/', trim($dir, '/'));
                 foreach ($_names as $_key => $_name) {
-                    if (!isset($tgt[$_name])) {
+                    if (! isset($tgt[$_name])) {
                         $tgt[$_name] = [];
                     }
                     $tgt = &$tgt[$_name];
@@ -1501,7 +1501,7 @@ class elFinder
         $name = $args['name'];
 
         if (($volume = $this->volume($target)) == false
-        ||  ($rm = $volume->file($target)) == false) {
+        || ($rm = $volume->file($target)) == false) {
             return ['error' => $this->error(self::ERROR_RENAME, '#'.$target, self::ERROR_FILE_NOT_FOUND)];
         }
         $rm['realpath'] = $volume->realpath($target);
@@ -1564,7 +1564,7 @@ class elFinder
 
                 return $result;
             }
-            if (!$volume->rm($target)) {
+            if (! $volume->rm($target)) {
                 $result['warning'] = $this->error($volume->error());
 
                 return $result;
@@ -1591,7 +1591,7 @@ class elFinder
      **/
     protected function get_remote_contents(&$url, $timeout = 30, $redirect_max = 5, $ua = 'Mozilla/5.0', $fp = null)
     {
-        $method = (function_exists('curl_exec') && !ini_get('safe_mode') && !ini_get('open_basedir')) ? 'curl_get_contents' : 'fsock_get_contents';
+        $method = (function_exists('curl_exec') && ! ini_get('safe_mode') && ! ini_get('open_basedir')) ? 'curl_get_contents' : 'fsock_get_contents';
 
         return $this->$method($url, $timeout, $redirect_max, $ua, $fp);
     }
@@ -1662,7 +1662,7 @@ class elFinder
         $headers = '';
 
         $arr = parse_url($url);
-        if (!$arr) {
+        if (! $arr) {
             // Bad request
             return false;
         }
@@ -1683,10 +1683,10 @@ class elFinder
         $query .= 'Host: '.$arr['host']."\r\n";
         $query .= "Accept: */*\r\n";
         $query .= "Connection: close\r\n";
-        if (!empty($ua)) {
+        if (! empty($ua)) {
             $query .= 'User-Agent: '.$ua."\r\n";
         }
-        if (!is_null($getSize)) {
+        if (! is_null($getSize)) {
             $query .= 'Range: bytes=0-'.($getSize - 1)."\r\n";
         }
 
@@ -1695,7 +1695,7 @@ class elFinder
         $query .= "\r\n";
 
         $fp = $connect_try_count = 0;
-        while (!$fp && $connect_try_count < $connect_try) {
+        while (! $fp && $connect_try_count < $connect_try) {
             $errno = 0;
             $errstr = '';
             $fp = fsockopen(
@@ -1715,7 +1715,7 @@ class elFinder
         $fwrite = 0;
         for ($written = 0; $written < strlen($query); $written += $fwrite) {
             $fwrite = fwrite($fp, substr($query, $written));
-            if (!$fwrite) {
+            if (! $fwrite) {
                 break;
             }
         }
@@ -1748,7 +1748,7 @@ class elFinder
                     $_url = $url;
                     $url = trim($matches[1]);
                     $hash = isset($matches[2]) ? trim($matches[2]) : '';
-                    if (!preg_match('/^https?:\//', $url)) { // no scheme
+                    if (! preg_match('/^https?:\//', $url)) { // no scheme
                         if ($url[0] != '/') { // Relative path
                             // to Absolute path
                             $url = substr($url_path, 0, strrpos($url_path, '/')).'/'.$url;
@@ -1766,14 +1766,14 @@ class elFinder
             case 200:
                 $ret = true;
         }
-        if (!$ret) {
+        if (! $ret) {
             fclose($fp);
 
             return false;
         }
 
         $body = '';
-        if (!$outfp) {
+        if (! $outfp) {
             $outfp = fopen('php://temp', 'rwb');
             $body = true;
         }
@@ -1837,7 +1837,7 @@ class elFinder
     protected function detectFileExtension($path)
     {
         static $type, $finfo;
-        if (!$type) {
+        if (! $type) {
             $keys = array_keys($this->volumes);
             $volume = $this->volumes[$keys[0]];
 
@@ -1912,7 +1912,7 @@ class elFinder
         }
         $tempDir = '';
         foreach ($testDirs as $testDir) {
-            if (!$testDir || !is_dir($testDir)) {
+            if (! $testDir || ! is_dir($testDir)) {
                 continue;
             }
             if (is_writable($testDir)) {
@@ -1944,7 +1944,7 @@ class elFinder
         $targets = $args['targets'];
         $mode = intval((string) $args['mode'], 8);
 
-        if (!is_array($targets)) {
+        if (! is_array($targets)) {
             $targets = [$targets];
         }
 
@@ -2020,7 +2020,7 @@ class elFinder
                 $csize = filesize($tmpname);
 
                 $tmpExists = is_file($tmp);
-                if (!$tmpExists) {
+                if (! $tmpExists) {
                     // check upload max size
                     $uploadMaxSize = $volume->getUploadMaxSize();
                     if ($uploadMaxSize > 0 && $size > $uploadMaxSize) {
@@ -2035,7 +2035,7 @@ class elFinder
                         fclose($fp);
                         touch($base);
                     }
-                    if (!$ok) {
+                    if (! $ok) {
                         unlink($tmp);
 
                         return [self::ERROR_UPLOAD_TEMP, false];
@@ -2043,10 +2043,10 @@ class elFinder
                 } else {
                     // wait until makeing temp file (for anothor session)
                     $cnt = 1200; // Time limit 120 sec
-                    while (!is_file($base) && --$cnt) {
+                    while (! is_file($base) && --$cnt) {
                         usleep(100000); // wait 100ms
                     }
-                    if (!$cnt) {
+                    if (! $cnt) {
                         return [self::ERROR_UPLOAD_TEMP, false];
                     }
                 }
@@ -2094,13 +2094,13 @@ class elFinder
                             }
                         }
                         if ($parts) {
-                            if (!is_file($base)) {
+                            if (! is_file($base)) {
                                 touch($base);
                                 if ($resfile = tempnam($tempDir, 'ELF')) {
                                     $target = fopen($resfile, 'wb');
                                     foreach ($parts as $f) {
                                         $fp = fopen($f, 'rb');
-                                        while (!feof($fp)) {
+                                        while (! feof($fp)) {
                                             fwrite($target, fread($fp, 8192));
                                         }
                                         fclose($fp);
@@ -2148,7 +2148,7 @@ class elFinder
         $suffix = '~';
         if ($args['renames'] && is_array($args['renames'])) {
             $renames = array_flip($args['renames']);
-            if (is_string($args['suffix']) && !preg_match($ngReg, $args['suffix'])) {
+            if (is_string($args['suffix']) && ! preg_match($ngReg, $args['suffix'])) {
                 $suffix = $args['suffix'];
             }
         }
@@ -2156,7 +2156,7 @@ class elFinder
             $hashes = array_flip($args['hashes']);
         }
 
-        if (!$volume) {
+        if (! $volume) {
             return array_merge(['error' => $this->error(self::ERROR_UPLOAD, self::ERROR_TRGDIR_NOT_FOUND, '#'.$target)], $header);
         }
 
@@ -2183,11 +2183,11 @@ class elFinder
         if (empty($files)) {
 
             //--- This part is unnecessary code from 2.1.7 START ---//
-            if (!$args['upload'] && $args['name'] && is_array($args['name'])) {
+            if (! $args['upload'] && $args['name'] && is_array($args['name'])) {
                 $error = '';
                 $result['name'] = [];
                 foreach ($args['name'] as $_i => $_name) {
-                    if (!$volume->isUploadableByName($_name)) {
+                    if (! $volume->isUploadableByName($_name)) {
                         $error = $this->error(self::ERROR_UPLOAD_FILE, $_name, self::ERROR_UPLOAD_FILE_MIME);
                         break;
                     }
@@ -2245,7 +2245,7 @@ class elFinder
                         $_POST['overwrite'] = false;
                         $_name = preg_replace('~^.*?([^/#?]+)(?:\?.*)?(?:#.*)?$~', '$1', rawurldecode($url));
                         // Check `Content-Disposition` response header
-                        if ($data && ($headers = get_headers($url, true)) && !empty($headers['Content-Disposition'])) {
+                        if ($data && ($headers = get_headers($url, true)) && ! empty($headers['Content-Disposition'])) {
                             if (preg_match('/filename\*?=(?:([a-zA-Z0-9_-]+?)\'\')?"?([a-z0-9_.~%-]+)"?/i', $headers['Content-Disposition'], $m)) {
                                 $_name = rawurldecode($m[2]);
                                 if ($m[1] && strtoupper($m[1]) !== 'UTF-8' && function_exists('mb_convert_encoding')) {
@@ -2306,7 +2306,7 @@ class elFinder
             }
 
             $tmpname = $files['tmp_name'][$i];
-            $path = ($paths && !empty($paths[$i])) ? $paths[$i] : '';
+            $path = ($paths && ! empty($paths[$i])) ? $paths[$i] : '';
             $mtime = isset($mtimes[$i]) ? $mtimes[$i] : 0;
             if ($name === 'blob') {
                 if ($chunk) {
@@ -2339,7 +2339,7 @@ class elFinder
             }
 
             // do hook function 'upload.presave'
-            if (!empty($this->listeners['upload.presave'])) {
+            if (! empty($this->listeners['upload.presave'])) {
                 foreach ($this->listeners['upload.presave'] as $handler) {
                     call_user_func_array($handler, [&$path, &$name, $tmpname, $this, $volume]);
                 }
@@ -2352,7 +2352,7 @@ class elFinder
             if (($fp = fopen($tmpname, 'rb')) == false) {
                 $result['warning'] = $this->error(self::ERROR_UPLOAD_FILE, $name, self::ERROR_UPLOAD_TRANSFER);
                 $this->uploadDebug = 'Upload error: unable open tmp file';
-                if (!is_uploaded_file($tmpname)) {
+                if (! is_uploaded_file($tmpname)) {
                     if (unlink($tmpname)) {
                         unset($GLOBALS['elFinderTempFiles'][$tmpfname]);
                     }
@@ -2364,7 +2364,7 @@ class elFinder
             if ($path && $path !== $target) {
                 if ($dir = $volume->dir($path)) {
                     $_target = $path;
-                    if (!isset($addedDirs[$path])) {
+                    if (! isset($addedDirs[$path])) {
                         $addedDirs[$path] = true;
                         $result['added'][] = $dir;
                     }
@@ -2383,16 +2383,16 @@ class elFinder
                         $hash = $volume->getHash($dir, $name);
                     }
                     $rnres = $this->rename(['target' => $hash, 'name' => $volume->uniqueName($dir, $name, $suffix, true, 0)]);
-                    if (!empty($rnres['error'])) {
+                    if (! empty($rnres['error'])) {
                         $result['warning'] = $rnres['error'];
                         break;
                     }
                 }
             }
-            if (!$_target || ($file = $volume->upload($fp, $_target, $name, $tmpname, $hashes)) === false) {
+            if (! $_target || ($file = $volume->upload($fp, $_target, $name, $tmpname, $hashes)) === false) {
                 $result['warning'] = $this->error(self::ERROR_UPLOAD_FILE, $name, $volume->error());
                 fclose($fp);
-                if (!is_uploaded_file($tmpname)) {
+                if (! is_uploaded_file($tmpname)) {
                     if (unlink($tmpname)) {
                         unset($GLOBALS['elFinderTempFiles'][$tmpname]);
                     }
@@ -2402,9 +2402,9 @@ class elFinder
             }
 
             is_resource($fp) && fclose($fp);
-            if (!is_uploaded_file($tmpname)) {
+            if (! is_uploaded_file($tmpname)) {
                 clearstatcache();
-                if (!is_file($tmpname) ||  unlink($tmpname)) {
+                if (! is_file($tmpname) || unlink($tmpname)) {
                     unset($GLOBALS['elFinderTempFiles'][$tmpname]);
                 }
             }
@@ -2420,7 +2420,7 @@ class elFinder
         }
         $result['removed'] = $volume->removed();
 
-        if (!empty($args['node'])) {
+        if (! empty($args['node'])) {
             $result['callback'] = [
                 'node' => $args['node'],
                 'bind' => 'upload',
@@ -2443,7 +2443,7 @@ class elFinder
     {
         $dst = $args['dst'];
         $targets = is_array($args['targets']) ? $args['targets'] : [];
-        $cut = !empty($args['cut']);
+        $cut = ! empty($args['cut']);
         $error = $cut ? self::ERROR_MOVE : self::ERROR_COPY;
         $result = ['added' => [], 'removed' => []];
 
@@ -2453,13 +2453,13 @@ class elFinder
 
         $hashes = $renames = [];
         $suffix = '~';
-        if (!empty($args['renames'])) {
+        if (! empty($args['renames'])) {
             $renames = array_flip($args['renames']);
-            if (is_string($args['suffix']) && !preg_match('/[\/\\?*:|"<>]/', $args['suffix'])) {
+            if (is_string($args['suffix']) && ! preg_match('/[\/\\?*:|"<>]/', $args['suffix'])) {
                 $suffix = $args['suffix'];
             }
         }
-        if (!empty($args['hashes'])) {
+        if (! empty($args['hashes'])) {
             $hashes = array_flip($args['hashes']);
         }
 
@@ -2480,7 +2480,7 @@ class elFinder
                         $hash = $dstVolume->getHash($dir, $file['name']);
                     }
                     $rnres = $this->rename(['target' => $hash, 'name' => $dstVolume->uniqueName($dir, $file['name'], $suffix, true, 0)]);
-                    if (!empty($rnres['error'])) {
+                    if (! empty($rnres['error'])) {
                         $result['warning'] = $rnres['error'];
                         break;
                     }
@@ -2492,7 +2492,7 @@ class elFinder
                 break;
             }
 
-            $dirChange = !empty($file['dirChange']);
+            $dirChange = ! empty($file['dirChange']);
             unset($file['dirChange']);
             if ($dirChange) {
                 $result['changed'][] = $file;
@@ -2521,7 +2521,7 @@ class elFinder
         $target = $args['target'];
         $volume = $this->volume($target);
 
-        if (!$volume || ($file = $volume->file($target)) == false) {
+        if (! $volume || ($file = $volume->file($target)) == false) {
             return ['error' => $this->error(self::ERROR_OPEN, '#'.$target, self::ERROR_FILE_NOT_FOUND)];
         }
 
@@ -2591,7 +2591,7 @@ class elFinder
     protected function extract($args)
     {
         $target = $args['target'];
-        $mimes = !empty($args['mimes']) && is_array($args['mimes']) ? $args['mimes'] : [];
+        $mimes = ! empty($args['mimes']) && is_array($args['mimes']) ? $args['mimes'] : [];
         $error = [self::ERROR_EXTRACT, '#'.$target];
         $makedir = isset($args['makedir']) ? (bool) $args['makedir'] : null;
 
@@ -2642,8 +2642,8 @@ class elFinder
     protected function search($args)
     {
         $q = trim($args['q']);
-        $mimes = !empty($args['mimes']) && is_array($args['mimes']) ? $args['mimes'] : [];
-        $target = !empty($args['target']) ? $args['target'] : null;
+        $mimes = ! empty($args['mimes']) && is_array($args['mimes']) ? $args['mimes'] : [];
+        $target = ! empty($args['target']) ? $args['target'] : null;
         $result = [];
         $errors = [];
 
@@ -2725,7 +2725,7 @@ class elFinder
         }
 
         $result = ['files' => $files];
-        if (!is_null($compare)) {
+        if (! is_null($compare)) {
             $result['compare'] = strval($compare);
         }
 
@@ -2819,18 +2819,18 @@ class elFinder
     protected function callback($args)
     {
         $checkReg = '/[^a-zA-Z0-9;._-]/';
-        $node = (isset($args['node']) && !preg_match($checkReg, $args['node'])) ? $args['node'] : '';
+        $node = (isset($args['node']) && ! preg_match($checkReg, $args['node'])) ? $args['node'] : '';
         $json = (isset($args['json']) && json_decode($args['json'])) ? $args['json'] : '{}';
-        $bind = (isset($args['bind']) && !preg_match($checkReg, $args['bind'])) ? $args['bind'] : '';
-        $done = (!empty($args['done']));
+        $bind = (isset($args['bind']) && ! preg_match($checkReg, $args['bind'])) ? $args['bind'] : '';
+        $done = (! empty($args['done']));
 
         while (ob_get_level()) {
-            if (!ob_end_clean()) {
+            if (! ob_end_clean()) {
                 break;
             }
         }
 
-        if ($done || !$this->callbackWindowURL) {
+        if ($done || ! $this->callbackWindowURL) {
             $script = '';
             if ($node) {
                 $script .= '
@@ -2900,7 +2900,7 @@ class elFinder
             $base = dirname(__FILE__).DIRECTORY_SEPARATOR;
         }
 
-        if (!(error_reporting() & $errno)) {
+        if (! (error_reporting() & $errno)) {
             return;
         }
 
@@ -2959,7 +2959,7 @@ class elFinder
      **/
     protected function toArray($data)
     {
-        return isset($data['hash']) || !is_array($data) ? [$data] : $data;
+        return isset($data['hash']) || ! is_array($data) ? [$data] : $data;
     }
 
     /**
@@ -2994,7 +2994,7 @@ class elFinder
     {
         $exists = [];
         foreach ($files as $i => $file) {
-            if (isset($exists[$file['hash']]) || !empty($file['hidden']) || !$this->default->mimeAccepted($file['mime'])) {
+            if (isset($exists[$file['hash']]) || ! empty($file['hidden']) || ! $this->default->mimeAccepted($file['mime'])) {
                 unset($files[$i]);
             }
             $exists[$file['hash']] = true;
@@ -3032,7 +3032,7 @@ class elFinder
                 $ids[$vOps['id']] = true;
             }
         }
-        if (!$ids) {
+        if (! $ids) {
             $id = $prefix.'1';
         } else {
             $i = 0;
@@ -3110,10 +3110,10 @@ class elFinder
             return false;
         }
 
-        while (!feof($fp)) {
+        while (! feof($fp)) {
             do {
                 $c = fread($fp, 1);
-            } while (ord($c) != 0x21 && !feof($fp));
+            } while (ord($c) != 0x21 && ! feof($fp));
 
             if (feof($fp)) {
                 break;
@@ -3218,7 +3218,7 @@ class elFinder
                     break;
             }
         }
-        if (!$chk) {
+        if (! $chk) {
             unset($var);
 
             return false;
