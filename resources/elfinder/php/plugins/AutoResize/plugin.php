@@ -52,12 +52,12 @@ class elFinderPluginAutoResize
     public function __construct($opts)
     {
         $defaults = [
-            'enable'         => true,       // For control by volume driver
-            'maxWidth'       => 1024,       // Path to Water mark image
-            'maxHeight'      => 1024,       // Margin right pixel
-            'quality'        => 95,         // JPEG image save quality
-            'preserveExif'   => false,      // Preserve EXIF data (Imagick only)
-            'targetType'     => IMG_GIF | IMG_JPG | IMG_PNG | IMG_WBMP, // Target image formats ( bit-field )
+            'enable' => true,       // For control by volume driver
+            'maxWidth' => 1024,       // Path to Water mark image
+            'maxHeight' => 1024,       // Margin right pixel
+            'quality' => 95,         // JPEG image save quality
+            'preserveExif' => false,      // Preserve EXIF data (Imagick only)
+            'targetType' => IMG_GIF | IMG_JPG | IMG_PNG | IMG_WBMP, // Target image formats ( bit-field )
         ];
 
         $this->opts = array_merge($defaults, $opts);
@@ -71,7 +71,7 @@ class elFinderPluginAutoResize
             $opts = array_merge($this->opts, $volOpts);
         }
 
-        if (!$opts['enable']) {
+        if (! $opts['enable']) {
             return false;
         }
 
@@ -82,13 +82,13 @@ class elFinderPluginAutoResize
 
         // check target image type
         $imgTypes = [
-            IMAGETYPE_GIF  => IMG_GIF,
+            IMAGETYPE_GIF => IMG_GIF,
             IMAGETYPE_JPEG => IMG_JPEG,
-            IMAGETYPE_PNG  => IMG_PNG,
-            IMAGETYPE_BMP  => IMG_WBMP,
+            IMAGETYPE_PNG => IMG_PNG,
+            IMAGETYPE_BMP => IMG_WBMP,
             IMAGETYPE_WBMP => IMG_WBMP,
         ];
-        if (!($opts['targetType'] & $imgTypes[$srcImgInfo[2]])) {
+        if (! ($opts['targetType'] & $imgTypes[$srcImgInfo[2]])) {
             return false;
         }
 
@@ -145,8 +145,8 @@ class elFinderPluginAutoResize
                 break;
         }
 
-        if ($oSrcImg &&  false != ($tmp = imagecreatetruecolor($width, $height))) {
-            if (!imagecopyresampled($tmp, $oSrcImg, 0, 0, 0, 0, $width, $height, $srcImgInfo[0], $srcImgInfo[1])) {
+        if ($oSrcImg && false != ($tmp = imagecreatetruecolor($width, $height))) {
+            if (! imagecopyresampled($tmp, $oSrcImg, 0, 0, 0, 0, $width, $height, $srcImgInfo[0], $srcImgInfo[1])) {
                 return false;
             }
 
@@ -186,7 +186,7 @@ class elFinderPluginAutoResize
             if (strtoupper($img->getImageFormat()) === 'JPEG') {
                 $img->setImageCompression(imagick::COMPRESSION_JPEG);
                 $img->setImageCompressionQuality($quality);
-                if (!$preserveExif) {
+                if (! $preserveExif) {
                     try {
                         $orientation = $img->getImageOrientation();
                     } catch (ImagickException $e) {

@@ -50,16 +50,16 @@ class elFinderPluginSanitizer
     private $opts = [];
     private $replaced = [];
     private $keyMap = [
-        'ls'     => 'intersect',
+        'ls' => 'intersect',
         'upload' => 'renames',
     ];
 
     public function __construct($opts)
     {
         $defaults = [
-            'enable'   => true,  // For control by volume driver
-            'targets'  => ['\\', '/', ':', '*', '?', '"', '<', '>', '|'], // target chars
-            'replace'  => '_',    // replace to this
+            'enable' => true,  // For control by volume driver
+            'targets' => ['\\', '/', ':', '*', '?', '"', '<', '>', '|'], // target chars
+            'replace' => '_',    // replace to this
         ];
 
         $this->opts = array_merge($defaults, $opts);
@@ -68,7 +68,7 @@ class elFinderPluginSanitizer
     public function cmdPreprocess($cmd, &$args, $elfinder, $volume)
     {
         $opts = $this->getOpts($volume);
-        if (!$opts['enable']) {
+        if (! $opts['enable']) {
             return false;
         }
         $this->replaced[$cmd] = [];
@@ -91,7 +91,7 @@ class elFinderPluginSanitizer
     public function cmdPostprocess($cmd, &$result, $args, $elfinder)
     {
         if ($cmd === 'ls') {
-            if (!empty($result['list']) && !empty($this->replaced['ls'])) {
+            if (! empty($result['list']) && ! empty($this->replaced['ls'])) {
                 foreach ($result['list'] as $hash => $name) {
                     if ($keys = array_keys($this->replaced['ls'], $name)) {
                         if (count($keys) === 1) {
@@ -108,7 +108,7 @@ class elFinderPluginSanitizer
     public function onUpLoadPreSave(&$path, &$name, $src, $elfinder, $volume)
     {
         $opts = $this->getOpts($volume);
-        if (!$opts['enable']) {
+        if (! $opts['enable']) {
             return false;
         }
 

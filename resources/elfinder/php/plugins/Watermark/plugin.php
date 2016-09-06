@@ -57,13 +57,13 @@ class elFinderPluginWatermark
     public function __construct($opts)
     {
         $defaults = [
-            'enable'         => true,       // For control by volume driver
-            'source'         => 'logo.png', // Path to Water mark image
-            'marginRight'    => 5,          // Margin right pixel
-            'marginBottom'   => 5,          // Margin bottom pixel
-            'quality'        => 95,         // JPEG image save quality
-            'transparency'   => 70,         // Water mark image transparency ( other than PNG )
-            'targetType'     => IMG_GIF | IMG_JPG | IMG_PNG | IMG_WBMP, // Target image formats ( bit-field )
+            'enable' => true,       // For control by volume driver
+            'source' => 'logo.png', // Path to Water mark image
+            'marginRight' => 5,          // Margin right pixel
+            'marginBottom' => 5,          // Margin bottom pixel
+            'quality' => 95,         // JPEG image save quality
+            'transparency' => 70,         // Water mark image transparency ( other than PNG )
+            'targetType' => IMG_GIF | IMG_JPG | IMG_PNG | IMG_WBMP, // Target image formats ( bit-field )
             'targetMinPixel' => 200,         // Target image minimum pixel size
         ];
 
@@ -78,7 +78,7 @@ class elFinderPluginWatermark
             $opts = array_merge($this->opts, $volOpts);
         }
 
-        if (!$opts['enable']) {
+        if (! $opts['enable']) {
             return false;
         }
 
@@ -93,12 +93,12 @@ class elFinderPluginWatermark
         }
 
         // check water mark image
-        if (!file_exists($opts['source'])) {
+        if (! file_exists($opts['source'])) {
             $opts['source'] = dirname(__FILE__).'/'.$opts['source'];
         }
         if (is_readable($opts['source'])) {
             $watermarkImgInfo = getimagesize($opts['source']);
-            if (!$watermarkImgInfo) {
+            if (! $watermarkImgInfo) {
                 return false;
             }
         } else {
@@ -113,13 +113,13 @@ class elFinderPluginWatermark
 
         // check target image type
         $imgTypes = [
-            IMAGETYPE_GIF  => IMG_GIF,
+            IMAGETYPE_GIF => IMG_GIF,
             IMAGETYPE_JPEG => IMG_JPEG,
-            IMAGETYPE_PNG  => IMG_PNG,
-            IMAGETYPE_BMP  => IMG_WBMP,
+            IMAGETYPE_PNG => IMG_PNG,
+            IMAGETYPE_BMP => IMG_WBMP,
             IMAGETYPE_WBMP => IMG_WBMP,
         ];
-        if (!($opts['targetType'] & $imgTypes[$srcImgInfo[2]])) {
+        if (! ($opts['targetType'] & $imgTypes[$srcImgInfo[2]])) {
             return false;
         }
 
@@ -217,7 +217,7 @@ class elFinderPluginWatermark
                 break;
         }
 
-        if (!$ermsg) {
+        if (! $ermsg) {
             switch ($srcImgInfo['mime']) {
                 case 'image/gif':
                     if (imagetypes() & IMG_GIF) {

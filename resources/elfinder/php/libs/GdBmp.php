@@ -165,7 +165,6 @@ class elFinderLibGdBmp
         }
         list(, $header_size) = unpack('V', $buf);
 
-
         if ($header_size == 12) {
             $buf = fread($stream, $header_size - 4);
             if ($buf === false) {
@@ -210,8 +209,8 @@ class elFinderLibGdBmp
                 'Vclr_important', $buf
             ));
             //負の整数を受け取る可能性があるものは自前で変換する
-            if ($width  & 0x80000000) {
-                $width = -(~$width  & 0xffffffff) - 1;
+            if ($width & 0x80000000) {
+                $width = -(~$width & 0xffffffff) - 1;
             }
             if ($height & 0x80000000) {
                 $height = -(~$height & 0xffffffff) - 1;
@@ -281,14 +280,14 @@ class elFinderLibGdBmp
         }
 
         if (
-            ($width  == 0) ||
+            ($width == 0) ||
             ($height == 0) ||
             ($planes != 1) ||
             (($alpha_mask & $red_mask) != 0) ||
             (($alpha_mask & $green_mask) != 0) ||
             (($alpha_mask & $blue_mask) != 0) ||
-            (($red_mask   & $green_mask) != 0) ||
-            (($red_mask   & $blue_mask) != 0) ||
+            (($red_mask & $green_mask) != 0) ||
+            (($red_mask & $blue_mask) != 0) ||
             (($green_mask & $blue_mask) != 0)
         ) {
             //不正な画像

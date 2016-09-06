@@ -44,8 +44,8 @@ class elFinderPluginAutoRotate
     public function __construct($opts)
     {
         $defaults = [
-            'enable'         => true,       // For control by volume driver
-            'quality'        => 95,         // JPEG image save quality
+            'enable' => true,       // For control by volume driver
+            'quality' => 95,         // JPEG image save quality
         ];
 
         $this->opts = array_merge($defaults, $opts);
@@ -59,7 +59,7 @@ class elFinderPluginAutoRotate
             $opts = array_merge($this->opts, $volOpts);
         }
 
-        if (!$opts['enable']) {
+        if (! $opts['enable']) {
             return false;
         }
 
@@ -78,12 +78,12 @@ class elFinderPluginAutoRotate
 
     private function rotate($volume, $src, $srcImgInfo, $quality)
     {
-        if (!function_exists('exif_read_data')) {
+        if (! function_exists('exif_read_data')) {
             return false;
         }
         $degree = 0;
         $exif = exif_read_data($src);
-        if ($exif && !empty($exif['Orientation'])) {
+        if ($exif && ! empty($exif['Orientation'])) {
             switch ($exif['Orientation']) {
                 case 8:
                     $degree = 270;
@@ -97,7 +97,7 @@ class elFinderPluginAutoRotate
             }
         }
         $opts = [
-            'degree'     => $degree,
+            'degree' => $degree,
             'jpgQuality' => $quality,
         ];
 
