@@ -3,7 +3,6 @@
 namespace Recca0120\Elfinder;
 
 use Illuminate\Routing\Router;
-use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class ServiceProvider extends BaseServiceProvider
@@ -56,7 +55,7 @@ class ServiceProvider extends BaseServiceProvider
                 'prefix' => 'elfinder',
                 'as' => 'elfinder.',
                 'namespace' => $this->namespace,
-            ], Arr::get($config, 'elfinder.route', [])), function () {
+            ], array_get($config, 'elfinder.route', [])), function () {
                 require __DIR__.'/Http/routes.php';
             });
         }

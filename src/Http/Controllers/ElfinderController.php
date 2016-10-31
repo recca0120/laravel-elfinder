@@ -12,7 +12,6 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Session\SessionManager;
-use Illuminate\Support\Arr;
 use Recca0120\Elfinder\Connector;
 use Recca0120\Elfinder\Session;
 
@@ -52,9 +51,9 @@ class ElfinderController extends Controller
         Session $session
     ) {
         $config = config('elfinder');
-        $options = Arr::get($config, 'options', []);
+        $options = array_get($config, 'options', []);
 
-        $roots = Arr::get($options, 'roots', []);
+        $roots = array_get($options, 'roots', []);
         foreach ($roots as $key => $disk) {
             $disk['driver'] = (empty($disk['driver']) === true) ? 'LocalFileSystem' : $disk['driver'];
             $disk['autoload'] = true;
@@ -82,7 +81,7 @@ class ElfinderController extends Controller
                         'utf8fix' => true,
                         'tmbCrop' => false,
                         'tmbBgColor' => 'transparent',
-                        'accessControl' => Arr::get($config, 'accessControl'),
+                        'accessControl' => array_get($config, 'accessControl'),
                     ], $disk);
                     break;
             }
