@@ -24,9 +24,12 @@ class ServiceProvider extends BaseServiceProvider
     public function boot(Router $router)
     {
         $config = $this->app['config']->get('elfinder', []);
-        $this->handlePublishes();
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'elfinder');
         $this->handleRoutes($router, $config);
+
+        if ($this->app->runningInConsole() === true) {
+            $this->handlePublishes();
+        }
     }
 
     /**
@@ -47,7 +50,7 @@ class ServiceProvider extends BaseServiceProvider
      *
      * @return void
      */
-    public function handleRoutes(Router $router, $config)
+    protected function handleRoutes(Router $router, $config)
     {
         if ($this->app->routesAreCached() === false) {
             $router->group(array_merge([
