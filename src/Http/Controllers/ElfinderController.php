@@ -2,18 +2,13 @@
 
 namespace Recca0120\Elfinder\Http\Controllers;
 
-use Closure;
-use elFinder;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Session\SessionManager;
 use Recca0120\Elfinder\Connector;
-use Recca0120\Elfinder\Session;
+use Recca0120\Elfinder\Elfinder;
 
 class ElfinderController extends Controller
 {
@@ -35,65 +30,13 @@ class ElfinderController extends Controller
     /**
      * connector.
      *
-     * @param \Illuminate\Contracts\Foundation\Application $app
-     * @param \Illuminate\Filesystem\Filesystem            $filesystem
-     * @param \Illuminate\Contracts\Routing\UrlGenerator   $urlGenerator
-     * @param \Illuminate\Contracts\Auth\Guard             $guard
-     * @param \Recca0120\Elfinder\Session                  $session
+     * @param \Recca0120\Elfinder\Elfinder  $elfinder
      *
      * @return mixed
      */
-    public function connector(
-        Application $app,
-        Filesystem $filesystem,
-        UrlGenerator $urlGenerator,
-        Guard $guard,
-        Session $session
-    ) {
-        $config = config('elfinder');
-        $options = array_get($config, 'options', []);
-
-        $roots = array_get($options, 'roots', []);
-        foreach ($roots as $key => $disk) {
-            $disk['driver'] = (empty($disk['driver']) === true) ? 'LocalFileSystem' : $disk['driver'];
-            $disk['autoload'] = true;
-
-            if (empty($disk['path']) === false && ($disk['path'] instanceof Closure) === true) {
-                $disk['path'] = call_user_func($disk['path']);
-            }
-
-            switch ($disk['driver']) {
-                case 'LocalFileSystem':
-                    if (strpos($disk['path'], '{user_id}') !== -1 && $guard->check() === false) {
-                        continue;
-                    }
-                    $user = $guard->user();
-                    $userId = $user->id;
-                    $disk['path'] = str_replace('{user_id}', $userId, $disk['path']);
-                    $disk['URL'] = $urlGenerator->to(str_replace('{user_id}', $userId, $disk['URL']));
-
-                    if ($filesystem->exists($disk['path']) === false) {
-                        $filesystem->makeDirectory($disk['path'], 0755, true);
-                    }
-
-                    $disk = array_merge([
-                        'mimeDetect' => 'internal',
-                        'utf8fix' => true,
-                        'tmbCrop' => false,
-                        'tmbBgColor' => 'transparent',
-                        'accessControl' => array_get($config, 'accessControl'),
-                    ], $disk);
-                    break;
-            }
-            $roots[$key] = $disk;
-        }
-        $options = array_merge($options, [
-            'roots' => $roots,
-            'session' => $session,
-        ]);
-        $connector = new Connector(new elFinder($options));
-
-        return $connector->run();
+    public function connector(Elfinder $elfinder)
+    {
+        return $elfinder->getConnector()->run();
     }
 
     /**
