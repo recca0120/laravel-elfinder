@@ -3,11 +3,11 @@
 namespace Recca0120\Elfinder;
 
 use Closure;
-use elFinder as BaseElfinder;
-use Illuminate\Contracts\Routing\UrlGenerator;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
+use elFinder as BaseElfinder;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Contracts\Routing\UrlGenerator;
 
 class Elfinder
 {

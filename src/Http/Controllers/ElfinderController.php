@@ -2,13 +2,12 @@
 
 namespace Recca0120\Elfinder\Http\Controllers;
 
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Session\SessionManager;
-use Recca0120\Elfinder\Connector;
 use Recca0120\Elfinder\Elfinder;
+use Recca0120\Elfinder\Connector;
+use Illuminate\Routing\Controller;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Contracts\Routing\ResponseFactory;
 
 class ElfinderController extends Controller
 {

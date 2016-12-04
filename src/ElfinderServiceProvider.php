@@ -2,8 +2,8 @@
 
 namespace Recca0120\Elfinder;
 
-use Illuminate\Routing\Router;
 use Illuminate\Support\Arr;
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 
 class ElfinderServiceProvider extends ServiceProvider
