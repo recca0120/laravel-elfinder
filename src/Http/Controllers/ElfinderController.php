@@ -12,19 +12,28 @@ use Recca0120\Elfinder\Elfinder;
 
 class ElfinderController extends Controller
 {
+    protected $responseFactory;
+
+    public function __construct(ResponseFactory $responseFactory)
+    {
+        $this->responseFactory = $responseFactory;
+    }
+
     /**
      * elfinder.
      *
-     * @param \Illuminate\Contracts\Routing\ResponseFactory $responseFactory
-     * @param \Illuminate\Session\SessionManager            $sessionManager
+     * @param \Illuminate\Http\Request $request
      *
      * @return mixed
      */
-    public function elfinder(ResponseFactory $responseFactory, SessionManager $sessionManager)
+    public function elfinder(Request $request)
     {
-        $token = $sessionManager->driver()->token();
+        $token = null;
+        if ($request->hasSession() === true) {
+            $token = $request->session()->token();
+        }
 
-        return $responseFactory->view('elfinder::elfinder', compact('token'));
+        return $this->responseFactory->view('elfinder::elfinder', compact('token'));
     }
 
     /**
@@ -42,14 +51,13 @@ class ElfinderController extends Controller
     /**
      * sound.
      *
-     * @param \Illuminate\Contracts\Routing\ResponseFactory $responseFactory
      * @param \Illuminate\Filesystem\Filesystem             $filesystem
      * @param \Illuminate\Http\Request                      $request
      * @param string                                        $file
      *
      * @return \Illuminate\Http\Response
      */
-    public function sound(ResponseFactory $responseFactory, Filesystem $filesystem, Request $request, $file)
+    public function sound(Filesystem $filesystem, Request $request, $file)
     {
         $filename = __DIR__.'/../../../resources/elfinder/sounds/'.$file;
         $mimeType = $filesystem->mimeType($filename);
@@ -63,9 +71,9 @@ class ElfinderController extends Controller
         if (@strtotime($request->server('HTTP_IF_MODIFIED_SINCE')) === $lastModified ||
             trim($request->server('HTTP_IF_NONE_MATCH'), '"') === $eTag
         ) {
-            $response = $responseFactory->make(null, 304, $headers);
+            $response = $this->responseFactory->make(null, 304, $headers);
         } else {
-            $response = $responseFactory->stream(function () use ($filename) {
+            $response = $this->responseFactory->stream(function () use ($filename) {
                 $out = fopen('php://output', 'wb');
                 $file = fopen($filename, 'rb');
                 stream_copy_to_stream($file, $out, filesize($filename));
