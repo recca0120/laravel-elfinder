@@ -24,15 +24,13 @@ class ElfinderServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
+        $config = $this->app['config']['elfinder'];
+        $this->handleRoutes($router, $config);
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'elfinder');
+
         if ($this->app->runningInConsole() === true) {
             $this->handlePublishes();
-
-            return;
         }
-
-        $config = $this->app['config']->get('elfinder', []);
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'elfinder');
-        $this->handleRoutes($router, $config);
     }
 
     /**
