@@ -84,7 +84,7 @@ class ElfinderServiceProvider extends ServiceProvider
         ], 'views');
 
         $this->publishes([
-            __DIR__.'/../resources/elfinder' => $this->app->publicPath().'/vendor/elfinder',
+            __DIR__.'/../resources/elfinder' => $this->app['path.public'].'/vendor/elfinder',
         ], 'public');
 
         $this->publishes([
