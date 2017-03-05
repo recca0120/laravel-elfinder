@@ -95,7 +95,7 @@ class Elfinder
      * @param array $data
      * @param string $volume
      * @param bool $isDir
-     * @return bool
+     * @return bool|null
      */
     public static function access($attr, $path, $data, $volume, $isDir)
     {
