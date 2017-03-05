@@ -55,8 +55,8 @@ class Session implements elFinderSessionInterface
      *
      * This method must be equipped with an automatic start / close.
      *
-     * @param string $key   Target key
-     * @param mixed  $empty Return value of if session target key does not exist
+     * @param string $key
+     * @param mixed $empty
      *
      * @return mixed
      **/
@@ -70,8 +70,8 @@ class Session implements elFinderSessionInterface
      *
      * This method must be equipped with an automatic start / close.
      *
-     * @param string $key  Target key
-     * @param mixed  $data Value
+     * @param string $key
+     * @param mixed $data
      *
      * @return self
      **/
@@ -85,7 +85,7 @@ class Session implements elFinderSessionInterface
     /**
      * Get session data.
      *
-     * @param string $key Target key
+     * @param string $key
      *
      * @return self
      **/

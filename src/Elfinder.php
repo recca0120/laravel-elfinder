@@ -14,11 +14,11 @@ class Elfinder
     /**
      * connector.
      *
-     * @param \Recca0120\Elfinder\Session                  $session
-     * @param \Illuminate\Http\Request                     $request
-     * @param \Illuminate\Filesystem\Filesystem            $filesystem
-     * @param \Illuminate\Contracts\Routing\UrlGenerator   $urlGenerator
-     * @param array                                        $config
+     * @param \Recca0120\Elfinder\Session $session
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Filesystem\Filesystem $filesystem
+     * @param \Illuminate\Contracts\Routing\UrlGenerator $urlGenerator
+     * @param array $config
      *
      * @return mixed
      */

@@ -23,7 +23,7 @@ class ElfinderController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return mixed
+     * @return \Illuminate\Http\Response
      */
     public function elfinder(Request $request)
     {
@@ -38,7 +38,7 @@ class ElfinderController extends Controller
     /**
      * connector.
      *
-     * @param \Recca0120\Elfinder\Elfinder  $elfinder
+     * @param \Recca0120\Elfinder\Elfinder $elfinder
      *
      * @return mixed
      */
@@ -50,9 +50,9 @@ class ElfinderController extends Controller
     /**
      * sound.
      *
-     * @param \Illuminate\Filesystem\Filesystem             $filesystem
-     * @param \Illuminate\Http\Request                      $request
-     * @param string                                        $file
+     * @param \Illuminate\Filesystem\Filesystem $filesystem
+     * @param \Illuminate\Http\Request $request
+     * @param string $file
      *
      * @return \Illuminate\Http\Response
      */
