@@ -19,8 +19,6 @@ class ElfinderServiceProvider extends ServiceProvider
      * handle routes.
      *
      * @param \Illuminate\Routing\Router $router
-     *
-     * @return void
      */
     public function boot(Router $router)
     {
@@ -35,8 +33,6 @@ class ElfinderServiceProvider extends ServiceProvider
 
     /**
      * Register any application services.
-     *
-     * @return void
      */
     public function register()
     {
@@ -54,9 +50,7 @@ class ElfinderServiceProvider extends ServiceProvider
      * register routes.
      *
      * @param \Illuminate\Routing\Router $router
-     * @oaram array                      $config
-     *
-     * @return void
+     * @param array $config
      */
     protected function handleRoutes(Router $router, $config)
     {

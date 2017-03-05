@@ -19,7 +19,6 @@ class Elfinder
      * @param \Illuminate\Filesystem\Filesystem $filesystem
      * @param \Illuminate\Contracts\Routing\UrlGenerator $urlGenerator
      * @param array $config
-     *
      * @return mixed
      */
     public function __construct(
@@ -36,6 +35,11 @@ class Elfinder
         $this->config = $config;
     }
 
+    /**
+     * getConnector.
+     *
+     * @return Connector
+     */
     public function getConnector()
     {
         $options = Arr::get($this->config, 'options', []);
@@ -83,6 +87,16 @@ class Elfinder
         return new Connector(new BaseElfinder($options));
     }
 
+    /**
+     * access.
+     *
+     * @param array  $attr
+     * @param string  $path
+     * @param array $data
+     * @param string $volume
+     * @param bool $isDir
+     * @return bool
+     */
     public static function access($attr, $path, $data, $volume, $isDir)
     {
         return strpos(basename($path), '.') === 0       // if file/folder begins with '.' (dot)

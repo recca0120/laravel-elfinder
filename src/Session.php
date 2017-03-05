@@ -17,8 +17,6 @@ class Session implements elFinderSessionInterface
     /**
      * __construct.
      *
-     * @method __construct
-     *
      * @param \Illuminate\Session\SessionManager $sessionManager
      */
     public function __construct(SessionManager $sessionManager)
@@ -29,7 +27,7 @@ class Session implements elFinderSessionInterface
     /**
      * Session start.
      *
-     * @return self
+     * @return static
      **/
     public function start()
     {
@@ -41,7 +39,7 @@ class Session implements elFinderSessionInterface
     /**
      * Session write & close.
      *
-     * @return self
+     * @return static
      **/
     public function close()
     {
@@ -57,7 +55,6 @@ class Session implements elFinderSessionInterface
      *
      * @param string $key
      * @param mixed $empty
-     *
      * @return mixed
      **/
     public function get($key, $empty = '')
@@ -72,8 +69,7 @@ class Session implements elFinderSessionInterface
      *
      * @param string $key
      * @param mixed $data
-     *
-     * @return self
+     * @return static
      **/
     public function set($key, $data)
     {
@@ -86,8 +82,7 @@ class Session implements elFinderSessionInterface
      * Get session data.
      *
      * @param string $key
-     *
-     * @return self
+     * @return static
      **/
     public function remove($key)
     {
