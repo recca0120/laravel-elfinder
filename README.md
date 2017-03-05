@@ -8,3 +8,6 @@
 [![License](https://poser.pugx.org/recca0120/elfinder/license.svg)](https://packagist.org/packages/recca0120/elfinder)
 [![Monthly Downloads](https://poser.pugx.org/recca0120/elfinder/d/monthly)](https://packagist.org/packages/recca0120/elfinder)
 [![Daily Downloads](https://poser.pugx.org/recca0120/elfinder/d/daily)](https://packagist.org/packages/recca0120/elfinder)
+
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/recca0120/laravel-elfinder/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/recca0120/laravel-elfinder/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/recca0120/laravel-elfinder/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/recca0120/laravel-elfinder/?branch=master)
