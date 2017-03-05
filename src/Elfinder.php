@@ -40,6 +40,13 @@ class Elfinder
     protected $urlGenerator;
 
     /**
+     * $config.
+     *
+     * @var array
+     */
+    protected $config;
+
+    /**
      * connector.
      *
      * @param \Recca0120\Elfinder\Session $session
