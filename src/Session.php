@@ -27,7 +27,7 @@ class Session implements elFinderSessionInterface
     /**
      * Session start.
      *
-     * @return static
+     * @return $this
      **/
     public function start()
     {
@@ -39,7 +39,7 @@ class Session implements elFinderSessionInterface
     /**
      * Session write & close.
      *
-     * @return static
+     * @return $this
      **/
     public function close()
     {
@@ -69,7 +69,7 @@ class Session implements elFinderSessionInterface
      *
      * @param string $key
      * @param mixed $data
-     * @return static
+     * @return $this
      **/
     public function set($key, $data)
     {
@@ -82,7 +82,7 @@ class Session implements elFinderSessionInterface
      * Get session data.
      *
      * @param string $key
-     * @return static
+     * @return $this
      **/
     public function remove($key)
     {
