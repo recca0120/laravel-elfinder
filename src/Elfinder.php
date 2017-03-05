@@ -12,6 +12,34 @@ use Illuminate\Contracts\Routing\UrlGenerator;
 class Elfinder
 {
     /**
+     * $session.
+     *
+     * @var \Recca0120\Elfinder\Session
+     */
+    protected $session;
+
+    /**
+     * $request.
+     *
+     * @var \Illuminate\Http\Request
+     */
+    protected $request;
+
+    /**
+     * $filesystem.
+     *
+     * @var \Illuminate\Filesystem\Filesystem
+     */
+    protected $filesystem;
+
+    /**
+     * $urlGenerator.
+     *
+     * @var \Illuminate\Contracts\Routing\UrlGenerator
+     */
+    protected $urlGenerator;
+
+    /**
      * connector.
      *
      * @param \Recca0120\Elfinder\Session $session
@@ -19,7 +47,6 @@ class Elfinder
      * @param \Illuminate\Filesystem\Filesystem $filesystem
      * @param \Illuminate\Contracts\Routing\UrlGenerator $urlGenerator
      * @param array $config
-     * @return mixed
      */
     public function __construct(
         Session $session,
