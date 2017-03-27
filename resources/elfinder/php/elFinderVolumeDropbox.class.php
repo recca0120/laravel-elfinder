@@ -11,6 +11,12 @@ elFinder::$netDrivers['dropbox'] = 'Dropbox';
 class elFinderVolumeDropbox extends elFinderVolumeDriver
 {
     /**
+     * Net mount key.
+     *
+     * @var string
+     **/
+    public $netMountKey = '';
+    /**
      * Driver id
      * Must be started from letter and contains [a-z0-9]
      * Used as part of volume id.
@@ -55,13 +61,6 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
      * @var string
      **/
     protected $tmp = '';
-
-    /**
-     * Net mount key.
-     *
-     * @var string
-     **/
-    public $netMountKey = '';
 
     /**
      * Dropbox.com uid.
@@ -279,22 +278,70 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
         return true;
     }
 
+    /*********************************************************************/
+    /*                               FS API                              */
+    /*********************************************************************/
+
     /**
-     * Get script url.
+     * Close opened connection.
      *
-     * @return string full URL
+     * @return void
+     *
+     * @author Dmitry (dio) Levashov
+     **/
+    public function umount()
+    {
+    }
+
+    /**
+     * Return content URL.
+     *
+     * @param string $hash    file hash
+     * @param array  $options options
+     *
+     * @return array
      *
      * @author Naoki Sawada
-     */
-    private function getConnectorUrl()
+     **/
+    public function getContentUrl($hash, $options = [])
     {
-        $url = ((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') ? 'https://' : 'http://')
-               .$_SERVER['SERVER_NAME']                                              // host
-              .($_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT'])  // port
-               .$_SERVER['REQUEST_URI'];                                             // path & query
-        list($url) = explode('?', $url);
+        if (($file = $this->file($hash)) == false || ! $file['url'] || $file['url'] == 1) {
+            $path = $this->decode($hash);
+            $cache = $this->getDBdat($path);
+            $url = '';
+            if (isset($cache['share']) && strpos($cache['share'], $this->dropbox_dlhost) !== false) {
+                $res = $this->getHttpResponseHeader($cache['share']);
+                if (preg_match("/^HTTP\/[01\.]+ ([0-9]{3})/", $res, $match)) {
+                    if ($match[1] < 400) {
+                        $url = $cache['share'];
+                    }
+                }
+            }
+            if (! $url) {
+                try {
+                    $res = $this->dropbox->share($path, null, false);
+                    $url = $res['url'];
+                    if (strpos($url, 'www.dropbox.com') === false) {
+                        $res = $this->getHttpResponseHeader($url);
+                        if (preg_match('/^location:\s*(http[^\s]+)/im', $res, $match)) {
+                            $url = $match[1];
+                        }
+                    }
+                    list($url) = explode('?', $url);
+                    $url = str_replace('www.dropbox.com', $this->dropbox_dlhost, $url);
+                    if (! isset($cache['share']) || $cache['share'] !== $url) {
+                        $cache['share'] = $url;
+                        $this->updateDBdat($path, $cache);
+                    }
+                } catch (Dropbox_Exception $e) {
+                    return false;
+                }
+            }
 
-        return $url;
+            return $url;
+        }
+
+        return $file['url'];
     }
 
     /*********************************************************************/
@@ -462,100 +509,6 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
 
         $this->disabled[] = 'archive';
         $this->disabled[] = 'extract';
-    }
-
-    /**
-     * Check DB for delta cache.
-     *
-     * @return bool
-     */
-    private function checkDB()
-    {
-        $res = $this->query('SELECT * FROM sqlite_master WHERE type=\'table\' AND name=\''.$this->DB_TableName.'\'');
-        if ($res && isset($_REQUEST['init'])) {
-            // check is index(nameidx) UNIQUE?
-            $chk = $this->query('SELECT sql FROM sqlite_master WHERE type=\'index\' and name=\'nameidx\'');
-            if (! $chk || strpos(strtoupper($chk[0]), 'UNIQUE') === false) {
-                // remake
-                $this->DB->exec('DROP TABLE '.$this->DB_TableName);
-                $res = false;
-            }
-        }
-        if (! $res) {
-            try {
-                $this->DB->exec('CREATE TABLE '.$this->DB_TableName.'(path text, fname text, dat blob, isdir integer);');
-                $this->DB->exec('CREATE UNIQUE INDEX nameidx ON '.$this->DB_TableName.'(path, fname)');
-                $this->DB->exec('CREATE INDEX isdiridx ON '.$this->DB_TableName.'(isdir)');
-            } catch (PDOException $e) {
-                return $this->setError($e->getMessage());
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * DB query and fetchAll.
-     *
-     * @param string $sql
-     *
-     * @return bool|array
-     */
-    private function query($sql)
-    {
-        if ($sth = $this->DB->query($sql)) {
-            $res = $sth->fetchAll(PDO::FETCH_COLUMN);
-        } else {
-            $res = false;
-        }
-
-        return $res;
-    }
-
-    /**
-     * Get dat(dropbox metadata) from DB.
-     *
-     * @param string $path
-     *
-     * @return array dropbox metadata
-     */
-    private function getDBdat($path)
-    {
-        if ($res = $this->query('select dat from '.$this->DB_TableName.' where path='.$this->DB->quote(strtolower($this->_dirname($path))).' and fname='.$this->DB->quote(strtolower(basename($path))).' limit 1')) {
-            return unserialize($res[0]);
-        } else {
-            return [];
-        }
-    }
-
-    /**
-     * Update DB dat(dropbox metadata).
-     *
-     * @param string $path
-     * @param array  $dat
-     *
-     * @return bool|array
-     */
-    private function updateDBdat($path, $dat)
-    {
-        return $this->query('update '.$this->DB_TableName.' set dat='.$this->DB->quote(serialize($dat))
-                .', isdir='.($dat['is_dir'] ? 1 : 0)
-                .' where path='.$this->DB->quote(strtolower($this->_dirname($path))).' and fname='.$this->DB->quote(strtolower(basename($path))));
-    }
-
-    /*********************************************************************/
-    /*                               FS API                              */
-    /*********************************************************************/
-
-    /**
-     * Close opened connection.
-     *
-     * @return void
-     *
-     * @author Dmitry (dio) Levashov
-     **/
-    public function umount()
-    {
     }
 
     /**
@@ -941,103 +894,6 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
         } catch (Dropbox_Exception $e) {
             return false;
         }
-    }
-
-    /**
-     * Return content URL.
-     *
-     * @param string $hash    file hash
-     * @param array  $options options
-     *
-     * @return array
-     *
-     * @author Naoki Sawada
-     **/
-    public function getContentUrl($hash, $options = [])
-    {
-        if (($file = $this->file($hash)) == false || ! $file['url'] || $file['url'] == 1) {
-            $path = $this->decode($hash);
-            $cache = $this->getDBdat($path);
-            $url = '';
-            if (isset($cache['share']) && strpos($cache['share'], $this->dropbox_dlhost) !== false) {
-                $res = $this->getHttpResponseHeader($cache['share']);
-                if (preg_match("/^HTTP\/[01\.]+ ([0-9]{3})/", $res, $match)) {
-                    if ($match[1] < 400) {
-                        $url = $cache['share'];
-                    }
-                }
-            }
-            if (! $url) {
-                try {
-                    $res = $this->dropbox->share($path, null, false);
-                    $url = $res['url'];
-                    if (strpos($url, 'www.dropbox.com') === false) {
-                        $res = $this->getHttpResponseHeader($url);
-                        if (preg_match('/^location:\s*(http[^\s]+)/im', $res, $match)) {
-                            $url = $match[1];
-                        }
-                    }
-                    list($url) = explode('?', $url);
-                    $url = str_replace('www.dropbox.com', $this->dropbox_dlhost, $url);
-                    if (! isset($cache['share']) || $cache['share'] !== $url) {
-                        $cache['share'] = $url;
-                        $this->updateDBdat($path, $cache);
-                    }
-                } catch (Dropbox_Exception $e) {
-                    return false;
-                }
-            }
-
-            return $url;
-        }
-
-        return $file['url'];
-    }
-
-    /**
-     * Get HTTP request response header string.
-     *
-     * @param string $url target URL
-     *
-     * @return string
-     *
-     * @author Naoki Sawada
-     */
-    private function getHttpResponseHeader($url)
-    {
-        if (function_exists('curl_exec')) {
-            $c = curl_init();
-            curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'HEAD');
-            curl_setopt($c, CURLOPT_HEADER, 1);
-            curl_setopt($c, CURLOPT_NOBODY, true);
-            curl_setopt($c, CURLOPT_URL, $url);
-            $res = curl_exec($c);
-        } else {
-            require_once 'HTTP/Request2.php';
-            try {
-                $request2 = new HTTP_Request2();
-                $request2->setConfig([
-                    'ssl_verify_peer' => false,
-                    'ssl_verify_host' => false,
-                ]);
-                $request2->setUrl($url);
-                $request2->setMethod(HTTP_Request2::METHOD_HEAD);
-                $result = $request2->send();
-                $res = [];
-                $res[] = 'HTTP/'.$result->getVersion().' '.$result->getStatus().' '.$result->getReasonPhrase();
-                foreach ($result->getHeader() as $key => $val) {
-                    $res[] = $key.': '.$val;
-                }
-                $res = implode("\r\n", $res);
-            } catch (HTTP_Request2_Exception $e) {
-                $res = '';
-            } catch (Exception $e) {
-                $res = '';
-            }
-        }
-
-        return $res;
     }
 
     /*********************** paths/urls *************************/
@@ -1650,5 +1506,148 @@ class elFinderVolumeDropbox extends elFinderVolumeDriver
     protected function _archive($dir, $files, $name, $arc)
     {
         die('Not yet implemented. (_archive)');
+    }
+
+    /**
+     * Get script url.
+     *
+     * @return string full URL
+     *
+     * @author Naoki Sawada
+     */
+    private function getConnectorUrl()
+    {
+        $url = ((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') ? 'https://' : 'http://')
+               .$_SERVER['SERVER_NAME']                                              // host
+              .($_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT'])  // port
+               .$_SERVER['REQUEST_URI'];                                             // path & query
+        list($url) = explode('?', $url);
+
+        return $url;
+    }
+
+    /**
+     * Check DB for delta cache.
+     *
+     * @return bool
+     */
+    private function checkDB()
+    {
+        $res = $this->query('SELECT * FROM sqlite_master WHERE type=\'table\' AND name=\''.$this->DB_TableName.'\'');
+        if ($res && isset($_REQUEST['init'])) {
+            // check is index(nameidx) UNIQUE?
+            $chk = $this->query('SELECT sql FROM sqlite_master WHERE type=\'index\' and name=\'nameidx\'');
+            if (! $chk || strpos(strtoupper($chk[0]), 'UNIQUE') === false) {
+                // remake
+                $this->DB->exec('DROP TABLE '.$this->DB_TableName);
+                $res = false;
+            }
+        }
+        if (! $res) {
+            try {
+                $this->DB->exec('CREATE TABLE '.$this->DB_TableName.'(path text, fname text, dat blob, isdir integer);');
+                $this->DB->exec('CREATE UNIQUE INDEX nameidx ON '.$this->DB_TableName.'(path, fname)');
+                $this->DB->exec('CREATE INDEX isdiridx ON '.$this->DB_TableName.'(isdir)');
+            } catch (PDOException $e) {
+                return $this->setError($e->getMessage());
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * DB query and fetchAll.
+     *
+     * @param string $sql
+     *
+     * @return bool|array
+     */
+    private function query($sql)
+    {
+        if ($sth = $this->DB->query($sql)) {
+            $res = $sth->fetchAll(PDO::FETCH_COLUMN);
+        } else {
+            $res = false;
+        }
+
+        return $res;
+    }
+
+    /**
+     * Get dat(dropbox metadata) from DB.
+     *
+     * @param string $path
+     *
+     * @return array dropbox metadata
+     */
+    private function getDBdat($path)
+    {
+        if ($res = $this->query('select dat from '.$this->DB_TableName.' where path='.$this->DB->quote(strtolower($this->_dirname($path))).' and fname='.$this->DB->quote(strtolower(basename($path))).' limit 1')) {
+            return unserialize($res[0]);
+        } else {
+            return [];
+        }
+    }
+
+    /**
+     * Update DB dat(dropbox metadata).
+     *
+     * @param string $path
+     * @param array  $dat
+     *
+     * @return bool|array
+     */
+    private function updateDBdat($path, $dat)
+    {
+        return $this->query('update '.$this->DB_TableName.' set dat='.$this->DB->quote(serialize($dat))
+                .', isdir='.($dat['is_dir'] ? 1 : 0)
+                .' where path='.$this->DB->quote(strtolower($this->_dirname($path))).' and fname='.$this->DB->quote(strtolower(basename($path))));
+    }
+
+    /**
+     * Get HTTP request response header string.
+     *
+     * @param string $url target URL
+     *
+     * @return string
+     *
+     * @author Naoki Sawada
+     */
+    private function getHttpResponseHeader($url)
+    {
+        if (function_exists('curl_exec')) {
+            $c = curl_init();
+            curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($c, CURLOPT_CUSTOMREQUEST, 'HEAD');
+            curl_setopt($c, CURLOPT_HEADER, 1);
+            curl_setopt($c, CURLOPT_NOBODY, true);
+            curl_setopt($c, CURLOPT_URL, $url);
+            $res = curl_exec($c);
+        } else {
+            require_once 'HTTP/Request2.php';
+            try {
+                $request2 = new HTTP_Request2();
+                $request2->setConfig([
+                    'ssl_verify_peer' => false,
+                    'ssl_verify_host' => false,
+                ]);
+                $request2->setUrl($url);
+                $request2->setMethod(HTTP_Request2::METHOD_HEAD);
+                $result = $request2->send();
+                $res = [];
+                $res[] = 'HTTP/'.$result->getVersion().' '.$result->getStatus().' '.$result->getReasonPhrase();
+                foreach ($result->getHeader() as $key => $val) {
+                    $res[] = $key.': '.$val;
+                }
+                $res = implode("\r\n", $res);
+            } catch (HTTP_Request2_Exception $e) {
+                $res = '';
+            } catch (Exception $e) {
+                $res = '';
+            }
+        }
+
+        return $res;
     }
 } // END class

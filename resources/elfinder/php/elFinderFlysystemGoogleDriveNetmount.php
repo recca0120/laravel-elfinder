@@ -36,26 +36,6 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
     }
 
     /**
-     * Prepare driver before mount volume.
-     * Return true if volume is ready.
-     *
-     * @return bool
-     **/
-    protected function init()
-    {
-        if (empty($this->options['icon'])) {
-            $this->options['icon'] = true;
-        }
-        if ($res = parent::init()) {
-            if ($this->options['icon'] === true) {
-                unset($this->options['icon']);
-            }
-        }
-
-        return $res;
-    }
-
-    /**
      * Prepare
      * Call from elFinder::netmout() before volume->mount().
      *
@@ -331,6 +311,34 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
     }
 
     /**
+     * Prepare driver before mount volume.
+     * Return true if volume is ready.
+     *
+     * @return bool
+     **/
+    protected function init()
+    {
+        if (empty($this->options['icon'])) {
+            $this->options['icon'] = true;
+        }
+        if ($res = parent::init()) {
+            if ($this->options['icon'] === true) {
+                unset($this->options['icon']);
+            }
+        }
+
+        return $res;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function tmbname($stat)
+    {
+        return $this->netMountKey.substr(substr($stat['hash'], strlen($this->id)), -38).$stat['ts'].'.png';
+    }
+
+    /**
      * Get script url.
      *
      * @return string full URL
@@ -346,13 +354,5 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends \Hypweb\elFinderFlysyst
         list($url) = explode('?', $url);
 
         return $url;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tmbname($stat)
-    {
-        return $this->netMountKey.substr(substr($stat['hash'], strlen($this->id)), -38).$stat['ts'].'.png';
     }
 }

@@ -16,6 +16,18 @@ class Connector extends elFinderConnector
     protected $response;
 
     /**
+     * run.
+     *
+     * @return mixed
+     */
+    public function run()
+    {
+        parent::run();
+
+        return $this->response;
+    }
+
+    /**
      * output.
      *
      * @param array $data
@@ -28,17 +40,5 @@ class Connector extends elFinderConnector
             header('Access-Control-Allow-Origin: *');
             parent::output($data);
         });
-    }
-
-    /**
-     * run.
-     *
-     * @return mixed
-     */
-    public function run()
-    {
-        parent::run();
-
-        return $this->response;
     }
 }

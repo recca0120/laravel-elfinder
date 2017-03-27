@@ -10,19 +10,71 @@
  **/
 class elFinder
 {
-    /**
-     * API version number.
-     *
-     * @var string
-     **/
-    protected $version = '2.1';
+    // Errors messages
+    const ERROR_UNKNOWN = 'errUnknown';
+    const ERROR_UNKNOWN_CMD = 'errUnknownCmd';
+    const ERROR_CONF = 'errConf';
+    const ERROR_CONF_NO_JSON = 'errJSON';
+    const ERROR_CONF_NO_VOL = 'errNoVolumes';
+    const ERROR_INV_PARAMS = 'errCmdParams';
+    const ERROR_OPEN = 'errOpen';
+    const ERROR_DIR_NOT_FOUND = 'errFolderNotFound';
+    const ERROR_FILE_NOT_FOUND = 'errFileNotFound';     // 'File not found.'
+    const ERROR_TRGDIR_NOT_FOUND = 'errTrgFolderNotFound'; // 'Target folder "$1" not found.'
+    const ERROR_NOT_DIR = 'errNotFolder';
+    const ERROR_NOT_FILE = 'errNotFile';
+    const ERROR_PERM_DENIED = 'errPerm';
+    const ERROR_LOCKED = 'errLocked';        // '"$1" is locked and can not be renamed, moved or removed.'
+    const ERROR_EXISTS = 'errExists';        // 'File named "$1" already exists.'
+    const ERROR_INVALID_NAME = 'errInvName';       // 'Invalid file name.'
+    const ERROR_MKDIR = 'errMkdir';
+    const ERROR_MKFILE = 'errMkfile';
+    const ERROR_RENAME = 'errRename';
+    const ERROR_COPY = 'errCopy';
+    const ERROR_MOVE = 'errMove';
+    const ERROR_COPY_FROM = 'errCopyFrom';
+    const ERROR_COPY_TO = 'errCopyTo';
+    const ERROR_COPY_ITSELF = 'errCopyInItself';
+    const ERROR_REPLACE = 'errReplace';          // 'Unable to replace "$1".'
+    const ERROR_RM = 'errRm';               // 'Unable to remove "$1".'
+    const ERROR_RM_SRC = 'errRmSrc';            // 'Unable remove source file(s)'
+    const ERROR_MKOUTLINK = 'errMkOutLink';        // 'Unable to create a link to outside the volume root.'
+    const ERROR_UPLOAD = 'errUpload';           // 'Upload error.'
+    const ERROR_UPLOAD_FILE = 'errUploadFile';       // 'Unable to upload "$1".'
+    const ERROR_UPLOAD_NO_FILES = 'errUploadNoFiles';    // 'No files found for upload.'
+    const ERROR_UPLOAD_TOTAL_SIZE = 'errUploadTotalSize';  // 'Data exceeds the maximum allowed size.'
+    const ERROR_UPLOAD_FILE_SIZE = 'errUploadFileSize';   // 'File exceeds maximum allowed size.'
+    const ERROR_UPLOAD_FILE_MIME = 'errUploadMime';       // 'File type not allowed.'
+    const ERROR_UPLOAD_TRANSFER = 'errUploadTransfer';   // '"$1" transfer error.'
+    const ERROR_UPLOAD_TEMP = 'errUploadTemp';       // 'Unable to make temporary file for upload.'
+    const ERROR_ACCESS_DENIED = 'errAccess';
+    const ERROR_NOT_REPLACE = 'errNotReplace';       // Object "$1" already exists at this location and can not be replaced with object of another type.
+    const ERROR_SAVE = 'errSave';
+    const ERROR_EXTRACT = 'errExtract';
+    const ERROR_ARCHIVE = 'errArchive';
+    const ERROR_NOT_ARCHIVE = 'errNoArchive';
+    const ERROR_ARCHIVE_TYPE = 'errArcType';
+    const ERROR_ARC_SYMLINKS = 'errArcSymlinks';
+    const ERROR_ARC_MAXSIZE = 'errArcMaxSize';
+    const ERROR_RESIZE = 'errResize';
+    const ERROR_UNSUPPORT_TYPE = 'errUsupportType';
+    const ERROR_CONV_UTF8 = 'errConvUTF8';
+    const ERROR_NOT_UTF8_CONTENT = 'errNotUTF8Content';
+    const ERROR_NETMOUNT = 'errNetMount';
+    const ERROR_NETUNMOUNT = 'errNetUnMount';
+    const ERROR_NETMOUNT_NO_DRIVER = 'errNetMountNoDriver';
+    const ERROR_NETMOUNT_FAILED = 'errNetMountFailed';
 
-    /**
-     * Storages (root dirs).
-     *
-     * @var array
-     **/
-    protected $volumes = [];
+    const ERROR_SESSION_EXPIRES = 'errSessionExpires';
+
+    const ERROR_CREATING_TEMP_DIR = 'errCreatingTempDir';
+    const ERROR_FTP_DOWNLOAD_FILE = 'errFtpDownloadFile';
+    const ERROR_FTP_UPLOAD_FILE = 'errFtpUploadFile';
+    const ERROR_FTP_MKDIR = 'errFtpMkdir';
+    const ERROR_ARCHIVE_EXEC = 'errArchiveExec';
+    const ERROR_EXTRACT_EXEC = 'errExtractExec';
+    const ERROR_SEARCH_TIMEOUT = 'errSearchTimeout';    // 'Timed out while searching "$1". Search result is partial.'
+    const ERROR_REAUTH_REQUIRE = 'errReauthRequire';  // 'Re-authorization is required.'
 
     /**
      * Network mount drivers.
@@ -46,13 +98,6 @@ class elFinder
     public static $defaultMimefile = '';
 
     /**
-     * elFinder session wrapper object.
-     *
-     * @var elFinderSessionInterface
-     */
-    protected $session;
-
-    /**
      * elFinder global sessionCacheKey.
      *
      * @deprecated
@@ -62,13 +107,46 @@ class elFinder
     public static $sessionCacheKey = '';
 
     /**
-     * Is session closed.
+     * Mounted volumes count
+     * Required to create unique volume id.
      *
-     * @deprecated
+     * @var int
+     **/
+    public static $volumesCnt = 1;
+
+    /**
+     * Errors from PHP.
      *
-     * @var bool
+     * @var array
+     **/
+    public static $phpErrors = [];
+
+    /**
+     * Errors from not mounted volumes.
+     *
+     * @var array
+     **/
+    public $mountErrors = [];
+    /**
+     * API version number.
+     *
+     * @var string
+     **/
+    protected $version = '2.1';
+
+    /**
+     * Storages (root dirs).
+     *
+     * @var array
+     **/
+    protected $volumes = [];
+
+    /**
+     * elFinder session wrapper object.
+     *
+     * @var elFinderSessionInterface
      */
-    private static $sessionClosed = false;
+    protected $session;
 
     /**
      * elFinder base64encodeSessionData
@@ -102,14 +180,6 @@ class elFinder
      * @var string
      */
     protected $netVolumesSessionKey = '';
-
-    /**
-     * Mounted volumes count
-     * Required to create unique volume id.
-     *
-     * @var int
-     **/
-    public static $volumesCnt = 1;
 
     /**
      * Default root (storage).
@@ -229,20 +299,6 @@ class elFinder
     protected $uploadDebug = '';
 
     /**
-     * Errors from PHP.
-     *
-     * @var array
-     **/
-    public static $phpErrors = [];
-
-    /**
-     * Errors from not mounted volumes.
-     *
-     * @var array
-     **/
-    public $mountErrors = [];
-
-    /**
      * URL for callback output window for CORS
      * redirect to this URL when callback output.
      *
@@ -250,71 +306,14 @@ class elFinder
      */
     protected $callbackWindowURL = '';
 
-    // Errors messages
-    const ERROR_UNKNOWN = 'errUnknown';
-    const ERROR_UNKNOWN_CMD = 'errUnknownCmd';
-    const ERROR_CONF = 'errConf';
-    const ERROR_CONF_NO_JSON = 'errJSON';
-    const ERROR_CONF_NO_VOL = 'errNoVolumes';
-    const ERROR_INV_PARAMS = 'errCmdParams';
-    const ERROR_OPEN = 'errOpen';
-    const ERROR_DIR_NOT_FOUND = 'errFolderNotFound';
-    const ERROR_FILE_NOT_FOUND = 'errFileNotFound';     // 'File not found.'
-    const ERROR_TRGDIR_NOT_FOUND = 'errTrgFolderNotFound'; // 'Target folder "$1" not found.'
-    const ERROR_NOT_DIR = 'errNotFolder';
-    const ERROR_NOT_FILE = 'errNotFile';
-    const ERROR_PERM_DENIED = 'errPerm';
-    const ERROR_LOCKED = 'errLocked';        // '"$1" is locked and can not be renamed, moved or removed.'
-    const ERROR_EXISTS = 'errExists';        // 'File named "$1" already exists.'
-    const ERROR_INVALID_NAME = 'errInvName';       // 'Invalid file name.'
-    const ERROR_MKDIR = 'errMkdir';
-    const ERROR_MKFILE = 'errMkfile';
-    const ERROR_RENAME = 'errRename';
-    const ERROR_COPY = 'errCopy';
-    const ERROR_MOVE = 'errMove';
-    const ERROR_COPY_FROM = 'errCopyFrom';
-    const ERROR_COPY_TO = 'errCopyTo';
-    const ERROR_COPY_ITSELF = 'errCopyInItself';
-    const ERROR_REPLACE = 'errReplace';          // 'Unable to replace "$1".'
-    const ERROR_RM = 'errRm';               // 'Unable to remove "$1".'
-    const ERROR_RM_SRC = 'errRmSrc';            // 'Unable remove source file(s)'
-    const ERROR_MKOUTLINK = 'errMkOutLink';        // 'Unable to create a link to outside the volume root.'
-    const ERROR_UPLOAD = 'errUpload';           // 'Upload error.'
-    const ERROR_UPLOAD_FILE = 'errUploadFile';       // 'Unable to upload "$1".'
-    const ERROR_UPLOAD_NO_FILES = 'errUploadNoFiles';    // 'No files found for upload.'
-    const ERROR_UPLOAD_TOTAL_SIZE = 'errUploadTotalSize';  // 'Data exceeds the maximum allowed size.'
-    const ERROR_UPLOAD_FILE_SIZE = 'errUploadFileSize';   // 'File exceeds maximum allowed size.'
-    const ERROR_UPLOAD_FILE_MIME = 'errUploadMime';       // 'File type not allowed.'
-    const ERROR_UPLOAD_TRANSFER = 'errUploadTransfer';   // '"$1" transfer error.'
-    const ERROR_UPLOAD_TEMP = 'errUploadTemp';       // 'Unable to make temporary file for upload.'
-    const ERROR_ACCESS_DENIED = 'errAccess';
-    const ERROR_NOT_REPLACE = 'errNotReplace';       // Object "$1" already exists at this location and can not be replaced with object of another type.
-    const ERROR_SAVE = 'errSave';
-    const ERROR_EXTRACT = 'errExtract';
-    const ERROR_ARCHIVE = 'errArchive';
-    const ERROR_NOT_ARCHIVE = 'errNoArchive';
-    const ERROR_ARCHIVE_TYPE = 'errArcType';
-    const ERROR_ARC_SYMLINKS = 'errArcSymlinks';
-    const ERROR_ARC_MAXSIZE = 'errArcMaxSize';
-    const ERROR_RESIZE = 'errResize';
-    const ERROR_UNSUPPORT_TYPE = 'errUsupportType';
-    const ERROR_CONV_UTF8 = 'errConvUTF8';
-    const ERROR_NOT_UTF8_CONTENT = 'errNotUTF8Content';
-    const ERROR_NETMOUNT = 'errNetMount';
-    const ERROR_NETUNMOUNT = 'errNetUnMount';
-    const ERROR_NETMOUNT_NO_DRIVER = 'errNetMountNoDriver';
-    const ERROR_NETMOUNT_FAILED = 'errNetMountFailed';
-
-    const ERROR_SESSION_EXPIRES = 'errSessionExpires';
-
-    const ERROR_CREATING_TEMP_DIR = 'errCreatingTempDir';
-    const ERROR_FTP_DOWNLOAD_FILE = 'errFtpDownloadFile';
-    const ERROR_FTP_UPLOAD_FILE = 'errFtpUploadFile';
-    const ERROR_FTP_MKDIR = 'errFtpMkdir';
-    const ERROR_ARCHIVE_EXEC = 'errArchiveExec';
-    const ERROR_EXTRACT_EXEC = 'errExtractExec';
-    const ERROR_SEARCH_TIMEOUT = 'errSearchTimeout';    // 'Timed out while searching "$1". Search result is partial.'
-    const ERROR_REAUTH_REQUIRE = 'errReauthRequire';  // 'Re-authorization is required.'
+    /**
+     * Is session closed.
+     *
+     * @deprecated
+     *
+     * @var bool
+     */
+    private static $sessionClosed = false;
 
     /**
      * Constructor.
@@ -636,23 +635,6 @@ class elFinder
         return $this->commandExists($cmd) ? $this->commands[$cmd] : [];
     }
 
-    private function session_expires()
-    {
-        if (! $last = $this->session->get(':LAST_ACTIVITY')) {
-            $this->session->set(':LAST_ACTIVITY', time());
-
-            return false;
-        }
-
-        if (($this->timeout > 0) && (time() - $last > $this->timeout)) {
-            return true;
-        }
-
-        $this->session->set(':LAST_ACTIVITY', time());
-
-        return false;
-    }
-
     /**
      * Exec command and return result.
      *
@@ -803,6 +785,265 @@ class elFinder
         return $volume->realpath($hash);
     }
 
+    /***************************************************************************/
+    /*                                 commands                                */
+    /***************************************************************************/
+
+    /**
+     * Normalize error messages.
+     *
+     * @return array
+     *
+     * @author Dmitry (dio) Levashov
+     **/
+    public function error()
+    {
+        $errors = [];
+
+        foreach (func_get_args() as $msg) {
+            if (is_array($msg)) {
+                $errors = array_merge($errors, $msg);
+            } else {
+                $errors[] = $msg;
+            }
+        }
+
+        return count($errors) ? $errors : [self::ERROR_UNKNOWN];
+    }
+
+    /**
+     * PHP error handler, catch error types only E_WARNING | E_NOTICE | E_USER_WARNING | E_USER_NOTICE.
+     *
+     * @param int    $errno
+     * @param string $errstr
+     * @param string $errfile
+     * @param int    $errline
+     *
+     * @return void|bool
+     */
+    public static function phpErrorHandler($errno, $errstr, $errfile, $errline)
+    {
+        static $base = null;
+
+        if (is_null($base)) {
+            $base = dirname(__FILE__).DIRECTORY_SEPARATOR;
+        }
+
+        if (! (error_reporting() & $errno)) {
+            return;
+        }
+
+        $errfile = str_replace($base, '', $errfile);
+
+        $proc = false;
+        switch ($errno) {
+            case E_WARNING:
+            case E_USER_WARNING:
+                self::$phpErrors[] = "WARNING: $errstr in $errfile line $errline.";
+                $proc = true;
+                break;
+
+            case E_NOTICE:
+            case E_USER_NOTICE:
+                self::$phpErrors[] = "NOTICE: $errstr in $errfile line $errline.";
+                $proc = true;
+                break;
+        }
+
+        return $proc;
+    }
+
+    /***************************************************************************/
+    /*                           static  utils                                 */
+    /***************************************************************************/
+
+    /**
+     * Return Is Animation Gif.
+     *
+     * @param string $path server local path of target image
+     *
+     * @return bool
+     */
+    public static function isAnimationGif($path)
+    {
+        list($width, $height, $type, $attr) = getimagesize($path);
+        switch ($type) {
+            case IMAGETYPE_GIF:
+                break;
+            default:
+                return false;
+        }
+
+        $imgcnt = 0;
+        $fp = fopen($path, 'rb');
+        fread($fp, 4);
+        $c = fread($fp, 1);
+        if (ord($c) != 0x39) {  // GIF89a
+            return false;
+        }
+
+        while (! feof($fp)) {
+            do {
+                $c = fread($fp, 1);
+            } while (ord($c) != 0x21 && ! feof($fp));
+
+            if (feof($fp)) {
+                break;
+            }
+
+            $c2 = fread($fp, 2);
+            if (bin2hex($c2) == 'f904') {
+                $imgcnt++;
+            }
+
+            if (feof($fp)) {
+                break;
+            }
+        }
+
+        if ($imgcnt > 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Return Is seekable stream resource.
+     *
+     * @param resource $resource
+     *
+     * @return bool
+     */
+    public static function isSeekableStream($resource)
+    {
+        $metadata = stream_get_meta_data($resource);
+
+        return $metadata['seekable'];
+    }
+
+    /**
+     * Rewind stream resource.
+     *
+     * @param resource $resource
+     *
+     * @return void
+     */
+    public static function rewind($resource)
+    {
+        self::isSeekableStream($resource) && rewind($resource);
+    }
+
+    /**
+     * serialize and base64_encode of session data (If needed).
+     *
+     * @deprecated
+     *
+     * @param mixed $var target variable
+     *
+     * @author Naoki Sawada
+     *
+     * @return mixed|string
+     */
+    public static function sessionDataEncode($var)
+    {
+        if (self::$base64encodeSessionData) {
+            $var = base64_encode(serialize($var));
+        }
+
+        return $var;
+    }
+
+    /**
+     * base64_decode and unserialize of session data  (If needed).
+     *
+     * @deprecated
+     *
+     * @param mixed $var     target variable
+     * @param bool  $checkIs data type for check (array|string|object|int)
+     *
+     * @author Naoki Sawada
+     *
+     * @return bool|mixed
+     */
+    public static function sessionDataDecode(&$var, $checkIs = null)
+    {
+        if (self::$base64encodeSessionData) {
+            $data = unserialize(base64_decode($var));
+        } else {
+            $data = $var;
+        }
+        $chk = true;
+        if ($checkIs) {
+            switch ($checkIs) {
+                case 'array':
+                    $chk = is_array($data);
+                    break;
+                case 'string':
+                    $chk = is_string($data);
+                    break;
+                case 'object':
+                    $chk = is_object($data);
+                    break;
+                case 'int':
+                    $chk = is_int($data);
+                    break;
+            }
+        }
+        if (! $chk) {
+            unset($var);
+
+            return false;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Call session_write_close() if session is restarted.
+     *
+     * @deprecated
+     *
+     * @return void
+     */
+    public static function sessionWrite()
+    {
+        if (session_id()) {
+            session_write_close();
+        }
+    }
+
+    /**
+     * Return elFinder static variable.
+     *
+     * @param $key
+     *
+     * @return mixed|null
+     */
+    public static function getStaticVar($key)
+    {
+        return isset(self::$$key) ? self::$$key : null;
+    }
+
+    /**
+     * Extend PHP execution time limit.
+     *
+     * @param int $time
+     *
+     * @return void
+     */
+    public static function extendTimeLimit($time = null)
+    {
+        static $defLimit = null;
+        if (is_null($defLimit)) {
+            $defLimit = ini_get('max_execution_time');
+        }
+        if ($defLimit != 0) {
+            $time = is_null($time) ? $defLimit : max($defLimit, $time);
+            set_time_limit($time);
+        }
+    }
+
     /**
      * Return network volumes config.
      *
@@ -890,32 +1131,6 @@ class elFinder
         }
 
         return $this->plugins[$key];
-    }
-
-    /***************************************************************************/
-    /*                                 commands                                */
-    /***************************************************************************/
-
-    /**
-     * Normalize error messages.
-     *
-     * @return array
-     *
-     * @author Dmitry (dio) Levashov
-     **/
-    public function error()
-    {
-        $errors = [];
-
-        foreach (func_get_args() as $msg) {
-            if (is_array($msg)) {
-                $errors = array_merge($errors, $msg);
-            } else {
-                $errors[] = $msg;
-            }
-        }
-
-        return count($errors) ? $errors : [self::ERROR_UNKNOWN];
     }
 
     protected function netmount($args)
@@ -1890,47 +2105,6 @@ class elFinder
     }
 
     /**
-     * Get temporary directory path.
-     *
-     * @param string $volumeTempPath
-     *
-     * @return string
-     *
-     * @author Naoki Sawada
-     */
-    private function getTempDir($volumeTempPath = null)
-    {
-        $testDirs = [];
-        if ($this->uploadTempPath) {
-            $testDirs[] = rtrim(realpath($this->uploadTempPath), DIRECTORY_SEPARATOR);
-        }
-        if ($volumeTempPath) {
-            $testDirs[] = rtrim(realpath($volumeTempPath), DIRECTORY_SEPARATOR);
-        }
-        if (function_exists('sys_get_temp_dir')) {
-            $testDirs[] = sys_get_temp_dir();
-        }
-        $tempDir = '';
-        foreach ($testDirs as $testDir) {
-            if (! $testDir || ! is_dir($testDir)) {
-                continue;
-            }
-            if (is_writable($testDir)) {
-                $tempDir = $testDir;
-                $gc = time() - 3600;
-                foreach (glob($tempDir.DIRECTORY_SEPARATOR.'ELF*') as $cf) {
-                    if (filemtime($cf) < $gc) {
-                        unlink($cf);
-                    }
-                }
-                break;
-            }
-        }
-
-        return $tempDir;
-    }
-
-    /**
      * chmod.
      *
      * @param array  command arguments
@@ -1977,149 +2151,6 @@ class elFinder
         }
 
         return $result;
-    }
-
-    /**
-     * Check chunked upload files.
-     *
-     * @param string $tmpname uploaded temporary file path
-     * @param string $chunk   uploaded chunk file name
-     * @param string $cid     uploaded chunked file id
-     * @param string $tempDir temporary dirctroy path
-     * @param null   $volume
-     *
-     * @return array or (empty, empty)
-     *
-     * @author Naoki Sawada
-     */
-    private function checkChunkedFile($tmpname, $chunk, $cid, $tempDir, $volume = null)
-    {
-        if (preg_match('/^(.+)(\.\d+_(\d+))\.part$/s', $chunk, $m)) {
-            $fname = $m[1];
-            $encname = md5($cid.'_'.$fname);
-            $base = $tempDir.DIRECTORY_SEPARATOR.'ELF'.$encname;
-            $clast = intval($m[3]);
-            if (is_null($tmpname)) {
-                ignore_user_abort(true);
-                sleep(10); // wait 10 sec
-                // chunked file upload fail
-                foreach (glob($base.'*') as $cf) {
-                    unlink($cf);
-                }
-                ignore_user_abort(false);
-
-                return;
-            }
-
-            $range = isset($_POST['range']) ? trim($_POST['range']) : '';
-            if ($range && preg_match('/^(\d+),(\d+),(\d+)$/', $range, $ranges)) {
-                $start = $ranges[1];
-                $len = $ranges[2];
-                $size = $ranges[3];
-                $tmp = $base.'.part';
-                $csize = filesize($tmpname);
-
-                $tmpExists = is_file($tmp);
-                if (! $tmpExists) {
-                    // check upload max size
-                    $uploadMaxSize = $volume->getUploadMaxSize();
-                    if ($uploadMaxSize > 0 && $size > $uploadMaxSize) {
-                        return [self::ERROR_UPLOAD_FILE_SIZE, false];
-                    }
-                    // make temp file
-                    $ok = false;
-                    if ($fp = fopen($tmp, 'wb')) {
-                        flock($fp, LOCK_EX);
-                        $ok = ftruncate($fp, $size);
-                        flock($fp, LOCK_UN);
-                        fclose($fp);
-                        touch($base);
-                    }
-                    if (! $ok) {
-                        unlink($tmp);
-
-                        return [self::ERROR_UPLOAD_TEMP, false];
-                    }
-                } else {
-                    // wait until makeing temp file (for anothor session)
-                    $cnt = 1200; // Time limit 120 sec
-                    while (! is_file($base) && --$cnt) {
-                        usleep(100000); // wait 100ms
-                    }
-                    if (! $cnt) {
-                        return [self::ERROR_UPLOAD_TEMP, false];
-                    }
-                }
-
-                // check size info
-                if ($len != $csize || $start + $len > $size || ($tmpExists && $size != filesize($tmp))) {
-                    return [self::ERROR_UPLOAD_TEMP, false];
-                }
-
-                // write chunk data
-                $writelen = 0;
-                $src = fopen($tmpname, 'rb');
-                $fp = fopen($tmp, 'cb');
-                fseek($fp, $start);
-                $writelen = stream_copy_to_stream($src, $fp, $len);
-                fclose($fp);
-                fclose($src);
-                if ($writelen != $len) {
-                    return [self::ERROR_UPLOAD_TEMP, false];
-                }
-
-                // write counts
-                file_put_contents($base, "\0", FILE_APPEND | LOCK_EX);
-
-                if (filesize($base) >= $clast + 1) {
-                    // Completion
-                    unlink($base);
-
-                    return [$tmp, $fname];
-                }
-            } else {
-                // old way
-                $part = $base.$m[2];
-                if (move_uploaded_file($tmpname, $part)) {
-                    chmod($part, 0600);
-                    if ($clast < count(glob($base.'*'))) {
-                        $parts = [];
-                        for ($i = 0; $i <= $clast; $i++) {
-                            $name = $base.'.'.$i.'_'.$clast;
-                            if (is_readable($name)) {
-                                $parts[] = $name;
-                            } else {
-                                $parts = null;
-                                break;
-                            }
-                        }
-                        if ($parts) {
-                            if (! is_file($base)) {
-                                touch($base);
-                                if ($resfile = tempnam($tempDir, 'ELF')) {
-                                    $target = fopen($resfile, 'wb');
-                                    foreach ($parts as $f) {
-                                        $fp = fopen($f, 'rb');
-                                        while (! feof($fp)) {
-                                            fwrite($target, fread($fp, 8192));
-                                        }
-                                        fclose($fp);
-                                        unlink($f);
-                                    }
-                                    fclose($target);
-                                    unlink($base);
-
-                                    return [$resfile, $fname];
-                                }
-                                unlink($base);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return ['', ''];
     }
 
     /**
@@ -2882,48 +2913,6 @@ class elFinder
         exit();
     }
 
-    /**
-     * PHP error handler, catch error types only E_WARNING | E_NOTICE | E_USER_WARNING | E_USER_NOTICE.
-     *
-     * @param int    $errno
-     * @param string $errstr
-     * @param string $errfile
-     * @param int    $errline
-     *
-     * @return void|bool
-     */
-    public static function phpErrorHandler($errno, $errstr, $errfile, $errline)
-    {
-        static $base = null;
-
-        if (is_null($base)) {
-            $base = dirname(__FILE__).DIRECTORY_SEPARATOR;
-        }
-
-        if (! (error_reporting() & $errno)) {
-            return;
-        }
-
-        $errfile = str_replace($base, '', $errfile);
-
-        $proc = false;
-        switch ($errno) {
-            case E_WARNING:
-            case E_USER_WARNING:
-                self::$phpErrors[] = "WARNING: $errstr in $errfile line $errline.";
-                $proc = true;
-                break;
-
-            case E_NOTICE:
-            case E_USER_NOTICE:
-                self::$phpErrors[] = "NOTICE: $errstr in $errfile line $errline.";
-                $proc = true;
-                break;
-        }
-
-        return $proc;
-    }
-
     /***************************************************************************/
     /*                                   utils                                 */
     /***************************************************************************/
@@ -3081,194 +3070,204 @@ class elFinder
         return $res;
     }
 
-    /***************************************************************************/
-    /*                           static  utils                                 */
-    /***************************************************************************/
-
-    /**
-     * Return Is Animation Gif.
-     *
-     * @param string $path server local path of target image
-     *
-     * @return bool
-     */
-    public static function isAnimationGif($path)
+    private function session_expires()
     {
-        list($width, $height, $type, $attr) = getimagesize($path);
-        switch ($type) {
-            case IMAGETYPE_GIF:
-                break;
-            default:
-                return false;
-        }
+        if (! $last = $this->session->get(':LAST_ACTIVITY')) {
+            $this->session->set(':LAST_ACTIVITY', time());
 
-        $imgcnt = 0;
-        $fp = fopen($path, 'rb');
-        fread($fp, 4);
-        $c = fread($fp, 1);
-        if (ord($c) != 0x39) {  // GIF89a
             return false;
         }
 
-        while (! feof($fp)) {
-            do {
-                $c = fread($fp, 1);
-            } while (ord($c) != 0x21 && ! feof($fp));
-
-            if (feof($fp)) {
-                break;
-            }
-
-            $c2 = fread($fp, 2);
-            if (bin2hex($c2) == 'f904') {
-                $imgcnt++;
-            }
-
-            if (feof($fp)) {
-                break;
-            }
-        }
-
-        if ($imgcnt > 1) {
+        if (($this->timeout > 0) && (time() - $last > $this->timeout)) {
             return true;
-        } else {
-            return false;
         }
+
+        $this->session->set(':LAST_ACTIVITY', time());
+
+        return false;
     }
 
     /**
-     * Return Is seekable stream resource.
+     * Get temporary directory path.
      *
-     * @param resource $resource
+     * @param string $volumeTempPath
      *
-     * @return bool
-     */
-    public static function isSeekableStream($resource)
-    {
-        $metadata = stream_get_meta_data($resource);
-
-        return $metadata['seekable'];
-    }
-
-    /**
-     * Rewind stream resource.
-     *
-     * @param resource $resource
-     *
-     * @return void
-     */
-    public static function rewind($resource)
-    {
-        self::isSeekableStream($resource) && rewind($resource);
-    }
-
-    /**
-     * serialize and base64_encode of session data (If needed).
-     *
-     * @deprecated
-     *
-     * @param mixed $var target variable
+     * @return string
      *
      * @author Naoki Sawada
-     *
-     * @return mixed|string
      */
-    public static function sessionDataEncode($var)
+    private function getTempDir($volumeTempPath = null)
     {
-        if (self::$base64encodeSessionData) {
-            $var = base64_encode(serialize($var));
+        $testDirs = [];
+        if ($this->uploadTempPath) {
+            $testDirs[] = rtrim(realpath($this->uploadTempPath), DIRECTORY_SEPARATOR);
         }
-
-        return $var;
-    }
-
-    /**
-     * base64_decode and unserialize of session data  (If needed).
-     *
-     * @deprecated
-     *
-     * @param mixed $var     target variable
-     * @param bool  $checkIs data type for check (array|string|object|int)
-     *
-     * @author Naoki Sawada
-     *
-     * @return bool|mixed
-     */
-    public static function sessionDataDecode(&$var, $checkIs = null)
-    {
-        if (self::$base64encodeSessionData) {
-            $data = unserialize(base64_decode($var));
-        } else {
-            $data = $var;
+        if ($volumeTempPath) {
+            $testDirs[] = rtrim(realpath($volumeTempPath), DIRECTORY_SEPARATOR);
         }
-        $chk = true;
-        if ($checkIs) {
-            switch ($checkIs) {
-                case 'array':
-                    $chk = is_array($data);
-                    break;
-                case 'string':
-                    $chk = is_string($data);
-                    break;
-                case 'object':
-                    $chk = is_object($data);
-                    break;
-                case 'int':
-                    $chk = is_int($data);
-                    break;
+        if (function_exists('sys_get_temp_dir')) {
+            $testDirs[] = sys_get_temp_dir();
+        }
+        $tempDir = '';
+        foreach ($testDirs as $testDir) {
+            if (! $testDir || ! is_dir($testDir)) {
+                continue;
+            }
+            if (is_writable($testDir)) {
+                $tempDir = $testDir;
+                $gc = time() - 3600;
+                foreach (glob($tempDir.DIRECTORY_SEPARATOR.'ELF*') as $cf) {
+                    if (filemtime($cf) < $gc) {
+                        unlink($cf);
+                    }
+                }
+                break;
             }
         }
-        if (! $chk) {
-            unset($var);
 
-            return false;
-        }
-
-        return $data;
+        return $tempDir;
     }
 
     /**
-     * Call session_write_close() if session is restarted.
+     * Check chunked upload files.
      *
-     * @deprecated
+     * @param string $tmpname uploaded temporary file path
+     * @param string $chunk   uploaded chunk file name
+     * @param string $cid     uploaded chunked file id
+     * @param string $tempDir temporary dirctroy path
+     * @param null   $volume
      *
-     * @return void
+     * @return array or (empty, empty)
+     *
+     * @author Naoki Sawada
      */
-    public static function sessionWrite()
+    private function checkChunkedFile($tmpname, $chunk, $cid, $tempDir, $volume = null)
     {
-        if (session_id()) {
-            session_write_close();
-        }
-    }
+        if (preg_match('/^(.+)(\.\d+_(\d+))\.part$/s', $chunk, $m)) {
+            $fname = $m[1];
+            $encname = md5($cid.'_'.$fname);
+            $base = $tempDir.DIRECTORY_SEPARATOR.'ELF'.$encname;
+            $clast = intval($m[3]);
+            if (is_null($tmpname)) {
+                ignore_user_abort(true);
+                sleep(10); // wait 10 sec
+                // chunked file upload fail
+                foreach (glob($base.'*') as $cf) {
+                    unlink($cf);
+                }
+                ignore_user_abort(false);
 
-    /**
-     * Return elFinder static variable.
-     *
-     * @param $key
-     *
-     * @return mixed|null
-     */
-    public static function getStaticVar($key)
-    {
-        return isset(self::$$key) ? self::$$key : null;
-    }
+                return;
+            }
 
-    /**
-     * Extend PHP execution time limit.
-     *
-     * @param int $time
-     *
-     * @return void
-     */
-    public static function extendTimeLimit($time = null)
-    {
-        static $defLimit = null;
-        if (is_null($defLimit)) {
-            $defLimit = ini_get('max_execution_time');
+            $range = isset($_POST['range']) ? trim($_POST['range']) : '';
+            if ($range && preg_match('/^(\d+),(\d+),(\d+)$/', $range, $ranges)) {
+                $start = $ranges[1];
+                $len = $ranges[2];
+                $size = $ranges[3];
+                $tmp = $base.'.part';
+                $csize = filesize($tmpname);
+
+                $tmpExists = is_file($tmp);
+                if (! $tmpExists) {
+                    // check upload max size
+                    $uploadMaxSize = $volume->getUploadMaxSize();
+                    if ($uploadMaxSize > 0 && $size > $uploadMaxSize) {
+                        return [self::ERROR_UPLOAD_FILE_SIZE, false];
+                    }
+                    // make temp file
+                    $ok = false;
+                    if ($fp = fopen($tmp, 'wb')) {
+                        flock($fp, LOCK_EX);
+                        $ok = ftruncate($fp, $size);
+                        flock($fp, LOCK_UN);
+                        fclose($fp);
+                        touch($base);
+                    }
+                    if (! $ok) {
+                        unlink($tmp);
+
+                        return [self::ERROR_UPLOAD_TEMP, false];
+                    }
+                } else {
+                    // wait until makeing temp file (for anothor session)
+                    $cnt = 1200; // Time limit 120 sec
+                    while (! is_file($base) && --$cnt) {
+                        usleep(100000); // wait 100ms
+                    }
+                    if (! $cnt) {
+                        return [self::ERROR_UPLOAD_TEMP, false];
+                    }
+                }
+
+                // check size info
+                if ($len != $csize || $start + $len > $size || ($tmpExists && $size != filesize($tmp))) {
+                    return [self::ERROR_UPLOAD_TEMP, false];
+                }
+
+                // write chunk data
+                $writelen = 0;
+                $src = fopen($tmpname, 'rb');
+                $fp = fopen($tmp, 'cb');
+                fseek($fp, $start);
+                $writelen = stream_copy_to_stream($src, $fp, $len);
+                fclose($fp);
+                fclose($src);
+                if ($writelen != $len) {
+                    return [self::ERROR_UPLOAD_TEMP, false];
+                }
+
+                // write counts
+                file_put_contents($base, "\0", FILE_APPEND | LOCK_EX);
+
+                if (filesize($base) >= $clast + 1) {
+                    // Completion
+                    unlink($base);
+
+                    return [$tmp, $fname];
+                }
+            } else {
+                // old way
+                $part = $base.$m[2];
+                if (move_uploaded_file($tmpname, $part)) {
+                    chmod($part, 0600);
+                    if ($clast < count(glob($base.'*'))) {
+                        $parts = [];
+                        for ($i = 0; $i <= $clast; $i++) {
+                            $name = $base.'.'.$i.'_'.$clast;
+                            if (is_readable($name)) {
+                                $parts[] = $name;
+                            } else {
+                                $parts = null;
+                                break;
+                            }
+                        }
+                        if ($parts) {
+                            if (! is_file($base)) {
+                                touch($base);
+                                if ($resfile = tempnam($tempDir, 'ELF')) {
+                                    $target = fopen($resfile, 'wb');
+                                    foreach ($parts as $f) {
+                                        $fp = fopen($f, 'rb');
+                                        while (! feof($fp)) {
+                                            fwrite($target, fread($fp, 8192));
+                                        }
+                                        fclose($fp);
+                                        unlink($f);
+                                    }
+                                    fclose($target);
+                                    unlink($base);
+
+                                    return [$resfile, $fname];
+                                }
+                                unlink($base);
+                            }
+                        }
+                    }
+                }
+            }
         }
-        if ($defLimit != 0) {
-            $time = is_null($time) ? $defLimit : max($defLimit, $time);
-            set_time_limit($time);
-        }
+
+        return ['', ''];
     }
 } // END class

@@ -11,6 +11,12 @@ elFinder::$netDrivers['ftp'] = 'FTP';
 class elFinderVolumeFTP extends elFinderVolumeDriver
 {
     /**
+     * Net mount key.
+     *
+     * @var string
+     **/
+    public $netMountKey = '';
+    /**
      * Driver id
      * Must be started from letter and contains [a-z0-9]
      * Used as part of volume id.
@@ -54,13 +60,6 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
      * @var string
      **/
     protected $tmp = '';
-
-    /**
-     * Net mount key.
-     *
-     * @var string
-     **/
-    public $netMountKey = '';
 
     /**
      * FTP command `MLST` support.
@@ -129,6 +128,22 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
         $options['allowChmodReadOnly'] = true;
 
         return $options;
+    }
+
+    /*********************************************************************/
+    /*                               FS API                              */
+    /*********************************************************************/
+
+    /**
+     * Close opened connection.
+     *
+     * @return void
+     *
+     * @author Dmitry (dio) Levashov
+     **/
+    public function umount()
+    {
+        $this->connect && ftp_close($this->connect);
     }
 
     /*********************************************************************/
@@ -288,22 +303,6 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
         }
 
         return true;
-    }
-
-    /*********************************************************************/
-    /*                               FS API                              */
-    /*********************************************************************/
-
-    /**
-     * Close opened connection.
-     *
-     * @return void
-     *
-     * @author Dmitry (dio) Levashov
-     **/
-    public function umount()
-    {
-        $this->connect && ftp_close($this->connect);
     }
 
     /**
@@ -1476,35 +1475,6 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
     }
 
     /**
-     * Create writable temporary directory and return path to it.
-     *
-     * @return string path to the new temporary directory or false in case of error.
-     */
-    private function tempDir()
-    {
-        $tempPath = tempnam($this->tmp, 'elFinder');
-        if (! $tempPath) {
-            $this->setError(elFinder::ERROR_CREATING_TEMP_DIR, $this->tmp);
-
-            return false;
-        }
-        $success = unlink($tempPath);
-        if (! $success) {
-            $this->setError(elFinder::ERROR_CREATING_TEMP_DIR, $this->tmp);
-
-            return false;
-        }
-        $success = mkdir($tempPath, 0700, true);
-        if (! $success) {
-            $this->setError(elFinder::ERROR_CREATING_TEMP_DIR, $this->tmp);
-
-            return false;
-        }
-
-        return $tempPath;
-    }
-
-    /**
      * Gets an array of absolute remote FTP paths of files and
      * folders in $remote_directory omitting symbolic links.
      *
@@ -1558,6 +1528,35 @@ class elFinderVolumeFTP extends elFinderVolumeDriver
         }
 
         return $items;
+    }
+
+    /**
+     * Create writable temporary directory and return path to it.
+     *
+     * @return string path to the new temporary directory or false in case of error.
+     */
+    private function tempDir()
+    {
+        $tempPath = tempnam($this->tmp, 'elFinder');
+        if (! $tempPath) {
+            $this->setError(elFinder::ERROR_CREATING_TEMP_DIR, $this->tmp);
+
+            return false;
+        }
+        $success = unlink($tempPath);
+        if (! $success) {
+            $this->setError(elFinder::ERROR_CREATING_TEMP_DIR, $this->tmp);
+
+            return false;
+        }
+        $success = mkdir($tempPath, 0700, true);
+        if (! $success) {
+            $this->setError(elFinder::ERROR_CREATING_TEMP_DIR, $this->tmp);
+
+            return false;
+        }
+
+        return $tempPath;
     }
 
     /**

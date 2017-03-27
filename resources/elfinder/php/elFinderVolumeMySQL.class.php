@@ -76,6 +76,36 @@ class elFinderVolumeMySQL extends elFinderVolumeDriver
         $this->options['mimeDetect'] = 'internal';
     }
 
+    /**
+     * Close connection.
+     *
+     * @return void
+     *
+     * @author Dmitry (dio) Levashov
+     **/
+    public function umount()
+    {
+        $this->db->close();
+    }
+
+    /**
+     * Return debug info for client.
+     *
+     * @return array
+     *
+     * @author Dmitry (dio) Levashov
+     **/
+    public function debug()
+    {
+        $debug = parent::debug();
+        $debug['sqlCount'] = $this->sqlCnt;
+        if ($this->dbError) {
+            $debug['dbError'] = $this->dbError;
+        }
+
+        return $debug;
+    }
+
     /*********************************************************************/
     /*                        INIT AND CONFIGURE                         */
     /*********************************************************************/
@@ -153,36 +183,6 @@ class elFinderVolumeMySQL extends elFinderVolumeDriver
         }
 
         $this->mimeDetect = 'internal';
-    }
-
-    /**
-     * Close connection.
-     *
-     * @return void
-     *
-     * @author Dmitry (dio) Levashov
-     **/
-    public function umount()
-    {
-        $this->db->close();
-    }
-
-    /**
-     * Return debug info for client.
-     *
-     * @return array
-     *
-     * @author Dmitry (dio) Levashov
-     **/
-    public function debug()
-    {
-        $debug = parent::debug();
-        $debug['sqlCount'] = $this->sqlCnt;
-        if ($this->dbError) {
-            $debug['dbError'] = $this->dbError;
-        }
-
-        return $debug;
     }
 
     /**

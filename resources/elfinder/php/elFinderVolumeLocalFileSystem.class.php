@@ -65,6 +65,84 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
         $this->options['keepTimestamp'] = ['copy', 'move']; // keep timestamp at inner filesystem allowed 'copy', 'move' and 'upload'
     }
 
+    /**
+     * Long pooling sync checker
+     * This function require server command `inotifywait`
+     * If `inotifywait` need full path, Please add `define('ELFINER_INOTIFYWAIT_PATH', '/PATH_TO/inotifywait');` into connector.php.
+     *
+     * @param string $path
+     * @param int    $standby
+     * @param number $compare
+     *
+     * @return number|bool
+     */
+    public function localFileSystemInotify($path, $standby, $compare)
+    {
+        if (isset($this->sessionCache['localFileSystemInotify_disable'])) {
+            return false;
+        }
+        $path = realpath($path);
+        $mtime = filemtime($path);
+        if (! $mtime) {
+            return false;
+        }
+        if ($mtime != $compare) {
+            return $mtime;
+        }
+        $inotifywait = defined('ELFINER_INOTIFYWAIT_PATH') ? ELFINER_INOTIFYWAIT_PATH : 'inotifywait';
+        $standby = max(1, intval($standby));
+        $cmd = $inotifywait.' '.escapeshellarg($path).' -t '.$standby.' -e moved_to,moved_from,move,close_write,delete,delete_self';
+        $this->procExec($cmd, $o, $r);
+        if ($r === 0) {
+            // changed
+            clearstatcache();
+            if (file_exists($path)) {
+                $mtime = filemtime($path); // error on busy?
+                return $mtime ? $mtime : time();
+            } else {
+                // target was removed
+                return 0;
+            }
+        } elseif ($r === 2) {
+            // not changed (timeout)
+            return $compare;
+        }
+        // error
+        // cache to $_SESSION
+        $this->sessionCache['localFileSystemInotify_disable'] = true;
+        $this->session->set($this->id, $this->sessionCache, true);
+
+        return false;
+    }
+
+    /******************** Original local functions ************************
+     * @param $file
+     * @param $key
+     * @param $iterator
+     * @return bool
+     */
+
+    public function localFileSystemSearchIteratorFilter($file, $key, $iterator)
+    {
+        $name = $file->getFilename();
+        if ($this->doSearchCurrentQuery['excludes']) {
+            foreach ($this->doSearchCurrentQuery['excludes'] as $exclude) {
+                if ($this->stripos($name, $exclude) !== false) {
+                    return false;
+                }
+            }
+        }
+        if ($iterator->hasChildren()) {
+            if ($this->options['searchExDirReg'] && preg_match($this->options['searchExDirReg'], $key)) {
+                return false;
+            }
+
+            return (bool) $this->attr($key, 'read', null, true);
+        }
+
+        return ($this->stripos($name, $this->doSearchCurrentQuery['q']) === false) ? false : true;
+    }
+
     /*********************************************************************/
     /*                        INIT AND CONFIGURE                         */
     /*********************************************************************/
@@ -194,56 +272,6 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
         if (! empty($this->options['keepTimestamp'])) {
             $this->options['keepTimestamp'] = array_flip($this->options['keepTimestamp']);
         }
-    }
-
-    /**
-     * Long pooling sync checker
-     * This function require server command `inotifywait`
-     * If `inotifywait` need full path, Please add `define('ELFINER_INOTIFYWAIT_PATH', '/PATH_TO/inotifywait');` into connector.php.
-     *
-     * @param string $path
-     * @param int    $standby
-     * @param number $compare
-     *
-     * @return number|bool
-     */
-    public function localFileSystemInotify($path, $standby, $compare)
-    {
-        if (isset($this->sessionCache['localFileSystemInotify_disable'])) {
-            return false;
-        }
-        $path = realpath($path);
-        $mtime = filemtime($path);
-        if (! $mtime) {
-            return false;
-        }
-        if ($mtime != $compare) {
-            return $mtime;
-        }
-        $inotifywait = defined('ELFINER_INOTIFYWAIT_PATH') ? ELFINER_INOTIFYWAIT_PATH : 'inotifywait';
-        $standby = max(1, intval($standby));
-        $cmd = $inotifywait.' '.escapeshellarg($path).' -t '.$standby.' -e moved_to,moved_from,move,close_write,delete,delete_self';
-        $this->procExec($cmd, $o, $r);
-        if ($r === 0) {
-            // changed
-            clearstatcache();
-            if (file_exists($path)) {
-                $mtime = filemtime($path); // error on busy?
-                return $mtime ? $mtime : time();
-            } else {
-                // target was removed
-                return 0;
-            }
-        } elseif ($r === 2) {
-            // not changed (timeout)
-            return $compare;
-        }
-        // error
-        // cache to $_SESSION
-        $this->sessionCache['localFileSystemInotify_disable'] = true;
-        $this->session->set($this->id, $this->sessionCache, true);
-
-        return false;
     }
 
     /*********************************************************************/
@@ -1366,33 +1394,5 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
         }
 
         return $result;
-    }
-
-    /******************** Original local functions ************************
-     * @param $file
-     * @param $key
-     * @param $iterator
-     * @return bool
-     */
-
-    public function localFileSystemSearchIteratorFilter($file, $key, $iterator)
-    {
-        $name = $file->getFilename();
-        if ($this->doSearchCurrentQuery['excludes']) {
-            foreach ($this->doSearchCurrentQuery['excludes'] as $exclude) {
-                if ($this->stripos($name, $exclude) !== false) {
-                    return false;
-                }
-            }
-        }
-        if ($iterator->hasChildren()) {
-            if ($this->options['searchExDirReg'] && preg_match($this->options['searchExDirReg'], $key)) {
-                return false;
-            }
-
-            return (bool) $this->attr($key, 'read', null, true);
-        }
-
-        return ($this->stripos($name, $this->doSearchCurrentQuery['q']) === false) ? false : true;
     }
 } // END class

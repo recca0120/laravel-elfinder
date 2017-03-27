@@ -405,13 +405,6 @@ abstract class elFinderVolumeDriver
     protected $mimeDetect = 'auto';
 
     /**
-     * Flag - mimetypes from externail file was loaded.
-     *
-     * @var bool
-     **/
-    private static $mimetypesLoaded = false;
-
-    /**
      * Finfo object for mimeDetect == 'finfo'.
      *
      * @var object
@@ -638,134 +631,12 @@ abstract class elFinderVolumeDriver
      **/
     protected $doSearchCurrentQuery = [];
 
-    /*********************************************************************/
-    /*                            INITIALIZATION                         */
-    /*********************************************************************/
-
     /**
-     * Prepare driver before mount volume.
-     * Return true if volume is ready.
+     * Flag - mimetypes from externail file was loaded.
      *
-     * @return bool
-     *
-     * @author Dmitry (dio) Levashov
+     * @var bool
      **/
-    protected function init()
-    {
-        return true;
-    }
-
-    /**
-     * Configure after successfull mount.
-     * By default set thumbnails path and image manipulation library.
-     *
-     * @return void
-     *
-     * @author Dmitry (dio) Levashov
-     **/
-    protected function configure()
-    {
-        // set ARGS
-        $this->ARGS = $_SERVER['REQUEST_METHOD'] === 'POST' ? $_POST : $_GET;
-        // set thumbnails path
-        $path = $this->options['tmbPath'];
-        if ($path) {
-            if (! file_exists($path)) {
-                if (mkdir($path)) {
-                    chmod($path, $this->options['tmbPathMode']);
-                } else {
-                    $path = '';
-                }
-            }
-
-            if (is_dir($path) && is_readable($path)) {
-                $this->tmbPath = $path;
-                $this->tmbPathWritable = is_writable($path);
-            }
-        }
-        // set resouce path
-        if (! is_dir($this->options['resourcePath'])) {
-            $this->options['resourcePath'] = dirname(__FILE__).DIRECTORY_SEPARATOR.'resources';
-        }
-
-        // set image manipulation library
-        $type = preg_match('/^(imagick|gd|convert|auto)$/i', $this->options['imgLib'])
-            ? strtolower($this->options['imgLib'])
-            : 'auto';
-
-        $imgLibFallback = extension_loaded('imagick') ? 'imagick' : (function_exists('gd_info') ? 'gd' : '');
-        if (($type === 'imagick' || $type === 'auto') && extension_loaded('imagick')) {
-            $this->imgLib = 'imagick';
-        } elseif (($type === 'gd' || $type === 'auto') && function_exists('gd_info')) {
-            $this->imgLib = 'gd';
-        } else {
-            $convertCache = 'imgLibConvert';
-            if (($convertCmd = $this->session->get($convertCache, false)) !== false) {
-                $this->imgLib = $convertCmd;
-            } else {
-                $this->imgLib = ($this->procExec('convert -version') === 0) ? 'convert' : '';
-                $this->session->set($convertCache, $this->imgLib);
-            }
-        }
-        if ($type !== 'auto' && $this->imgLib === '') {
-            // fallback
-            $this->imgLib = extension_loaded('imagick') ? 'imagick' : (function_exists('gd_info') ? 'gd' : '');
-        }
-
-        // check video to img converter
-        if (! empty($this->options['imgConverter']) && is_array($this->options['imgConverter'])) {
-            foreach ($this->options['imgConverter'] as $_type => $_converter) {
-                if (isset($_converter['func'])) {
-                    $this->imgConverter[strtolower($_type)] = $_converter;
-                }
-            }
-        }
-        if (! isset($this->imgConverter['video'])) {
-            $videoLibCache = 'videoLib';
-            if (($videoLibCmd = $this->session->get($videoLibCache, false)) === false) {
-                $videoLibCmd = ($this->procExec('ffmpeg -version') === 0) ? 'ffmpeg' : '';
-                $this->session->set($videoLibCache, $videoLibCmd);
-            }
-            if ($videoLibCmd) {
-                $this->imgConverter['video'] = [
-                    'func' => [$this, $videoLibCmd.'ToImg'],
-                    'maxlen' => $this->options['tmbVideoConvLen'],
-                ];
-            }
-        }
-
-        // check archivers
-        if (empty($this->archivers['create'])) {
-            $this->disabled[] = 'archive';
-        }
-        if (empty($this->archivers['extract'])) {
-            $this->disabled[] = 'extract';
-        }
-        $_arc = $this->getArchivers();
-        if (empty($_arc['create'])) {
-            $this->disabled[] = 'zipdl';
-        }
-
-        // check 'statOwner' for command `chmod`
-        if (empty($this->options['statOwner'])) {
-            $this->disabled[] = 'chmod';
-        }
-
-        // check 'mimeMap'
-        if (! is_array($this->options['mimeMap'])) {
-            $this->options['mimeMap'] = [];
-        }
-    }
-
-    /**
-     * @deprecated
-     */
-    protected function sessionRestart()
-    {
-        $this->sessionCache = $this->session->start()->get($this->id, []);
-
-        return true;
-    }
+    private static $mimetypesLoaded = false;
 
     /*********************************************************************/
     /*                              PUBLIC API                           */
@@ -2954,6 +2825,277 @@ abstract class elFinderVolumeDriver
     }
 
     /**
+     * Return new unique name based on file name and suffix.
+     *
+     * @param $dir
+     * @param $name
+     * @param string $suffix   suffix append to name
+     * @param bool   $checkNum
+     * @param int    $start
+     *
+     * @return string
+     *
+     * @internal param string $path file path
+     *
+     * @author Dmitry (dio) Levashov
+     */
+    public function uniqueName($dir, $name, $suffix = ' copy', $checkNum = true, $start = 1)
+    {
+        $ext = '';
+
+        if (preg_match('/\.((tar\.(gz|bz|bz2|z|lzo))|cpio\.gz|ps\.gz|xcf\.(gz|bz2)|[a-z0-9]{1,4})$/i', $name, $m)) {
+            $ext = '.'.$m[1];
+            $name = substr($name, 0, strlen($name) - strlen($m[0]));
+        }
+
+        if ($checkNum && preg_match('/('.preg_quote($suffix, '/').')(\d*)$/i', $name, $m)) {
+            $i = (int) $m[2];
+            $name = substr($name, 0, strlen($name) - strlen($m[2]));
+        } else {
+            $i = $start;
+            $name .= $suffix;
+        }
+        $max = $i + 100000;
+
+        while ($i <= $max) {
+            $n = $name.($i > 0 ? sprintf($this->options['uniqueNumFormat'], $i) : '').$ext;
+
+            if (! $this->stat($this->joinPathCE($dir, $n))) {
+                $this->clearcache();
+
+                return $n;
+            }
+            $i++;
+        }
+
+        return $name.md5($dir).$ext;
+    }
+
+    /**
+     * Converts character encoding from UTF-8 to server's one.
+     *
+     * @param mixed  $var           target string or array var
+     * @param bool   $restoreLocale do retore global locale, default is false
+     * @param string $unknown       replaces character for unknown
+     *
+     * @return mixed
+     *
+     * @author Naoki Sawada
+     */
+    public function convEncIn($var = null, $restoreLocale = false, $unknown = '_')
+    {
+        return (! $this->encoding) ? $var : $this->convEnc($var, 'UTF-8', $this->encoding, $this->options['locale'], $restoreLocale, $unknown);
+    }
+
+    /**
+     * Converts character encoding from server's one to UTF-8.
+     *
+     * @param mixed  $var           target string or array var
+     * @param bool   $restoreLocale do retore global locale, default is true
+     * @param string $unknown       replaces character for unknown
+     *
+     * @return mixed
+     *
+     * @author Naoki Sawada
+     */
+    public function convEncOut($var = null, $restoreLocale = true, $unknown = '_')
+    {
+        return (! $this->encoding) ? $var : $this->convEnc($var, $this->encoding, 'UTF-8', $this->options['locale'], $restoreLocale, $unknown);
+    }
+
+    /**
+     * Get image size array with `dimensions`.
+     *
+     * @param string $path path need convert encoding to server encoding
+     * @param string $mime file mime type
+     *
+     * @return array|false
+     */
+    public function getImageSize($path, $mime = '')
+    {
+        $size = false;
+        if ($mime === '' || strtolower(substr($mime, 0, 5)) === 'image') {
+            if ($work = $this->getWorkFile($path)) {
+                if ($size = getimagesize($work)) {
+                    $size['dimensions'] = $size[0].'x'.$size[1];
+                }
+            }
+            is_file($work) && unlink($work);
+        }
+
+        return $size;
+    }
+
+    /**
+     * Remove directory recursive on local file system.
+     *
+     * @param string $dir Target dirctory path
+     *
+     * @return bool
+     *
+     * @author Naoki Sawada
+     */
+    public function rmdirRecursive($dir)
+    {
+        if (! is_link($dir) && is_dir($dir)) {
+            chmod($dir, 0777);
+            if ($handle = opendir($dir)) {
+                while (false !== ($file = readdir($handle))) {
+                    if ($file === '.' || $file === '..') {
+                        continue;
+                    }
+                    elFinder::extendTimeLimit(30);
+                    $path = $dir.DIRECTORY_SEPARATOR.$file;
+                    if (! is_link($dir) && is_dir($path)) {
+                        $this->rmdirRecursive($path);
+                    } else {
+                        chmod($path, 0666);
+                        unlink($path);
+                    }
+                }
+                closedir($handle);
+            }
+
+            return rmdir($dir);
+        } elseif (is_file($dir) || is_link($dir)) {
+            chmod($dir, 0666);
+
+            return unlink($dir);
+        }
+
+        return false;
+    }
+
+    /*********************************************************************/
+    /*                            INITIALIZATION                         */
+    /*********************************************************************/
+
+    /**
+     * Prepare driver before mount volume.
+     * Return true if volume is ready.
+     *
+     * @return bool
+     *
+     * @author Dmitry (dio) Levashov
+     **/
+    protected function init()
+    {
+        return true;
+    }
+
+    /**
+     * Configure after successfull mount.
+     * By default set thumbnails path and image manipulation library.
+     *
+     * @return void
+     *
+     * @author Dmitry (dio) Levashov
+     **/
+    protected function configure()
+    {
+        // set ARGS
+        $this->ARGS = $_SERVER['REQUEST_METHOD'] === 'POST' ? $_POST : $_GET;
+        // set thumbnails path
+        $path = $this->options['tmbPath'];
+        if ($path) {
+            if (! file_exists($path)) {
+                if (mkdir($path)) {
+                    chmod($path, $this->options['tmbPathMode']);
+                } else {
+                    $path = '';
+                }
+            }
+
+            if (is_dir($path) && is_readable($path)) {
+                $this->tmbPath = $path;
+                $this->tmbPathWritable = is_writable($path);
+            }
+        }
+        // set resouce path
+        if (! is_dir($this->options['resourcePath'])) {
+            $this->options['resourcePath'] = dirname(__FILE__).DIRECTORY_SEPARATOR.'resources';
+        }
+
+        // set image manipulation library
+        $type = preg_match('/^(imagick|gd|convert|auto)$/i', $this->options['imgLib'])
+            ? strtolower($this->options['imgLib'])
+            : 'auto';
+
+        $imgLibFallback = extension_loaded('imagick') ? 'imagick' : (function_exists('gd_info') ? 'gd' : '');
+        if (($type === 'imagick' || $type === 'auto') && extension_loaded('imagick')) {
+            $this->imgLib = 'imagick';
+        } elseif (($type === 'gd' || $type === 'auto') && function_exists('gd_info')) {
+            $this->imgLib = 'gd';
+        } else {
+            $convertCache = 'imgLibConvert';
+            if (($convertCmd = $this->session->get($convertCache, false)) !== false) {
+                $this->imgLib = $convertCmd;
+            } else {
+                $this->imgLib = ($this->procExec('convert -version') === 0) ? 'convert' : '';
+                $this->session->set($convertCache, $this->imgLib);
+            }
+        }
+        if ($type !== 'auto' && $this->imgLib === '') {
+            // fallback
+            $this->imgLib = extension_loaded('imagick') ? 'imagick' : (function_exists('gd_info') ? 'gd' : '');
+        }
+
+        // check video to img converter
+        if (! empty($this->options['imgConverter']) && is_array($this->options['imgConverter'])) {
+            foreach ($this->options['imgConverter'] as $_type => $_converter) {
+                if (isset($_converter['func'])) {
+                    $this->imgConverter[strtolower($_type)] = $_converter;
+                }
+            }
+        }
+        if (! isset($this->imgConverter['video'])) {
+            $videoLibCache = 'videoLib';
+            if (($videoLibCmd = $this->session->get($videoLibCache, false)) === false) {
+                $videoLibCmd = ($this->procExec('ffmpeg -version') === 0) ? 'ffmpeg' : '';
+                $this->session->set($videoLibCache, $videoLibCmd);
+            }
+            if ($videoLibCmd) {
+                $this->imgConverter['video'] = [
+                    'func' => [$this, $videoLibCmd.'ToImg'],
+                    'maxlen' => $this->options['tmbVideoConvLen'],
+                ];
+            }
+        }
+
+        // check archivers
+        if (empty($this->archivers['create'])) {
+            $this->disabled[] = 'archive';
+        }
+        if (empty($this->archivers['extract'])) {
+            $this->disabled[] = 'extract';
+        }
+        $_arc = $this->getArchivers();
+        if (empty($_arc['create'])) {
+            $this->disabled[] = 'zipdl';
+        }
+
+        // check 'statOwner' for command `chmod`
+        if (empty($this->options['statOwner'])) {
+            $this->disabled[] = 'chmod';
+        }
+
+        // check 'mimeMap'
+        if (! is_array($this->options['mimeMap'])) {
+            $this->options['mimeMap'] = [];
+        }
+    }
+
+    /**
+     * @deprecated
+     */
+    protected function sessionRestart()
+    {
+        $this->sessionCache = $this->session->start()->get($this->id, []);
+
+        return true;
+    }
+
+    /**
      * Save error message.
      *
      * @param  array  error
@@ -3303,85 +3445,6 @@ abstract class elFinderVolumeDriver
     }
 
     /**
-     * Return new unique name based on file name and suffix.
-     *
-     * @param $dir
-     * @param $name
-     * @param string $suffix   suffix append to name
-     * @param bool   $checkNum
-     * @param int    $start
-     *
-     * @return string
-     *
-     * @internal param string $path file path
-     *
-     * @author Dmitry (dio) Levashov
-     */
-    public function uniqueName($dir, $name, $suffix = ' copy', $checkNum = true, $start = 1)
-    {
-        $ext = '';
-
-        if (preg_match('/\.((tar\.(gz|bz|bz2|z|lzo))|cpio\.gz|ps\.gz|xcf\.(gz|bz2)|[a-z0-9]{1,4})$/i', $name, $m)) {
-            $ext = '.'.$m[1];
-            $name = substr($name, 0, strlen($name) - strlen($m[0]));
-        }
-
-        if ($checkNum && preg_match('/('.preg_quote($suffix, '/').')(\d*)$/i', $name, $m)) {
-            $i = (int) $m[2];
-            $name = substr($name, 0, strlen($name) - strlen($m[2]));
-        } else {
-            $i = $start;
-            $name .= $suffix;
-        }
-        $max = $i + 100000;
-
-        while ($i <= $max) {
-            $n = $name.($i > 0 ? sprintf($this->options['uniqueNumFormat'], $i) : '').$ext;
-
-            if (! $this->stat($this->joinPathCE($dir, $n))) {
-                $this->clearcache();
-
-                return $n;
-            }
-            $i++;
-        }
-
-        return $name.md5($dir).$ext;
-    }
-
-    /**
-     * Converts character encoding from UTF-8 to server's one.
-     *
-     * @param mixed  $var           target string or array var
-     * @param bool   $restoreLocale do retore global locale, default is false
-     * @param string $unknown       replaces character for unknown
-     *
-     * @return mixed
-     *
-     * @author Naoki Sawada
-     */
-    public function convEncIn($var = null, $restoreLocale = false, $unknown = '_')
-    {
-        return (! $this->encoding) ? $var : $this->convEnc($var, 'UTF-8', $this->encoding, $this->options['locale'], $restoreLocale, $unknown);
-    }
-
-    /**
-     * Converts character encoding from server's one to UTF-8.
-     *
-     * @param mixed  $var           target string or array var
-     * @param bool   $restoreLocale do retore global locale, default is true
-     * @param string $unknown       replaces character for unknown
-     *
-     * @return mixed
-     *
-     * @author Naoki Sawada
-     */
-    public function convEncOut($var = null, $restoreLocale = true, $unknown = '_')
-    {
-        return (! $this->encoding) ? $var : $this->convEnc($var, $this->encoding, 'UTF-8', $this->options['locale'], $restoreLocale, $unknown);
-    }
-
-    /**
      * Converts character encoding (base function).
      *
      * @param mixed  $var    target string or array var
@@ -3492,29 +3555,6 @@ abstract class elFinderVolumeDriver
         }
 
         return false;
-    }
-
-    /**
-     * Get image size array with `dimensions`.
-     *
-     * @param string $path path need convert encoding to server encoding
-     * @param string $mime file mime type
-     *
-     * @return array|false
-     */
-    public function getImageSize($path, $mime = '')
-    {
-        $size = false;
-        if ($mime === '' || strtolower(substr($mime, 0, 5)) === 'image') {
-            if ($work = $this->getWorkFile($path)) {
-                if ($size = getimagesize($work)) {
-                    $size['dimensions'] = $size[0].'x'.$size[1];
-                }
-            }
-            is_file($work) && unlink($work);
-        }
-
-        return $size;
     }
 
     /**
@@ -5857,46 +5897,6 @@ abstract class elFinderVolumeDriver
         }
 
         return $path;
-    }
-
-    /**
-     * Remove directory recursive on local file system.
-     *
-     * @param string $dir Target dirctory path
-     *
-     * @return bool
-     *
-     * @author Naoki Sawada
-     */
-    public function rmdirRecursive($dir)
-    {
-        if (! is_link($dir) && is_dir($dir)) {
-            chmod($dir, 0777);
-            if ($handle = opendir($dir)) {
-                while (false !== ($file = readdir($handle))) {
-                    if ($file === '.' || $file === '..') {
-                        continue;
-                    }
-                    elFinder::extendTimeLimit(30);
-                    $path = $dir.DIRECTORY_SEPARATOR.$file;
-                    if (! is_link($dir) && is_dir($path)) {
-                        $this->rmdirRecursive($path);
-                    } else {
-                        chmod($path, 0666);
-                        unlink($path);
-                    }
-                }
-                closedir($handle);
-            }
-
-            return rmdir($dir);
-        } elseif (is_file($dir) || is_link($dir)) {
-            chmod($dir, 0666);
-
-            return unlink($dir);
-        }
-
-        return false;
     }
 
     /**
