@@ -73,7 +73,7 @@ class Session implements elFinderSessionInterface
      **/
     public function set($key, $data)
     {
-        $this->session->set($key, $data);
+        $this->session->put($key, $data);
 
         return $this;
     }
