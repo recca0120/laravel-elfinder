@@ -26,11 +26,11 @@ class Elfinder
     protected $request;
 
     /**
-     * $filesystem.
+     * $files.
      *
      * @var \Illuminate\Filesystem\Filesystem
      */
-    protected $filesystem;
+    protected $files;
 
     /**
      * $urlGenerator.
@@ -51,18 +51,18 @@ class Elfinder
      *
      * @param \Recca0120\Elfinder\Session $session
      * @param \Illuminate\Http\Request $request
-     * @param \Illuminate\Filesystem\Filesystem $filesystem
+     * @param \Illuminate\Filesystem\Filesystem $files
      * @param \Illuminate\Contracts\Routing\UrlGenerator $urlGenerator
      * @param array $config
      */
     public function __construct(
         Session $session,
         Request $request,
-        Filesystem $filesystem,
+        Filesystem $files,
         UrlGenerator $urlGenerator,
         $config = []
     ) {
-        $this->filesystem = $filesystem;
+        $this->files = $files;
         $this->urlGenerator = $urlGenerator;
         $this->session = $session;
         $this->request = $request;
@@ -98,8 +98,8 @@ class Elfinder
                     $disk['path'] = str_replace('{user_id}', $userId, $disk['path']);
                     $disk['URL'] = $this->urlGenerator->to(str_replace('{user_id}', $userId, $disk['URL']));
 
-                    if ($this->filesystem->exists($disk['path']) === false) {
-                        $this->filesystem->makeDirectory($disk['path'], 0755, true);
+                    if ($this->files->exists($disk['path']) === false) {
+                        $this->files->makeDirectory($disk['path'], 0755, true);
                     }
 
                     $disk = array_merge([

@@ -4,7 +4,6 @@ namespace Recca0120\Elfinder\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Recca0120\Elfinder\Elfinder;
-use Recca0120\Elfinder\Connector;
 use Illuminate\Routing\Controller;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -48,16 +47,16 @@ class ElfinderController extends Controller
     /**
      * sound.
      *
-     * @param \Illuminate\Filesystem\Filesystem $filesystem
+     * @param \Illuminate\Filesystem\Filesystem $files
      * @param \Illuminate\Http\Request $request
      * @param string $file
      * @return \Illuminate\Http\Response
      */
-    public function sound(Filesystem $filesystem, Request $request, $file)
+    public function sound(Filesystem $files, Request $request, $file)
     {
         $filename = __DIR__.'/../../../resources/elfinder/sounds/'.$file;
-        $mimeType = $filesystem->mimeType($filename);
-        $lastModified = $filesystem->lastModified($filename);
+        $mimeType = $files->mimeType($filename);
+        $lastModified = $files->lastModified($filename);
         $eTag = sha1_file($filename);
         $headers = [
             'content-type' => $mimeType,
