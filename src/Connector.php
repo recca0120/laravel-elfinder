@@ -3,7 +3,6 @@
 namespace Recca0120\Elfinder;
 
 use elFinderConnector;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Connector extends elFinderConnector
