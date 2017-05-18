@@ -74,15 +74,15 @@ class ElfinderServiceProvider extends ServiceProvider
     protected function handlePublishes()
     {
         $this->publishes([
-            __DIR__.'/../resources/views' => $this->app->basePath().'/resources/views/vendor/elfinder',
+            __DIR__.'/../resources/views' => base_path('resources/views/vendor/elfinder'),
         ], 'views');
 
         $this->publishes([
-            __DIR__.'/../resources/elfinder' => $this->app['path.public'].'/vendor/elfinder',
+            __DIR__.'/../resources/elfinder' => public_path('vendor/elfinder'),
         ], 'public');
 
         $this->publishes([
-            __DIR__.'/../config/elfinder.php' => $this->app->configPath().'/elfinder.php',
+            __DIR__.'/../config/elfinder.php' => config_path('elfinder.php'),
         ], 'config');
     }
 }
