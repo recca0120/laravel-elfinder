@@ -19,16 +19,17 @@
     },
     "require-dev": {
         "mockery/mockery": "~0.9.4",
-        "phpunit/phpunit": "~4.8|~5.4",
+        "phpunit/phpunit": "~4.8|~5.4|~6.1",
         "nesbot/carbon": "~1.20"
     },
     "autoload": {
-        "classmap": ["resources/elfinder/php/"],
+        "classmap": ["lib/"],
         "psr-4": {
             "Recca0120\\Elfinder\\": "src/"
         }
     },
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "sort-packages": true
     }
 }

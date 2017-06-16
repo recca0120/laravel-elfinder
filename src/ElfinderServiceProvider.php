@@ -2,6 +2,7 @@
 
 namespace Recca0120\Elfinder;
 
+use elFinder;
 use Illuminate\Support\Arr;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
@@ -38,17 +39,22 @@ class ElfinderServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/elfinder.php', 'elfinder');
 
-        $this->app->singleton(Elfinder::class, function ($app) {
-            $session = $app['session'];
-            $config = $app['config']['elfinder'];
-
-            return new Elfinder(
-                new Session($session),
+        $this->app->singleton('elfinder.options', function ($app) {
+            return new Options(
                 $app['request'],
                 $app['files'],
                 $app['url'],
-                $config
+                new LaravelSession($app['session']),
+                $app['config']['elfinder']
             );
+        });
+
+        $this->app->singleton('elfinder', function ($app) {
+            return new elFinder((array) $app['elfinder.options']);
+        });
+
+        $this->app->singleton(Connector::class, function ($app) {
+            return new Connector($app['elfinder']);
         });
     }
 

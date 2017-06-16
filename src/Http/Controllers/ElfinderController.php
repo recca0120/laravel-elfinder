@@ -3,15 +3,25 @@
 namespace Recca0120\Elfinder\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Recca0120\Elfinder\Elfinder;
+use Recca0120\Elfinder\Connector;
 use Illuminate\Routing\Controller;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\Routing\ResponseFactory;
 
 class ElfinderController extends Controller
 {
+    /**
+     * $responseFactory.
+     *
+     * @var \Illuminate\Contracts\Routing\ResponseFactory
+     */
     protected $responseFactory;
 
+    /**
+     * __construct.
+     *
+     * @param \Illuminate\Contracts\Routing\ResponseFactory $responseFactory
+     */
     public function __construct(ResponseFactory $responseFactory)
     {
         $this->responseFactory = $responseFactory;
@@ -36,12 +46,12 @@ class ElfinderController extends Controller
     /**
      * connector.
      *
-     * @param \Recca0120\Elfinder\Elfinder $elfinder
+     * @param \Recca0120\Elfinder\Connector $elfinder
      * @return mixed
      */
-    public function connector(Elfinder $elfinder)
+    public function connector(Connector $connector)
     {
-        return $elfinder->getConnector()->run();
+        return $connector->run();
     }
 
     /**
