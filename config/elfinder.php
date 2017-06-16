@@ -2,8 +2,9 @@
 
 return [
     'route' => [
-        'middleware' => ['web', 'auth'],
         'prefix' => 'elfinder',
+        'as' => 'elfinder.',
+        'middleware' => ['web', 'auth']
     ],
     'accessControl' => [Recca0120\Elfinder\Elfinder::class, 'access'],
     'options' => [

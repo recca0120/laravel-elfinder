@@ -39,10 +39,16 @@ class ElfinderServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/elfinder.php', 'elfinder');
 
         $this->app->singleton(Elfinder::class, function ($app) {
-            $session = new Session($app['session']);
+            $session = $app['session'];
             $config = $app['config']['elfinder'];
 
-            return new Elfinder($session, $app['request'], $app['files'], $app['url'], $config);
+            return new Elfinder(
+                new Session($session),
+                $app['request'],
+                $app['files'],
+                $app['url'],
+                $config
+            );
         });
     }
 
@@ -56,11 +62,8 @@ class ElfinderServiceProvider extends ServiceProvider
     {
         if ($this->app->routesAreCached() === false) {
             $router->group(array_merge([
-                'middleware' => ['web', 'auth'],
-                'prefix' => 'elfinder',
-                'as' => 'elfinder.',
                 'namespace' => $this->namespace,
-            ], Arr::get($config, 'elfinder.route', [])), function () {
+            ], Arr::get($config, 'route', [])), function () {
                 require __DIR__.'/Http/routes.php';
             });
         }
