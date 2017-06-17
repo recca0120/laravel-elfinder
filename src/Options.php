@@ -52,7 +52,6 @@ class Options extends ArrayObject
      * @param \Illuminate\Http\Request $request
      * @param \Illuminate\Filesystem\Filesystem $files
      * @param \Illuminate\Contracts\Routing\UrlGenerator $urlGenerator
-     * @param \Recca0120\Elfinder\LaravelSession $session
      * @param array $config
      */
     public function __construct(Request $request, Filesystem $files, UrlGenerator $urlGenerator, $config = [])
