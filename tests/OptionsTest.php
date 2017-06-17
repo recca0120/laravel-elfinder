@@ -138,7 +138,9 @@ class OptionsTest extends TestCase
                     ], [
                         'driver' => 'LocalFileSystem',
                         'alias' => 'Shared',
-                        'path' => public_path('storage/media/shared'),
+                        'path' => function () {
+                            return public_path('storage/media/shared');
+                        },
                         'URL' => 'storage/media/shared',
                     ], [
                         'driver' => 'Trash',
