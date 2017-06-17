@@ -80,7 +80,6 @@ class Options extends ArrayObject
 
         return array_values(array_filter(array_map(function ($disk) use ($user, $accessControl) {
             $disk['driver'] = empty($disk['driver']) === true ? 'LocalFileSystem' : $disk['driver'];
-            $disk['autoload'] = true;
 
             if (empty($disk['path']) === false && ($disk['path'] instanceof Closure) === true) {
                 $disk['path'] = call_user_func($disk['path']);
