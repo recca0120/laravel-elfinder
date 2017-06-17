@@ -55,7 +55,7 @@ class Options extends ArrayObject
      * @param \Recca0120\Elfinder\LaravelSession $session
      * @param array $config
      */
-    public function __construct(Request $request, Filesystem $files, UrlGenerator $urlGenerator, LaravelSession $session, $config = [])
+    public function __construct(Request $request, Filesystem $files, UrlGenerator $urlGenerator, $config = [])
     {
         $this->request = $request;
         $this->files = $files;
@@ -65,7 +65,6 @@ class Options extends ArrayObject
 
         parent::__construct(array_merge($this->options, [
             'roots' => $this->getRoots(),
-            'session' => $session,
         ]));
     }
 
@@ -80,7 +79,7 @@ class Options extends ArrayObject
         $roots = Arr::get($this->options, 'roots', []);
         $user = $this->request->user();
 
-        return array_filter(array_map(function ($disk) use ($user, $accessControl) {
+        return array_values(array_filter(array_map(function ($disk) use ($user, $accessControl) {
             $disk['driver'] = empty($disk['driver']) === true ? 'LocalFileSystem' : $disk['driver'];
             $disk['autoload'] = true;
 
@@ -91,7 +90,7 @@ class Options extends ArrayObject
             $method = method_exists($this, $method) === true ? $method : 'createDefaultDriver';
 
             return call_user_func_array([$this, $method], [$disk, $user, $accessControl]);
-        }, $roots));
+        }, $roots)));
     }
 
     /**
@@ -105,7 +104,7 @@ class Options extends ArrayObject
      */
     protected function createDefaultDriver($disk, $user, $accessControl = null, $makeDirectory = false)
     {
-        if (strpos($disk['path'], '{user_id}') !== -1) {
+        if (strpos($disk['path'], '{user_id}') !== false) {
             if (is_null($user) === true) {
                 return;
             }

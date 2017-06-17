@@ -69,8 +69,10 @@ class ElfinderServiceProviderTest extends TestCase
 
         $app->shouldReceive('singleton')->once()->with('elfinder', m::on(function ($closure) use ($app) {
             $app->shouldReceive('offsetGet')->once()->with('elfinder.options')->andReturn([]);
+            $elfinder = $closure($app);
+            $this->assertInstanceOf('elFinder', $elfinder);
 
-            return $closure($app) instanceof elFinder;
+            return $elfinder instanceof elFinder;
         }));
 
         $app->shouldReceive('singleton')->once()->with('Recca0120\Elfinder\Connector', m::on(function ($closure) use ($app) {

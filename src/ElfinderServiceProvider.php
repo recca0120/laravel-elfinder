@@ -44,8 +44,9 @@ class ElfinderServiceProvider extends ServiceProvider
                 $app['request'],
                 $app['files'],
                 $app['url'],
-                new LaravelSession($app['session']),
-                $app['config']['elfinder']
+                array_merge($app['config']['elfinder'], [
+                    'session' => new LaravelSession($app['session']),
+                ])
             );
         });
 
