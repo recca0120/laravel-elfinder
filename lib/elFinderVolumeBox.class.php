@@ -1039,7 +1039,7 @@ class elFinderVolumeBox extends elFinderVolumeDriver
      *
      * @param string $path file path
      * @param string $mime file mime type
-
+     *
      * @return string|false
      *
      * @author Dmitry (dio) Levashov
