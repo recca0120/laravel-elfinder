@@ -1355,7 +1355,7 @@ class elFinder
                 }
             }
             if ($data['url']) {
-                ++$data['cnt'];
+                $data['cnt']++;
                 fclose($stream);
 
                 return self::getStreamByUrl($data, $redirectLimit);

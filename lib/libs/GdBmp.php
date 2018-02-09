@@ -320,7 +320,7 @@ class elFinderLibGdBmp
             $palette_size = $header_size == 12 ? 3 : 4; //OS/2形式の場合は x に相当する箇所のデータは最初から確保されていない
             $colors = $clr_used ? $clr_used : pow(2, $bit_count); //色数
             $palette = [];
-            for ($i = 0; $i < $colors; ++$i) {
+            for ($i = 0; $i < $colors; $i++) {
                 $buf = fread($stream, $palette_size);
                 if ($buf === false) {
                     imagedestroy($img);

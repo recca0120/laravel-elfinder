@@ -4364,9 +4364,9 @@ abstract class elFinderVolumeDriver
         $this->options['checkSubfolders'] = true;
         foreach ($this->getScandir($path) as $stat) {
             if ($isDir = ($stat['mime'] === 'directory' && $stat['read'])) {
-                ++$result['dirs'];
+                $result['dirs']++;
             } else {
-                ++$result['files'];
+                $result['files']++;
             }
             $res = $isDir
                 ? $this->countSize($this->decode($stat['hash']))
