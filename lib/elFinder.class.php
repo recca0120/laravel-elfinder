@@ -2222,42 +2222,42 @@ class elFinder
         return $this->$method($url, $timeout, $redirect_max, $ua, $fp);
     }
 
-     /**
-      * Get remote contents with cURL.
-      *
-      * @param  string   $url     target url
-      * @param  int      $timeout timeout (sec)
-      * @param  int      $redirect_max redirect max count
-      * @param  string   $ua
-      * @param  resource $outfp
-      * @return string or bool(false)
-      * @retval string contents
-      * @retval false  error
-      * @author Naoki Sawada
-      **/
-     protected function curl_get_contents(&$url, $timeout, $redirect_max, $ua, $outfp)
-     {
-         $ch = curl_init();
-         curl_setopt($ch, CURLOPT_URL, $url);
-         curl_setopt($ch, CURLOPT_HEADER, false);
-         if ($outfp) {
-             curl_setopt($ch, CURLOPT_FILE, $outfp);
-         } else {
-             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-             curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
-         }
-         curl_setopt($ch, CURLOPT_LOW_SPEED_LIMIT, 1);
-         curl_setopt($ch, CURLOPT_LOW_SPEED_TIME, $timeout);
-         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-         curl_setopt($ch, CURLOPT_MAXREDIRS, $redirect_max);
-         curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-         $result = curl_exec($ch);
-         $url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
-         curl_close($ch);
+    /**
+     * Get remote contents with cURL.
+     *
+     * @param  string   $url     target url
+     * @param  int      $timeout timeout (sec)
+     * @param  int      $redirect_max redirect max count
+     * @param  string   $ua
+     * @param  resource $outfp
+     * @return string or bool(false)
+     * @retval string contents
+     * @retval false  error
+     * @author Naoki Sawada
+     **/
+    protected function curl_get_contents(&$url, $timeout, $redirect_max, $ua, $outfp)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        if ($outfp) {
+            curl_setopt($ch, CURLOPT_FILE, $outfp);
+        } else {
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+        }
+        curl_setopt($ch, CURLOPT_LOW_SPEED_LIMIT, 1);
+        curl_setopt($ch, CURLOPT_LOW_SPEED_TIME, $timeout);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, $redirect_max);
+        curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+        $result = curl_exec($ch);
+        $url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+        curl_close($ch);
 
-         return $outfp ? $outfp : $result;
-     }
+        return $outfp ? $outfp : $result;
+    }
 
     /**
      * Get remote contents with fsockopen().
@@ -2631,19 +2631,19 @@ class elFinder
 
         // regist Shutdown function
         $GLOBALS['elFinderTempFiles'] = [];
-// 		if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
-// 			$shutdownfunc = function(){ // <- Parse error on PHP < 5.3 ;-(
-// 				foreach(array_keys($GLOBALS['elFinderTempFiles']) as $f){
-// 					unlink($f);
-// 				}
-// 			};
-// 		} else {
-            $shutdownfunc = create_function('', '
+        // 		if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
+        // 			$shutdownfunc = function(){ // <- Parse error on PHP < 5.3 ;-(
+        // 				foreach(array_keys($GLOBALS['elFinderTempFiles']) as $f){
+        // 					unlink($f);
+        // 				}
+        // 			};
+        // 		} else {
+        $shutdownfunc = create_function('', '
 				foreach(array_keys($GLOBALS[\'elFinderTempFiles\']) as $f){
 					is_file($f) && unlink($f);
 				}
 			');
-//		}
+        //		}
         register_shutdown_function($shutdownfunc);
 
         // file extentions table by MIME
